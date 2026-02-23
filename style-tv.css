@@ -1,0 +1,149 @@
+<style>
+
+/* =========================
+   BACKGROUND UTAMA
+========================= */
+body{
+    font-family:"Segoe UI",Tahoma,Arial,sans-serif;
+    background:linear-gradient(180deg,#eaf6ff,#cfefff);
+    color:#003b5c;
+}
+
+/* =========================
+   MENU ATAS
+========================= */
+p a{
+    background:#1e88e5;
+    border:2px solid #1565c0;
+    color:#fff;
+    font-weight:bold;
+    letter-spacing:.4px;
+    box-shadow:0 3px 8px rgba(0,0,0,.2);
+    transition:.2s;
+}
+
+p a:hover{
+    background:#42a5f5;
+    transform:translateY(-2px);
+    box-shadow:0 6px 15px rgba(0,0,0,.25);
+}
+
+/* =========================
+   RUNNING TEXT PASIEN
+========================= */
+.running-text{
+    background:#1976d2;
+    color:#fff;
+    font-size:22px;
+    border-top:3px solid #64b5f6;
+    border-bottom:3px solid #64b5f6;
+    text-shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+/* =========================
+   JAM DIGITAL
+========================= */
+#jam{
+    font-size:36px !important;
+    font-weight:bold;
+    color:#0d47a1;
+    background:#ffffff;
+    padding:5px;
+    border-radius:2px;
+    border:3px solid #42a5f5;
+    box-shadow:0 0 12px rgba(30,136,229,.5);
+}
+
+#tanggal,#hari{
+    color:#0d47a1;
+    font-weight:bold;
+}
+
+/* =========================
+   BOX WIDGET
+========================= */
+div[style*="background:#fff"]{
+    background:#ffffff !important;
+    border:2px solid #90caf9 !important;
+    box-shadow:0 4px 14px rgba(0,0,0,.15) !important;
+    color:#003b5c !important;
+}
+
+/* =========================
+   YOUTUBE TV
+========================= */
+#tv-iframe{
+    border:4px solid #42a5f5;
+    border-radius:14px;
+    box-shadow:0 0 20px rgba(66,165,245,.7);
+}
+
+/* =========================
+   TOMBOL FULLSCREEN
+========================= */
+#fullScreenBtn{
+    background:#2e7d32;
+    border:2px solid #43a047;
+    color:#fff;
+    font-weight:bold;
+    box-shadow:0 0 10px rgba(67,160,71,.6);
+}
+
+#fullScreenBtn:hover{
+    background:#43a047;
+    box-shadow:0 0 20px rgba(67,160,71,1);
+}
+
+/* =========================
+   IFRAME
+========================= */
+iframe{
+    background:#ffffff;
+}
+
+/* =========================
+   COPYRIGHT TEXT
+========================= */
+.typing{
+    color:#1565c0 !important;
+    font-weight:bold;
+}
+
+/* =========================
+   NOTIFIKASI ADZAN
+========================= */
+#notifikasi-adzan div{
+    background:#ffffff !important;
+    color:#0d47a1 !important;
+    border:3px solid #42a5f5 !important;
+    box-shadow:0 0 30px rgba(66,165,245,.7) !important;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
+::-webkit-scrollbar{
+    width:8px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:#64b5f6;
+    border-radius:10px;
+}
+
+/* =========================
+   EFEK HALUS (BIAR HIDUP)
+========================= */
+body::after{
+    content:"";
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    background:radial-gradient(circle at 50% 20%,rgba(255,255,255,.35),transparent 60%);
+}
+
+</style>
+

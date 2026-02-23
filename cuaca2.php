@@ -1,0 +1,2 @@
+
+<div id="id6b11d5d4aa4c7" a='{"t":"r","v":"1.2","lang":"id","locs":[449],"ssot":"c","sics":"ds","cbkg":"#FFFFFF","cfnt":"#000000","codd":"#FFFFFF","cont":"#000000d4","eln":"bool","ewi":"bool","etp":"bool","stof":"5"}'>Sumber Data Cuaca: <a href="https://cuacalab.id/cuaca_palembang/10_hari/">Palembang 10 hari cuaca</a></div><script async src="https://static1.cuacalab.id/widgetjs/?id=id6b11d5d4aa4c7"></script>

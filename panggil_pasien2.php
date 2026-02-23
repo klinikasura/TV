@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aplikasi RS. Asura</title>
+    <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
+    <meta http-equiv="refresh" content="240;url=panggil_pasien2.php">
+    <style>
+        table {border-collapse:collapse;width:100%;}
+        th, td {border:1px solid #ddd;padding:8px;text-align:left;}
+        th {background:#f0f0f0;}
+        .speaker {cursor:pointer; margin-right:5px;}
+        .search {margin-bottom:10px; display:flex; align-items:center;}
+        .search label {margin-right:5px;}
+        .btn {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .btn:hover {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
+    <?php
+    // Koneksi
+    $servername = "10.10.20.250";
+    $username = "root";
+    $password = "";
+    $dbname = "sikdraisyah";
+    $conn = new mysqli($servername,$username,$password,$dbname);
+    if ($conn->connect_error) die("Koneksi gagal: ".$conn->connect_error);
+
+    // Pagination
+    $per_halaman = 20;
+    $halaman = isset($_GET['halaman']) ? $_GET['halaman'] : 1;
+    $offset = ($halaman - 1) * $per_halaman;
+    $tgl_hari_ini = date('Y-m-d');
+
+    // Filter pencarian (jika ada)
+    $filter = "";
+    if (isset($_GET['cari']) && !empty($_GET['cari'])) {
+        $cari = $conn->real_escape_string($_GET['cari']);
+        $filter = " AND p.nm_pasien LIKE '%$cari%' ";
+    }
+
+    // Query utama (tambah JOIN ke penjab + filter)
+    $sql = "
+     SELECT rp.no_reg, rp.no_rawat, rp.tgl_registrasi, p.nm_pasien, d.nm_dokter, pl.nm_poli, pj.png_jawab, rp.status_bayar, rp.status_lanjut
+     FROM reg_periksa rp
+     INNER JOIN pasien p ON rp.no_rkm_medis = p.no_rkm_medis
+     INNER JOIN dokter d ON rp.kd_dokter = d.kd_dokter
+     INNER JOIN poliklinik pl ON rp.kd_poli = pl.kd_poli
+     INNER JOIN penjab pj ON rp.kd_pj = pj.kd_pj
+     WHERE DATE(rp.tgl_registrasi) = '$tgl_hari_ini' AND rp.status_bayar = 'Belum Bayar' AND rp.status_lanjut = 'Ralan' $filter
+     LIMIT $offset,$per_halaman
+     ";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // Form pencarian
+        echo "<div class='search'>";
+        echo "<label>Cari Pasien:</label>";
+        echo "<form method='get' style='display:inline;'>";
+        echo "<input type='text' name='cari' placeholder='Ketik nama...' value='".(isset($_GET['cari'])?$_GET['cari']:"")."'>";
+        echo "<button type='submit' class='btn'>Cari</button>";
+        echo "<a href='?halaman=1' class='btn'>Reset</a>";
+              echo "</form>";
+        echo "</div>";
+
+        echo "<table>";
+        echo "<tr>";
+        echo "<th>No.</th>";
+        echo "<th>Tanggal</th>";
+        echo "<th>Pasien</th>";
+        echo "<th>Dokter</th>";
+        echo "<th>Poliklinik</th>";
+        echo "<th>Bayar</th>";
+        echo "<th>Status</th>";
+        echo "<th>Lanjut</th>";
+        echo "<th>Speaker</th>";
+        echo "</tr>";
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>".$row["no_reg"]."</td>";
+            echo "<td>".$row["tgl_registrasi"]."</td>";
+            echo "<td>".$row["nm_pasien"]."</td>";
+            echo "<td>".$row["nm_dokter"]."</td>";
+            echo "<td>".$row["nm_poli"]."</td>";
+            echo "<td>".$row["png_jawab"]."</td>";
+            echo "<td>".$row["status_bayar"]."</td>";
+            echo "<td>".$row["status_lanjut"]."</td>";
+            echo "<td> <span class='speaker' data-no-reg='".htmlspecialchars($row['no_reg'])."' data-pasien='".htmlspecialchars($row['nm_pasien'])."' data-poli='".htmlspecialchars($row['nm_poli'])."' data-dokter='".htmlspecialchars($row['nm_dokter'])."'> &#128266; </span> </td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+
+        // Jumlah data (dengan filter)
+        $sql_jml = "
+         SELECT COUNT(*) as jml
+         FROM reg_periksa rp
+         INNER JOIN pasien p ON rp.no_rkm_medis = p.no_rkm_medis
+         INNER JOIN dokter d ON rp.kd_dokter = d.kd_dokter
+         INNER JOIN poliklinik pl ON rp.kd_poli = pl.kd_poli
+         INNER JOIN penjab pj ON rp.kd_pj = pj.kd_pj
+         WHERE DATE(rp.tgl_registrasi) = '$tgl_hari_ini' AND rp.status_bayar = 'Belum Bayar' AND rp.status_lanjut = 'Ralan' $filter
+         ";
+        $jml = $conn->query($sql_jml)->fetch_assoc()['jml'];
+        echo "Jumlah Pasien Belum Bayar: $jml";
+
+        // Paging (tambah parameter pencarian agar paging tetap filter)
+        $jml_halaman = ceil($jml / $per_halaman);
+        echo "<div>";
+        for ($i = 1; $i <= $jml_halaman; $i++) {
+            $aktif = ($i == $halaman) ? "style='font-weight:bold;'" : "";
+            $cari_param = (isset($_GET['cari']) && !empty($_GET['cari'])) ? "&cari=".$_GET['cari'] : "";
+            echo "<a href='?halaman=$i$cari_param' $aktif>$i</a> ";
+        }
+        echo "</div>";
+    } else {
+        echo "Hore.... Pasien Hari Ini Sudah Bayar Semua";
+    }
+    ?>
+
+    <script>
+        let soundReady = true; // langsung aktifkan suara
+        function playVoice(text) {
+            if(!soundReady) return;
+            if ('speechSynthesis' in window) {
+                var msg = new SpeechSynthesisUtterance();
+                msg.text = text;
+                msg.lang = 'id-ID';
+                window.speechSynthesis.speak(msg);
+            } else {
+                alert('Browser tidak mendukung speech synthesis.');
+            }
+        }
+
+        document.addEventListener('click', function(e){
+            if (e.target && e.target.className === 'speaker') {
+                var noReg = e.target.getAttribute('data-no-reg');
+                var nama = e.target.getAttribute('data-pasien');
+                var poli = e.target.getAttribute('data-poli');
+                var dokter = e.target.getAttribute('data-dokter');
+                var teks = 'Nomor Antrian ' + noReg + ', Panggilan Untuk Pasien ' + nama + ' di ' + poli + ' dengan ' + dokter + ' .';
+                playVoice(teks);
+            }
+        });
+    </script>
+</body>
+</html>
+
