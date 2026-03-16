@@ -46,7 +46,7 @@ body{
     top:0;
     left:0;
     overflow:hidden;
-    background:#c00000;
+
     border-top:3px solid #fff;
     border-bottom:3px solid #fff;
     display:flex;

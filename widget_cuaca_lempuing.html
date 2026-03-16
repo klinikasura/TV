@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aplikasi RS. Asura</title>
-<link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
 
 <style>
 *{box-sizing:border-box}
@@ -15,7 +14,6 @@ body{
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 }
 
-/* BOX */
 .widget{
     width:200px;
     height:240px;
@@ -28,23 +26,54 @@ body{
 }
 
 /* TEKS */
-.location{font-size:14px;opacity:.85;}
+.location{font-size:10px;opacity:.85;}
 .time{font-size:12px;font-weight:300;margin-top:2px;}
-.temp{font-size:24px;margin-top:6px;}
-.desc{font-size:20px;opacity:.9;}
-.extra{
-    font-size:13px;
-    opacity:.85;
-    margin-top:2px;
-    line-height:1.2;
+.temp{font-size:26px;margin-top:2px;}
+.desc{font-size:16px;opacity:.9;margin-top:2px;}
+.extra{font-size:11px;opacity:.85;margin-top:2px;line-height:1.2;}
+
+/* ===== MATAHARI ===== */
+.sun{
+    position:absolute;
+    right:20px;
+    top:35px;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background:radial-gradient(circle at center,#fff799 20%,#ffd93b 60%,#ffb300 100%);
+    box-shadow:
+        0 0 20px rgba(255,220,120,.8),
+        0 0 40px rgba(255,200,0,.5),
+        0 0 70px rgba(255,180,0,.4);
+    animation:sunPulse 4s ease-in-out infinite;
+}
+.sun-ray{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:90px;
+    height:90px;
+    margin-left:-45px;
+    margin-top:-45px;
+    border-radius:50%;
+    border:2px solid rgba(255,230,150,.5);
+    animation:rotateSun 10s linear infinite;
+}
+@keyframes rotateSun{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+@keyframes sunPulse{
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.08)}
 }
 
-/* AWAN */
+/* ===== AWAN ===== */
 .cloud{
     position:absolute;
     right:15px;
-    top:42px;
-    width:90px;
+    top:40px;
+    width:80px;
     height:35px;
     background:#fff;
     border-radius:40px;
@@ -71,24 +100,20 @@ body{
     top:-10px;
     left:50px;
 }
-
 @keyframes cloudFloat{
   0%{transform:translateY(0)}
   50%{transform:translateY(5px)}
   100%{transform:translateY(0)}
 }
 
-/* AREA HUJAN */
+/* ===== HUJAN ===== */
 .rain-area{
     position:absolute;
     width:120px;
     height:70px;
     right:10px;
-    top:78px;
-    pointer-events:none;
+    top:95px;
 }
-
-/* HUJAN */
 .rain{
     position:absolute;
     width:2px;
@@ -101,8 +126,6 @@ body{
     from{transform:translateY(0)}
     to{transform:translateY(55px)}
 }
-
-/* GERIMIS */
 .sleet{
     position:absolute;
     width:4px;
@@ -117,22 +140,47 @@ body{
     to{transform:translateY(60px)}
 }
 
-/* PETIR */
-.lightning{
+/* ===== PETIR REALISTIS ===== */
+.lightning-bolt{
     position:absolute;
-    width:100%;
-    height:100%;
-    background:white;
+    right:45px;
+    top:70px;
+    width:0;
+    height:0;
     opacity:0;
-    animation:flash 8s infinite;
+    filter:drop-shadow(0 0 8px white)
+           drop-shadow(0 0 15px #bdf2ff)
+           drop-shadow(0 0 25px #6fd3ff);
 }
-@keyframes flash{
-    0%,96%,100%{opacity:0}
-    97%{opacity:.7}
-    98%{opacity:0}
+.lightning-bolt::before{
+    content:"";
+    position:absolute;
+    width:6px;
+    height:80px;
+    background:linear-gradient(180deg,#ffffff,#bdf2ff,#ffffff);
+    clip-path:polygon(
+        40% 0%,
+        65% 20%,
+        45% 35%,
+        70% 55%,
+        40% 70%,
+        60% 100%,
+        30% 80%,
+        50% 55%,
+        30% 35%,
+        55% 20%
+    );
+}
+@keyframes lightningStrike{
+    0%{opacity:0}
+    2%{opacity:1}
+    4%{opacity:0}
+    6%{opacity:1}
+    8%{opacity:0}
+    100%{opacity:0}
 }
 
-/* ANGIN */
+/* ===== ANGIN ===== */
 .wind-line{
     position:absolute;
     width:20px;
@@ -152,25 +200,27 @@ body{
 <body>
 
 <div class="widget">
-    <div class="lightning" id="lightning"></div>
-
-    <div class="location">Lempuing</div>
-    <div class="time" id="clock">--:--</div>
     <div class="temp" id="temp">--°C</div>
     <div class="desc" id="desc">Robot Cuaca...</div>
-
+<p>
     <div class="extra" id="humidity">Kelembapan: --%</div>
     <div class="extra" id="pressure">Tekanan: ---- hPa</div>
     <div class="extra" id="wind">Angin: -- km/j</div>
     <div class="extra" id="winddir">Arah: --</div>
 
+    <div class="sun" id="sun" style="display:none;">
+        <div class="sun-ray"></div>
+    </div>
+
     <div class="cloud"></div>
+    <div class="lightning-bolt" id="bolt"></div>
     <div class="rain-area" id="rainArea"></div>
+     <p>&nbsp;</p>
+    <div class="location">Lempuing</div>
+    <div class="time" id="clock">--:--</div>
 </div>
 
 <script>
-
-/* JAM REALTIME */
 function updateTime(){
  const now=new Date();
  document.getElementById("clock").innerHTML=
@@ -179,101 +229,90 @@ function updateTime(){
 setInterval(updateTime,1000);
 updateTime();
 
-/* KOORDINAT */
 const lat=-3.560;
 const lon=105.115;
 
-/* KONVERSI ARAH ANGIN */
 function arahAngin(deg){
-    const arah=[
-        "Utara","Timur Laut","Timur","Tenggara",
-        "Selatan","Barat Daya","Barat","Barat Laut"
-    ];
-    return arah[Math.round(deg/45)%8];
+ const arah=["Utara","Timur Laut","Timur","Tenggara",
+             "Selatan","Barat Daya","Barat","Barat Laut"];
+ return arah[Math.round(deg/45)%8];
 }
 
 async function loadWeather(){
 try{
+ const res=await fetch(
+ `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,weather_code,wind_speed_10m,wind_direction_10m&timezone=Asia%2FBangkok`
+ );
+ const d=await res.json();
 
-    const res = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,surface_pressure,weather_code,wind_speed_10m,wind_direction_10m&timezone=Asia%2FBangkok`
-    );
+ const t=d.current.temperature_2m;
+ const humidity=d.current.relative_humidity_2m;
+ const pressure=d.current.surface_pressure;
+ const code=d.current.weather_code;
+ const wind=d.current.wind_speed_10m;
+ const winddir=d.current.wind_direction_10m;
 
-    const d = await res.json();
+ document.getElementById("temp").innerHTML=t+"°C";
+ document.getElementById("humidity").innerHTML="Kelembapan: "+humidity+"%";
+ document.getElementById("pressure").innerHTML="Tekanan: "+pressure+" hPa";
+ document.getElementById("wind").innerHTML="Angin: "+wind+" km/j";
+ document.getElementById("winddir").innerHTML="Arah: "+arahAngin(winddir);
 
-    const t = d.current.temperature_2m;
-    const humidity = d.current.relative_humidity_2m;
-    const pressure = d.current.surface_pressure;
-    const code = d.current.weather_code;
-    const wind = d.current.wind_speed_10m;
-    const winddir = d.current.wind_direction_10m;
+ let text="Cerah";
+ let rain=false;
+ let storm=false;
+ let sunny=false;
 
-    document.getElementById("temp").innerHTML = t+"°C";
-    document.getElementById("humidity").innerHTML="Kelembapan: "+humidity+"%";
-    document.getElementById("pressure").innerHTML="Tekanan: "+pressure+" hPa";
-    document.getElementById("wind").innerHTML="Angin: "+wind+" km/j";
-    document.getElementById("winddir").innerHTML="Arah: "+arahAngin(winddir);
+ if(code==0){text="Cerah";sunny=true;}
+ else if(code==1||code==2){text="Cerah Berawan";sunny=true;}
+ else if(code==3){text="Mendung";}
+ else if(code>=51&&code<80){text="Gerimis";rain=true;}
+ else if(code>=80&&code<95){text="Hujan";rain=true;}
+ else if(code>=95){text="Badai Petir";rain=true;storm=true;}
 
-    let text="Cerah";
-    let rain=false;
-    let storm=false;
+ document.getElementById("desc").innerHTML=text;
 
-    if(code>=51 && code<80){text="Gerimis";rain=true;}
-    if(code>=80 && code<95){text="Hujan";rain=true;}
-    if(code>=95){text="Badai Petir";rain=true;storm=true;}
+ document.getElementById("sun").style.display=sunny?"block":"none";
 
-    document.getElementById("desc").innerHTML=text;
+ const bolt=document.getElementById("bolt");
+ if(storm){
+   bolt.style.opacity="1";
+   bolt.style.animation="lightningStrike 7s infinite";
+ }else{
+   bolt.style.opacity="0";
+   bolt.style.animation="none";
+ }
 
-    const rainArea=document.getElementById("rainArea");
-    rainArea.innerHTML="";
+ const rainArea=document.getElementById("rainArea");
+ rainArea.innerHTML="";
+ document.querySelectorAll(".wind-line").forEach(w=>w.remove());
 
-    /* HAPUS ANGIN LAMA */
-    document.querySelectorAll(".wind-line").forEach(w=>w.remove());
+ if(rain){
+   for(let i=0;i<25;i++){
+     const drop=document.createElement("div");
+     drop.className="rain";
+     drop.style.left=Math.random()*110+"px";
+     drop.style.animationDuration=(0.5+Math.random())+"s";
+     rainArea.appendChild(drop);
+   }
+ }
 
-    /* EFEK HUJAN */
-    if(rain){
-        for(let i=0;i<28;i++){
-            const drop=document.createElement("div");
-            drop.className="rain";
-            drop.style.left=Math.random()*110+"px";
-            drop.style.top=Math.random()*10+"px";
-            drop.style.animationDuration=(0.5+Math.random())+"s";
-            rainArea.appendChild(drop);
-        }
-
-        for(let i=0;i<12;i++){
-            const ice=document.createElement("div");
-            ice.className="sleet";
-            ice.style.left=Math.random()*110+"px";
-            ice.style.top=Math.random()*10+"px";
-            ice.style.animationDuration=(1.2+Math.random())+"s";
-            rainArea.appendChild(ice);
-        }
-    }
-
-    /* EFEK ANGIN */
-    let jumlah=Math.min(12,Math.round(wind/2));
-    for(let i=0;i<jumlah;i++){
-        const w=document.createElement("div");
-        w.className="wind-line";
-        w.style.top=(50+Math.random()*140)+"px";
-        w.style.animationDuration=(1.5 - Math.min(wind,20)/25)+"s";
-        document.querySelector(".widget").appendChild(w);
-    }
-
-    document.getElementById("lightning").style.display = storm ? "block":"none";
+ let jumlah=Math.min(12,Math.round(wind/2));
+ for(let i=0;i<jumlah;i++){
+   const w=document.createElement("div");
+   w.className="wind-line";
+   w.style.top=(60+Math.random()*120)+"px";
+   w.style.animationDuration=(1.5 - Math.min(wind,20)/25)+"s";
+   document.querySelector(".widget").appendChild(w);
+ }
 
 }catch(e){
-    console.log("Cuaca gagal diambil (internet/server down)");
+ console.log("Gagal ambil data cuaca");
 }
 }
 
-/* LOAD PERTAMA */
 loadWeather();
-
-/* REFRESH 10 MENIT */
-setInterval(loadWeather, 600000);
-
+setInterval(loadWeather,600000);
 </script>
 
 </body>

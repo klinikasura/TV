@@ -14,7 +14,7 @@ $jam     = date("H:i");
 <head>
     <title>Aplikasi RS. Asura</title>
     <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
-    <meta http-equiv="refresh" content="8;url=pasien.php">
+    <meta http-equiv="refresh" content="8;url=pasien-apps.php">
     <style>
         table {border-collapse:collapse;width:100%;font-size:0.9em;}
         th, td {border:2px solid #ff69b4;padding:6px 10px;text-align:left;}
@@ -190,22 +190,13 @@ Daftar Hari Ini :
 
 | Billing Pasien Bayar
 <b>(<span class="berkedip2"><?= $bayar ?></span>)</b>
-
-| Farmasi
+ Farmasi
 <b>(<span class="berkedip2"><?= $farmasi ?></span>)</b>
 
 | Lab
 <b>(<span class="berkedip2"><?= $lab ?></span>)</b>
 </div>
 
-
-
-
-<!-- ★ JUMLAH TEXT BERJALAN ★ -->
-
-<div class="running-text">
-    <span id="text"></span>
-</div>
 
 
 
@@ -378,9 +369,9 @@ if ($result->num_rows > 0) {
     echo "<th>Dokter</th>";
     echo "<th>Poliklinik</th>";
     echo "<th>Status Lanjut</th>";
-    echo "<th>Total Pasien</th>";
-    echo "<th>Belum Bayar</th>";
-    echo "<th>Sudah Bayar</th>";
+    echo "<th>=</th>";
+    echo "<th>X</th>";
+    echo "<th>V</th>";
     echo "</tr>";
     $total_pasien = 0;
     $total_belum = 0;
@@ -427,105 +418,6 @@ $conn->close();
 
 
 
-
-<?php
-// --------------------------------------------------
-// Koneksi & query
-$servername = "10.10.20.250";
-$username   = "root";
-$password   = "";
-$dbname     = "sikdraisyah";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) die("Koneksi gagal: ".$conn->connect_error);
-
-$tgl_hari_ini = date('Y-m-d');
-
-// --- Data belum bayar ---
-$sql_belum = "
-    SELECT rp.no_reg,
-           rp.no_rawat,
-           rp.tgl_registrasi,
-           p.nm_pasien,
-           d.nm_dokter,
-           pl.nm_poli,
-           pj.png_jawab,
-           rp.status_bayar,
-           rp.status_lanjut
-    FROM reg_periksa rp
-    JOIN pasien p  ON rp.no_rkm_medis = p.no_rkm_medis
-    JOIN dokter d  ON rp.kd_dokter   = d.kd_dokter
-    JOIN poliklinik pl ON rp.kd_poli = pl.kd_poli
-    JOIN penjab pj ON rp.kd_pj = pj.kd_pj
-    WHERE DATE(rp.tgl_registrasi) = '$tgl_hari_ini'
-      AND rp.status_bayar = 'Sudah Bayar'
-      AND rp.status_lanjut = 'Ralan'
-";
-
-$result_belum = $conn->query($sql_belum);
-$data_belum = [];
-if ($result_belum->num_rows > 0) {
-    while ($row = $result_belum->fetch_assoc()) {
-        $data_belum[] = $row;
-    }
-} else {
-    $data_belum[] = [
-        'nm_pasien' => 'Belum Ada Pasien Bayar',
-        'nm_poli'   => '',
-        'nm_dokter' => ''
-    ];
-}
-
-// --- Jumlah sudah bayar ---
-$sql_sudah = "
-    SELECT COUNT(*) AS total
-    FROM reg_periksa rp
-    WHERE DATE(rp.tgl_registrasi) = '$tgl_hari_ini'
-      AND rp.status_bayar = 'Sudah Bayar'
-      AND rp.status_lanjut = 'Ralan'
-";
-
-$total_sudah = $conn->query($sql_sudah)->fetch_assoc()['total'];
-
-$conn->close();
-?>
-
-
-
-
-<script>
-    // Data belum bayar
-    var dataBelum = <?= json_encode($data_belum); ?>;
-    var i = 0;
-    var text = document.getElementById('text');
-
-    // Jumlah sudah bayar
-    var totalSudah = <?= $total_sudah; ?>;
-
-    function updateText() {
-        var row = dataBelum[i];
-        // Tampilkan data belum bayar
-        var msg = row.nm_pasien +
-                  (row.nm_poli ? ' (' + row.nm_poli + ' - ' + row.nm_dokter + ')' : '') +
-                  '  ';// Tambahkan info Sudah Bayar ('')
-
-        // Tambahkan info pasien sudah bayar (hanya sekali di akhir)
-        if (i === dataBelum.length - 1) {
-            msg += ' : ' + totalSudah;
-        }
-
-        text.innerHTML = msg;
-
-        i++;
-        if (i >= dataBelum.length) i = 0;
-    }
-
-    // Tampilkan pertama kali
-    updateText();
-
-    // Ganti tiap 1 detik
-    setInterval(updateText, 2000);
-</script>
 
 </body>
 </html>

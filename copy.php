@@ -97,16 +97,16 @@ $video_id = 'DOOrIxw5xOw';
 
 
     </style>
-
-
-
-
-
-
-
-
 </head>
 <body>
+
+
+
+
+
+
+
+
 
 <!-- LOGO RAMADHAN -->
 <div id="ramadhan-logo">
@@ -319,7 +319,7 @@ function tampilkanCountdownIqomah(sholat) {
         let detik = sisaDetik % 60;
 
         box.innerHTML = `
-            <h1>IQOMAH ${sholat}</h1>
+            <h4>Selamat Menunaikan Ibadah Sholat ${sholat}</h4>
             <h2>${String(menit).padStart(2,'0')}:${String(detik).padStart(2,'0')}</h2>
         `;
 
@@ -628,7 +628,7 @@ setInterval(updateJam,1000);
 <!-- TV Live + Tabel -->
 <div style="display:flex; justify-content:space-between;">
   <div style="width:680px; height:780px;">
-    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $video_id;?>?autoplay=1&mute=1&loop=1&vq=hd720" frameborder="0" allowfullscreen></iframe> </div>
+    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $video_id;?>?autoplay=1&mute=1&loop=1&vq=hd480" frameborder="0" allowfullscreen></iframe> </div>
 
 
 

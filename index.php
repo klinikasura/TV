@@ -70,8 +70,8 @@ $video_id = 'DOOrIxw5xOw';
 #ramadhan-logo{
     position: fixed;
     top: 10px;           /* turun dari atas (biar agak tengah) */
-    left: 850px;          /* pojok kiri */
-    width: 250px;        /* ukuran sedang */
+    left: 1190px;          /* pojok kiri */
+    width: 40px;        /* ukuran sedang */
     opacity: 0.88;       /* transparan */
     z-index: 9999;
     pointer-events: none;  /* tidak bisa di klik (aman) */
@@ -97,20 +97,20 @@ $video_id = 'DOOrIxw5xOw';
 
 
     </style>
-
-
-
-
-
-
-
-
 </head>
 <body>
 
+
+
+
+
+
+
+
+
 <!-- LOGO RAMADHAN -->
 <div id="ramadhan-logo">
-    <img src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/JPG/RAMADHAN2.png">
+    <img src="JPG/WIFI.webp">
 </div>
 
 
@@ -240,7 +240,7 @@ $conn->close();
     <a href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/lab.php" target="_blank" class="bell-link">
         <span class="bell-icon"></span>LAB
     </a>
-    <font color="green" class="typing">&copy; AI ROBOT SYSTEM V80</font>
+    <font color="green" class="typing">&copy; myROBOT-V80</font>
 </p>
 
 
@@ -319,7 +319,7 @@ function tampilkanCountdownIqomah(sholat) {
         let detik = sisaDetik % 60;
 
         box.innerHTML = `
-            <h1>IQOMAH ${sholat}</h1>
+            <h4>Selamat Menunaikan Ibadah Sholat ${sholat}</h4>
             <h2>${String(menit).padStart(2,'0')}:${String(detik).padStart(2,'0')}</h2>
         `;
 
@@ -495,14 +495,18 @@ setInterval(updateText, 1000);
 background:#fff; padding:6px; width:200px; height:160px; border-radius:12px;
 box-shadow:0 0 40px rgba(0,0,0,0.12); text-align:center; border:20px solid #00FF00;">
 
-  <p id="hariNasional" style="font-size:8px; margin:0; line-height:10px;"></p>
-  <p id="hariKesehatan" style="font-size:8px; margin:0; line-height:10px;"></p>
+
 
   <h2 id="jam" style="font-size:30px; margin:2px 0 0 0; line-height:40px;">WIB</h2>
 <p>
   <p id="tanggal" style="font-size:24px; margin:2px 0; line-height:20px;">ROBOT</p>
 <p>
   <p id="hari" style="font-size:20px; margin:0; line-height:20px;">Hamba Alloh</p>
+
+
+<p id="hariNasional" style="font-size:14px; margin:4px 0 0 0; line-height:16px; color:#c00000; font-weight:bold;"></p>
+<p id="hariKesehatan" style="font-size:14px; margin:0; line-height:16px; color:#008000; font-weight:bold;"></p>
+
 
 </div>
 
@@ -542,10 +546,54 @@ setInterval(updateJam,1000);
 </script>
 
 
+<script>
 
+// ================= HARI SPESIAL OTOMATIS =================
+async function cekHariSpesial() {
 
+    const now = new Date();
+    const tahun = now.getFullYear();
+    const bulan = String(now.getMonth()+1).padStart(2,'0');
+    const tanggal = String(now.getDate()).padStart(2,'0');
 
+    const todayStr = `${tahun}-${bulan}-${tanggal}`;
 
+    let nasional = [];
+    let kesehatan = [];
+
+    try {
+
+        // API Kalender Indonesia
+        const response = await fetch(`https://api-harilibur.vercel.app/api?year=${tahun}`);
+        const data = await response.json();
+
+        data.forEach(item => {
+            if (item.holiday_date === todayStr) {
+                nasional.push("🎉 " + item.holiday_name);
+            }
+        });
+
+    } catch (error) {
+        console.log("Gagal ambil data libur:", error);
+    }
+
+    // ===== HARI KESEHATAN (tetap manual tetap tahunan) =====
+    const tgl = now.getDate();
+    const bln = now.getMonth()+1;
+
+    if (tgl==7 && bln==4) kesehatan.push("Hari Kesehatan Dunia");
+    if (tgl==12 && bln==11) kesehatan.push("Hari Kesehatan Nasional");
+    if (tgl==24 && bln==3) kesehatan.push("Hari Tuberkulosis Sedunia");
+    if (tgl==31 && bln==5) kesehatan.push("Hari Tanpa Tembakau Sedunia");
+    if (tgl==1 && bln==12) kesehatan.push("Hari AIDS Sedunia");
+
+    document.getElementById("hariNasional").innerHTML = nasional.join("<br>");
+    document.getElementById("hariKesehatan").innerHTML = kesehatan.join("<br>");
+}
+
+cekHariSpesial();
+
+</script>
 
 
 
@@ -628,7 +676,7 @@ setInterval(updateJam,1000);
 <!-- TV Live + Tabel -->
 <div style="display:flex; justify-content:space-between;">
   <div style="width:680px; height:780px;">
-    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $video_id;?>?autoplay=1&mute=1&loop=1&vq=hd720" frameborder="0" allowfullscreen></iframe> </div>
+    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $video_id;?>?autoplay=1&mute=1&loop=1&vq=hd480" frameborder="0" allowfullscreen></iframe> </div>
 
 
 
