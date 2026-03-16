@@ -2,7 +2,6 @@
 <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
 <meta http-equiv="refresh" content="240;url=display-otomatis2.php">
 
-<a href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/display-otomatis2.php" target="_blank" id="fullScreenBtn">Lengkap</a>
 
 
 
@@ -30,10 +29,7 @@
 
 <div style="display:flex; justify-content:space-between;">
     <div class="iframe-container">
-        <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/hanya-pasien.php"
-                class="snapwidget-widget" allowtransparency="true"
-                frameborder="0" scrolling="no" title="Klinik Asura"></iframe>
-
+     
         <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/panggil_pasien.php"
                 class="snapwidget-widget" allowtransparency="true"
                 frameborder="0" scrolling="no" title="Klinik Asura"></iframe>
