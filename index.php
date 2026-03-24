@@ -97,8 +97,571 @@ $video_id = 'DOOrIxw5xOw';
 
 
     </style>
+
+
+
+
+<!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
+
+
+
+
+
+<style>
+@keyframes slideIn {
+    0% { transform: translateX(120%); opacity:0; }
+    100% { transform: translateX(0); opacity:1; }
+}
+
+@keyframes slideOut {
+    0% { transform: translateX(0); opacity:1; }
+    100% { transform: translateX(120%); opacity:0; }
+}
+
+@keyframes slideInLeft {
+    0% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutLeft {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-120%);
+        opacity: 0;
+    }
+}
+</style>
+
+
+<!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
+
 </head>
 <body>
+
+
+
+
+<!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
+
+
+
+<audio id="notifSound" preload="auto">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="notifBayar" preload="auto">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
+</audio>
+
+
+
+<!-- CODING TAMPILKAN PASIEN BARU DAFTAR  -->
+
+<script>
+let dataSebelumnya = [];
+
+// 🔊 suara
+function playNotif() {
+    const audio = document.getElementById("notifSound");
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+}
+
+// 🎨 warna berdasarkan cara bayar
+function getWarna(cara) {
+    if (!cara) return "#6c757d";
+
+    cara = cara.toLowerCase();
+
+    if (cara.includes("bpjs")) return "#007bff"; // biru
+    if (cara.includes("umum")) return "#28a745"; // hijau
+
+    return "#ff9800"; // lainnya
+}
+
+// 🎬 popup
+function tampilkanPopup(pasien) {
+    const popup = document.createElement("div");
+
+    let warna = getWarna(pasien.cara_bayar);
+
+    popup.style.position = "fixed";
+    popup.style.top = (20 + (Math.random()*50)) + "px"; 
+    popup.style.right = "20px";
+    popup.style.background = warna;
+    popup.style.color = "white";
+    popup.style.padding = "20px 30px";
+    popup.style.borderRadius = "12px";
+    popup.style.boxShadow = "0 0 25px rgba(0,0,0,0.4)";
+    popup.style.zIndex = "99999";
+    popup.style.fontSize = "20px";
+    popup.style.minWidth = "300px";
+    popup.style.animation = "slideIn 0.80s ease";
+
+    popup.innerHTML = `
+        <div style="font-size:14px;opacity:0.8;">🆕 Pasien Baru</div>
+        <div style="font-size:24px;font-weight:bold;margin:5px 0;">
+            ${pasien.nm_pasien}
+        </div>
+        <div style="font-size:16px;">
+            🏥 ${pasien.nm_poli || '-'}
+        </div>
+        <div style="font-size:14px;opacity:0.9;">
+            💳 ${pasien.cara_bayar || '-'}
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+bicara(`Pasien baru atas nama ${pasien.nm_pasien}, ${pasien.nm_poli}`);
+
+
+    // 🔊 bunyi
+    playNotif();
+
+    // ❌ hilang
+    setTimeout(() => {
+        popup.style.animation = "slideOut 0.40s ease";
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
+}
+
+// 🔍 MONITOR DATA REALTIME
+setInterval(function() {
+    fetch('get_pasien2.php')
+        .then(r => r.json())
+        .then(dataBaru => {
+
+            if (dataSebelumnya.length > 0) {
+
+                dataBaru.forEach(pasienBaru => {
+
+                    let pasienLama = dataSebelumnya.find(
+                        d => d.no_rawat === pasienBaru.no_rawat
+                    );
+
+                    // 🆕 PASIEN BARU
+                    if (!pasienLama) {
+                        tampilkanPopup(pasienBaru);
+                    }
+
+                    // 💰 STATUS BAYAR BERUBAH
+                    if (
+                        pasienLama &&
+                        pasienLama.status_bayar === "Belum Bayar" &&
+                        pasienBaru.status_bayar === "Sudah Bayar"
+                    ) {
+                        tampilkanPopupBayar(pasienBaru);
+                    }
+
+                });
+            }
+
+            dataSebelumnya = dataBaru;
+
+        })
+        .catch(e => console.error(e));
+
+}, 1000);
+
+</script>
+
+
+
+
+<!-- CODING TAMPILKAN PASIEN SUDAH BAYAR -->
+
+
+
+<script>
+function playNotifBayar() {
+    const audio = document.getElementById("notifBayar");
+    if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+    }
+}
+
+function tampilkanPopupBayar(pasien) {
+    const popup = document.createElement("div");
+
+   popup.style.position = "fixed";
+  popup.style.top = (20 + (Math.random()*50)) + "px";    // 🔥 PINDAH KE ATAS
+    popup.style.left = "20px";   // 🔥 DI KIRI
+    popup.style.right = "auto";
+
+    popup.style.background = "#00c853"; // hijau terang
+    popup.style.color = "white";
+    popup.style.padding = "20px 30px";
+    popup.style.borderRadius = "12px";
+    popup.style.boxShadow = "0 0 25px rgba(0,0,0,0.4)";
+    popup.style.zIndex = "99999";
+    popup.style.fontSize = "20px";
+    popup.style.minWidth = "300px";
+    popup.style.animation = "slideInLeft 0.80s ease";
+
+    popup.innerHTML = `
+        <div style="font-size:14px;">💰 Pembayaran Selesai</div>
+        <div style="font-size:24px;font-weight:bold;">
+            ${pasien.nm_pasien}
+        </div>
+        <div>🏥 ${pasien.nm_poli}</div>
+    `;
+
+    document.body.appendChild(popup);
+
+bicara(`Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`);
+
+    playNotifBayar();
+
+    setTimeout(() => {
+        popup.style.animation = "slideOut 0.40s ease";
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
+}
+</script>
+
+
+
+<!-- CODING GOOGLE SUARA TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
+
+
+<script>
+function bicara(teks) {
+    const speech = new SpeechSynthesisUtterance(teks);
+
+    speech.lang = "id-ID"; // Bahasa Indonesia
+    speech.rate = 0.9;     // kecepatan
+    speech.pitch = 1;      // nada
+
+    window.speechSynthesis.speak(speech);
+}
+</script>
+
+
+
+
+<!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
+
+
+
+<script>
+// ================= GLOBAL =================
+let dataSebelumnya = [];
+
+let modeAdzan = false;
+let antrianNotif = [];
+let modeQueue = true; // 👉 true = ditunda | false = tampil tanpa suara
+
+// ================= AUDIO =================
+function playNotif() {
+    const audio = document.getElementById("notifSound");
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+}
+
+function playNotifBayar() {
+    const audio = document.getElementById("notifBayar");
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+}
+
+// ================= TEXT TO SPEECH =================
+function bicara(teks) {
+    if (modeAdzan) return; // 🔥 blok saat adzan
+
+    const speech = new SpeechSynthesisUtterance(teks);
+    speech.lang = "id-ID";
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+// ================= WARNA =================
+function getWarna(cara) {
+    if (!cara) return "#6c757d";
+
+    cara = cara.toLowerCase();
+
+    if (cara.includes("bpjs")) return "#007bff";
+    if (cara.includes("umum")) return "#28a745";
+
+    return "#ff9800";
+}
+
+// ================= QUEUE =================
+function jalankanAntrianNotif() {
+    if (antrianNotif.length === 0) return;
+
+    let delay = 0;
+
+    antrianNotif.forEach(item => {
+        setTimeout(() => {
+            if (item.tipe === "baru") tampilkanPopup(item.data, true);
+            if (item.tipe === "bayar") tampilkanPopupBayar(item.data, true);
+        }, delay);
+
+        delay += 1500;
+    });
+
+    antrianNotif = [];
+}
+
+// ================= POPUP PASIEN BARU =================
+function tampilkanPopup(pasien, pakaiSuara = true) {
+
+    if (modeAdzan) {
+        if (modeQueue) {
+            antrianNotif.push({ tipe: "baru", data: pasien });
+            return;
+        } else {
+            pakaiSuara = false;
+        }
+    }
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = (20 + (Math.random()*50)) + "px";
+    popup.style.right = "20px";
+    popup.style.background = getWarna(pasien.cara_bayar);
+    popup.style.color = "white";
+    popup.style.padding = "20px 30px";
+    popup.style.borderRadius = "12px";
+    popup.style.zIndex = "99999";
+    popup.style.animation = "slideIn 0.8s ease";
+
+    popup.innerHTML = `
+        <div style="font-size:14px;">🆕 Pasien Baru</div>
+        <div style="font-size:22px;font-weight:bold;">
+            ${pasien.nm_pasien}
+        </div>
+        <div>🏥 ${pasien.nm_poli || '-'}</div>
+        <div>💳 ${pasien.cara_bayar || '-'}</div>
+    `;
+
+    document.body.appendChild(popup);
+
+    if (pakaiSuara) {
+        playNotif();
+        bicara(`Pasien baru atas nama ${pasien.nm_pasien}, ${pasien.nm_poli}`);
+    }
+
+    setTimeout(() => {
+        popup.style.animation = "slideOut 0.4s ease";
+        setTimeout(() => popup.remove(), 400);
+    }, 3000);
+}
+
+// ================= POPUP BAYAR =================
+function tampilkanPopupBayar(pasien, pakaiSuara = true) {
+
+    if (modeAdzan) {
+        if (modeQueue) {
+            antrianNotif.push({ tipe: "bayar", data: pasien });
+            return;
+        } else {
+            pakaiSuara = false;
+        }
+    }
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = (20 + (Math.random()*50)) + "px";
+    popup.style.left = "20px";
+    popup.style.background = "#00c853";
+    popup.style.color = "white";
+    popup.style.padding = "20px 30px";
+    popup.style.borderRadius = "12px";
+    popup.style.zIndex = "99999";
+    popup.style.animation = "slideInLeft 0.8s ease";
+
+    popup.innerHTML = `
+        <div>💰 Pembayaran Selesai</div>
+        <div style="font-size:22px;font-weight:bold;">
+            ${pasien.nm_pasien}
+        </div>
+        <div>🏥 ${pasien.nm_poli}</div>
+    `;
+
+    document.body.appendChild(popup);
+
+    if (pakaiSuara) {
+        playNotifBayar();
+        bicara(`Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`);
+    }
+
+    setTimeout(() => {
+        popup.style.animation = "slideOutLeft 0.4s ease";
+        setTimeout(() => popup.remove(), 400);
+    }, 3000);
+}
+
+// ================= MONITOR DATA =================
+setInterval(function() {
+    fetch('get_pasien2.php')
+        .then(r => r.json())
+        .then(dataBaru => {
+
+            if (dataSebelumnya.length > 0) {
+
+                dataBaru.forEach(pasienBaru => {
+
+                    let pasienLama = dataSebelumnya.find(
+                        d => d.no_rawat === pasienBaru.no_rawat
+                    );
+
+                    if (!pasienLama) {
+                        tampilkanPopup(pasienBaru);
+                    }
+
+                    if (
+                        pasienLama &&
+                        pasienLama.status_bayar === "Belum Bayar" &&
+                        pasienBaru.status_bayar === "Sudah Bayar"
+                    ) {
+                        tampilkanPopupBayar(pasienBaru);
+                    }
+
+                });
+            }
+
+            dataSebelumnya = dataBaru;
+
+        })
+        .catch(e => console.error(e));
+
+}, 1000);
+
+// ================= ADZAN CONTROL =================
+function muteSemuaAudio() {
+    document.querySelectorAll("video, audio").forEach(el => {
+        el.dataset.volume = el.volume;
+        el.volume = 0;
+    });
+}
+
+function unmuteSemuaAudio() {
+    document.querySelectorAll("video, audio").forEach(el => {
+        if (el.dataset.volume) {
+            el.volume = el.dataset.volume;
+        }
+    });
+}
+
+function playAdzan() {
+    const audio = document.getElementById("audioAdzan");
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+}
+
+// ================= ADZAN START =================
+function showNotifikasiAdzan(sholat) {
+
+    modeAdzan = true;
+
+    muteSemuaAudio();
+    playAdzan();
+
+    const notifikasi = document.createElement("div");
+
+    notifikasi.style.position = "fixed";
+    notifikasi.style.top = "0";
+    notifikasi.style.left = "0";
+    notifikasi.style.width = "100%";
+    notifikasi.style.height = "100%";
+    notifikasi.style.background = "black";
+    notifikasi.style.color = "white";
+    notifikasi.style.display = "flex";
+    notifikasi.style.justifyContent = "center";
+    notifikasi.style.alignItems = "center";
+    notifikasi.style.fontSize = "60px";
+    notifikasi.style.zIndex = "9999";
+
+    notifikasi.innerHTML = `Saatnya Adzan ${sholat}`;
+
+    document.body.appendChild(notifikasi);
+
+    setTimeout(() => {
+        document.body.removeChild(notifikasi);
+        tampilkanCountdownIqomah(sholat);
+    }, 250000);
+}
+
+// ================= IQOMAH =================
+function tampilkanCountdownIqomah(sholat) {
+
+    let sisaDetik = 60;
+
+    const box = document.createElement("div");
+
+    box.style.position = "fixed";
+    box.style.top = "0";
+    box.style.left = "0";
+    box.style.width = "100%";
+    box.style.height = "100%";
+    box.style.background = "black";
+    box.style.color = "white";
+    box.style.display = "flex";
+    box.style.flexDirection = "column";
+    box.style.justifyContent = "center";
+    box.style.alignItems = "center";
+    box.style.fontSize = "70px";
+    box.style.zIndex = "9999";
+
+    document.body.appendChild(box);
+
+    const interval = setInterval(() => {
+
+        let menit = Math.floor(sisaDetik / 60);
+        let detik = sisaDetik % 60;
+
+        box.innerHTML = `
+            <h4>Sholat ${sholat}</h4>
+            <h2>${menit}:${detik}</h2>
+        `;
+
+        sisaDetik--;
+
+        if (sisaDetik < 0) {
+            clearInterval(interval);
+            document.body.removeChild(box);
+
+            unmuteSemuaAudio();
+            modeAdzan = false;
+
+            jalankanAntrianNotif(); // 🔥 jalankan notif tertunda
+        }
+
+    }, 1000);
+}
+</script>
+
+
+
+
+
+
+
+<!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
+
+
+
+
+
+
+
 
 
 
