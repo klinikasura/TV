@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mini Cuaca Indo</title>
+<title>myROBOT-V80</title>
+  <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
+
+ <meta http-equiv="refresh" content="60;url=cuaca-widget.php">
 
 <style>
 body {
@@ -91,10 +94,41 @@ body {
   font-size: 18px;
   font-weight: 500;
 }
+
+/* SIANG */
+.day {
+  background: linear-gradient(#1e88e5);
+}
+
+/* MALAM */
+.night {
+  background: linear-gradient(black);
+}
+
+/* PETIR */
+.flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* animasi petir */
+@keyframes lightning {
+  0% { opacity: 0; }
+  10% { opacity: 0.8; }
+  20% { opacity: 0; }
+}
 </style>
 </head>
 
 <body>
+
+<div class="flash" id="flash"></div>
 
 <div class="rain" id="rain"></div>
 
@@ -153,6 +187,12 @@ fetch("https://wttr.in/Tugumulyo?format=j1")
   document.getElementById("icon").innerText = icon;
 });
 
+// LOAD PERTAMA
+loadCuaca();
+
+// AUTO UPDATE (tiap 5 menit)
+setInterval(loadCuaca, 300000);
+
 // HUJAN ANIMASI
 function createRain(){
   const rain = document.getElementById("rain");
@@ -164,6 +204,82 @@ function createRain(){
     rain.appendChild(drop);
   }
 }
+</script>
+
+
+<script>
+function loadCuaca(){
+  fetch("https://wttr.in/Tugumulyo?format=j1")
+  .then(res => res.json())
+  .then(data => {
+    const cur = data.current_condition[0];
+
+    document.getElementById("temp").innerText = cur.temp_C + "°C";
+
+    let kondisi = cur.weatherDesc[0].value.toLowerCase();
+    let desc = "Cerah";
+    let icon = "☀️";
+
+    // RESET HUJAN
+    document.getElementById("rain").innerHTML = "";
+
+    if(kondisi.includes("rain")) {
+      desc = "Hujan";
+      icon = "🌧️";
+      createRain();
+    }
+    else if(kondisi.includes("cloud")) {
+      desc = "Berawan";
+      icon = "☁️";
+    }
+    else if(kondisi.includes("storm")) {
+      desc = "Badai Petir";
+      icon = "⛈️";
+      createRain();
+      lightning(); // AKTIFKAN PETIR
+    }
+    else if(kondisi.includes("mist") || kondisi.includes("fog")) {
+      desc = "Berkabut";
+      icon = "🌫️";
+    }
+
+    document.getElementById("desc").innerText = desc;
+
+    document.getElementById("hum").innerText = cur.humidity;
+    document.getElementById("press").innerText = cur.pressure + " hPa";
+    document.getElementById("wind").innerText = cur.windspeedKmph + " km/j";
+
+    document.getElementById("icon").innerText = icon;
+
+    // 🌅 SIANG / 🌙 MALAM OTOMATIS
+    const jam = new Date().getHours();
+    if(jam >= 6 && jam < 18){
+      document.body.classList.add("day");
+      document.body.classList.remove("night");
+    } else {
+      document.body.classList.add("night");
+      document.body.classList.remove("day");
+    }
+  });
+}
+
+// PETIR REAL ⚡
+function lightning(){
+  const flash = document.getElementById("flash");
+
+  setInterval(() => {
+    flash.style.animation = "lightning 0.4s";
+    setTimeout(() => {
+      flash.style.animation = "";
+    }, 400);
+  }, 5000); // tiap 5 detik
+}
+
+// LOAD AWAL
+loadCuaca();
+
+// AUTO UPDATE TANPA REFRESH
+setInterval(loadCuaca, 600000); // 10 menit
 </script>
 
 </body>

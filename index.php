@@ -340,7 +340,7 @@ function bicara(teks) {
     const speech = new SpeechSynthesisUtterance(teks);
 
     speech.lang = "id-ID"; // Bahasa Indonesia
-    speech.rate = 0.8;     // kecepatan
+    speech.rate = 0.2;     // kecepatan
     speech.pitch = 1;      // nada
 
     window.speechSynthesis.speak(speech);
