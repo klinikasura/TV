@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Aplikasi RS. Asura</title>
-    <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
+ <title>myROBOT-V80</title>
+  <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
     <meta http-equiv="refresh" content="240;url=panggil_pasien2.php">
     <style>
         table {border-collapse:collapse;width:100%;}

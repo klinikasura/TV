@@ -16,7 +16,7 @@ $video_id = 'DOOrIxw5xOw';
  <title>myROBOT-V80</title>
   <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
 <link rel="stylesheet" href="style-tv.css">
- <meta http-equiv="refresh" content="1200;url=index.php">
+ <meta http-equiv="refresh" content="1800;url=index.php">
 
 
     <!-- CSS umum -->
@@ -215,7 +215,7 @@ function tampilkanPopup(pasien) {
         <div style="font-size:16px;">
             Ke : ${pasien.nm_poli || '-'}
         </div>
-        <div style="font-size:14px;opacity:0.8;">
+        <div style="font-size:14px;opacity:0.9;">
             Pembayaran : ${pasien.cara_bayar || '-'}
         </div>
     `;
@@ -230,9 +230,9 @@ bicara(`Pasien baru atas nama ${pasien.nm_pasien}, ${pasien.nm_poli}`);
 
     // ❌ hilang
     setTimeout(() => {
-        popup.style.animation = "slideOut 0.80s ease";
-        setTimeout(() => popup.remove(), 800);
-    }, 8000);
+        popup.style.animation = "slideOut 0.40s ease";
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
 }
 
 // 🔍 MONITOR DATA REALTIME
@@ -324,9 +324,9 @@ bicara(`Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`);
     playNotifBayar();
 
     setTimeout(() => {
-        popup.style.animation = "slideOut 0.80s ease";
-        setTimeout(() => popup.remove(), 800);
-    }, 8000);
+        popup.style.animation = "slideOut 0.40s ease";
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
 }
 </script>
 
@@ -340,13 +340,12 @@ function bicara(teks) {
     const speech = new SpeechSynthesisUtterance(teks);
 
     speech.lang = "id-ID"; // Bahasa Indonesia
-    speech.rate = 0.8;     // kecepatan
+    speech.rate = 0.9;     // kecepatan
     speech.pitch = 1;      // nada
 
     window.speechSynthesis.speak(speech);
 }
 </script>
-
 
 
 
@@ -1050,8 +1049,8 @@ setInterval(updateText, 1000);
 
 <!-- FITUR -->
 
-<div style="position:fixed; top:200px; left:9%; transform:translate(-50%, -50%);
-background:#fff; padding:6px; width:200px; height:170px; border-radius:12px;
+<div style="position:fixed; top:210px; left:9%; transform:translate(-50%, -50%);
+background:#fff; padding:6px; width:200px; height:160px; border-radius:12px;
 box-shadow:0 0 40px rgba(0,0,0,0.12); text-align:center; border:20px solid #00FF00;">
 
 
@@ -1164,8 +1163,8 @@ cekHariSpesial();
 
 <!-- Widget Cuaca -->
 <font color="">
-  <div style="position:absolute; top:110px; left:480px; background:; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid ;">
-    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/cuaca-widget.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:180px; border-radius:8px;" title="Klinik Asura"></iframe>
+  <div style="position:absolute; top:125px; left:480px; background:; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid ;">
+    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/widget_cuaca_lempuing.html" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:170px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
 
@@ -1178,8 +1177,8 @@ cekHariSpesial();
 
 <!-- Pasien Ranap -->
 <font color="#9900FF">
-  <div style="position:absolute; top:109px; left:230px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
-    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/ranap.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:240px; height:175px; border-radius:8px;" title="Klinik Asura"></iframe>
+  <div style="position:absolute; top:125px; left:230px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
+    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/ranap.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:240px; height:165px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
 
@@ -1235,7 +1234,7 @@ cekHariSpesial();
 <!-- TV Live + Tabel -->
 <div style="display:flex; justify-content:space-between;">
   <div style="width:680px; height:780px;">
-    <iframe width="100%" height="100%" src="youtube.php" frameborder="0" allowfullscreen></iframe> </div>
+    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $video_id;?>?autoplay=1&mute=1&loop=1&vq=hd480" frameborder="0" allowfullscreen></iframe> </div>
 
 
 

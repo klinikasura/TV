@@ -80,8 +80,8 @@ var runningText = document.getElementById("runningText");
 function mulaiRunning(){
 
     var teks =
-        "🔴 BREAKING NEWS • " +
-        "Update: <?= $tanggal; ?> WIB • " +
+        "BREAKING NEWS • " +
+        "UPDATE TANGGAL : <?= $tanggal; ?> WIB • " +
         daftarNews[indexNews] + " • ";
 
     runningText.innerHTML = teks;

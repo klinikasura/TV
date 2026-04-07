@@ -14,7 +14,7 @@ $jam     = date("H:i");
 <head>
     <title>Aplikasi RS. Asura</title>
     <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
-    <meta http-equiv="refresh" content="8;url=pasien.php">
+    <meta http-equiv="refresh" content="2;url=pasien.php">
     <style>
         table {border-collapse:collapse;width:100%;font-size:0.9em;}
         th, td {border:2px solid #ff69b4;padding:6px 10px;text-align:left;}
@@ -139,6 +139,17 @@ $jam     = date("H:i");
 }
 
 
+.live-text {
+    color: red;
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%   { opacity: 1; }
+    50%  { opacity: 0; }
+    100% { opacity: 1; }
+}
 
 </style>
 
@@ -196,6 +207,8 @@ Daftar Hari Ini :
 
 | Lab
 <b>(<span class="berkedip2"><?= $lab ?></span>)</b>
+
+   <span class="live-text">LIVE</span>
 </div>
 
 
