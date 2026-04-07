@@ -1,112 +1,99 @@
-<title>Aplikasi RS. Asura</title>
-<link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>myROBOT-V80</title>
 
+<link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
 
-
- <button id="fullScreenBtn">Full Layar</button>
-
-<audio autoplay>
-    <source src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/AUDIO/JADWAL.mp3" type="audio/mpeg">
-    </audio>
-
-
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    .iframe-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-    }
-    .iframe-container iframe {
-      width: 100%;
-      border: none;
-    }
-    .iframe-container iframe:nth-child(1) {
-      height: 300px;
-    }
-    .iframe-container iframe:nth-child(2) {
-      flex-grow: 1;
-    }
-    #fullScreenBtn {
-      position: fixed;
-      top: 0px;
-      left: 10px;
-      z-index: 1;
-      background-color: #4CAF50;
-      color: #FFFFFF;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #fullScreenBtn:hover {
-      background-color: #3e8e41;
-    }
-  </style>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-  }
-  .iframe-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-  .iframe-container iframe {
-    width: 100%;
-    border: none;
-  }
-  .iframe-container iframe:nth-child(1) {
-    height: 800px;
-  }
-  .iframe-container iframe:nth-child(2) {
-    flex-grow: 1;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Poppins', Arial, sans-serif;
+  color: white;
+
+}
+
+/* BUTTON */
+#fullScreenBtn {
+  position: fixed;
+  top: 2px;
+  left: 12px;
+  z-index: 10;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  background: #1e88e5;
+}
+
+/* CONTAINER */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* IFRAME */
+iframe {
+  width: 100%;
+  height: 80%;
+  border: none;
+}
+
+/* CHART AREA */
+.charts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 10px;
+  margin-top: -10px;
+}
+
+/* CHART BOX */
+.chart-box {
+background: #1e88e5;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: center;
+}
+
+h3 {
+  margin-bottom: 5px;
+}
+
+canvas {
+  max-height: 250px;
+}
 </style>
+</head>
+
+<body>
 
 
 
-<?php $image_url = 'https://snapwidget.com/embed/1092490'; ?>
+<audio autoplay>
+  <source src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/AUDIO/JADWAL.mp3" type="audio/mpeg">
+</audio>
 
-<div style="display: flex; justify-content: space-between;">
-  <div class="iframe-container">
-    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/ANTRIAN-POLIKLINIK/poli-github-tv-2.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" title="Klinik Asura"></iframe>
-   
-  </div>
-</div>
-
-
-
- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.documentElement.requestFullscreen();
-    });
-    document.getElementById('fullScreenBtn').addEventListener('click', function() {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else {
-        document.documentElement.requestFullscreen();
-      }
-    });
-  </script>
+<div class="container">
+<p>
+  <!-- IFRAME -->
+  <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/ANTRIAN-POLIKLINIK/poli-github-tv-2.php"
+    scrolling="no"
+    title="Klinik Asura">
+  </iframe>
 
 
+<iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/pasien8.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%; height:350px" title="Klinik Asura"></iframe>
 
+<button id="fullScreenBtn">Full Layar</button>
 
+  
 
+</body>
+</html>

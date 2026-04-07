@@ -1,5 +1,5 @@
-<title>Aplikasi RS. Asura</title>
-<link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
+ <title>myROBOT-V80</title>
+  <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
 <meta http-equiv="refresh" content="240;url=grafik.php">
 <button id="fullScreenBtn">Full Layar</button>
 <audio autoplay>
@@ -66,12 +66,29 @@
 
 <div class="iframe-container">
   <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/GRAFIK/index2-tv.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" title="Klinik Asura"></iframe>
+
+
+
   <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/grafik2.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" title="Klinik Asura"></iframe>
 </div>
 
 
+
+
 <div style="position: absolute; top: 420px; left: 20px; background-color: #fff; padding: 10px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.5);">
-<iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/pasien8.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:1225px; height:350px" title="Klinik Asura"></iframe>
+
+
+
+
+
+<iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/pie.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:1225px; height:350px" title="Klinik Asura"></iframe>
+
+
+
+
+
+
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
