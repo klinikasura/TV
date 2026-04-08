@@ -15,8 +15,9 @@ $video_id = 'DOOrIxw5xOw';
 <head>
  <title>myROBOT-V80</title>
   <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
+
 <link rel="stylesheet" href="style-tv.css">
- <meta http-equiv="refresh" content="1200;url=index.php">
+ <meta http-equiv="refresh" content="600;url=index.php">
 
 
     <!-- CSS umum -->
@@ -90,11 +91,6 @@ $video_id = 'DOOrIxw5xOw';
     width: 100%;
     filter: drop-shadow(0 0 8px rgba(255,215,120,0.6));
 }
-
-
-
-
-
 
     </style>
 
@@ -336,19 +332,113 @@ bicara(`Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`);
 
 
 <script>
+let lastCuaca = "";
+
+/* 🔔 BEEP RUMAH SAKIT */
+function beep(){
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(1000, ctx.currentTime); // nada tinggi
+
+    gain.gain.setValueAtTime(0.3, ctx.currentTime);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + 0.2);
+}
+
+/* 🎙️ SUARA ANNOUNCER + ECHO */
 function bicara(teks) {
+    window.speechSynthesis.cancel();
+
     const speech = new SpeechSynthesisUtterance(teks);
 
-    speech.lang = "id-ID"; // Bahasa Indonesia
-    speech.rate = 0.2;     // kecepatan
-    speech.pitch = 1;      // nada
+    speech.lang = "id-ID";
+    speech.rate = 0.85;
+    speech.pitch = 1;
+    speech.volume = 1;
+
+    // pilih voice indo kalau ada
+    const voices = speechSynthesis.getVoices();
+    const indoVoice = voices.find(v => v.lang.includes("id"));
+    if (indoVoice) speech.voice = indoVoice;
+
+    // efek echo (ulang pelan)
+    speech.onend = () => {
+        setTimeout(() => {
+            const echo = new SpeechSynthesisUtterance(teks);
+            echo.lang = "id-ID";
+            echo.rate = 0.9;
+            echo.pitch = 1;
+            echo.volume = 0.3; // lebih pelan (echo)
+            window.speechSynthesis.speak(echo);
+        }, 300);
+    };
 
     window.speechSynthesis.speak(speech);
 }
+
+/* FORMAT TEKS */
+function formatSuara(data){
+    return `Perhatian. Cuaca saat ini ${data.desc}. 
+    Suhu ${data.temp} derajat celcius. 
+    Kelembaban ${data.hum} persen. 
+    Kecepatan angin ${data.wind} kilometer per jam.`;
+}
+
+/* LOAD CUACA */
+function loadCuaca(){
+  fetch("https://wttr.in/Tugumulyo?format=j1")
+  .then(res => res.json())
+  .then(data => {
+
+    const cur = data.current_condition[0];
+
+    let kondisi = cur.weatherDesc[0].value.toLowerCase();
+    let desc = "cerah";
+
+    if(kondisi.includes("rain")) desc = "hujan";
+    else if(kondisi.includes("cloud")) desc = "berawan";
+    else if(kondisi.includes("storm")) desc = "badai petir";
+    else if(kondisi.includes("mist") || kondisi.includes("fog")) desc = "berkabut";
+
+    const info = {
+        temp: cur.temp_C,
+        hum: cur.humidity,
+        wind: cur.windspeedKmph,
+        desc: desc
+    };
+
+    // 🔥 hanya ngomong kalau berubah
+    const statusBaru = JSON.stringify(info);
+
+    if(statusBaru !== lastCuaca){
+        lastCuaca = statusBaru;
+
+        beep(); // 🔔 bunyi dulu
+
+        setTimeout(()=>{
+            const teks = formatSuara(info);
+            bicara(teks);
+        }, 300);
+    }
+
+  });
+}
+
+/* INIT */
+loadCuaca();
+setInterval(loadCuaca, 60000);
+
+// fix voice
+speechSynthesis.onvoiceschanged = () => {};
 </script>
-
-
-
 
 
 <!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
@@ -744,6 +834,10 @@ $conn->close();
         from, to { border-color:transparent; }
         50% { border-color:green; }
     }
+.typing {
+  color: green;
+  font-size: 18px; /* ukuran sedang */
+}
 </style>
 
 
@@ -799,7 +893,9 @@ $conn->close();
     <a href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/lab.php" target="_blank" class="bell-link">
         <span class="bell-icon"></span>LAB
     </a>
-    <font color="green" class="typing">&copy; myROBOT-V80</font>
+  <span class="typing" style="color: green; font-size: 18px;">
+  &copy; myROBOT-V80
+</span>
 </p>
 
 

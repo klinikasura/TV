@@ -18,6 +18,6 @@
     // Coba reload jika autoplay gagal
     setTimeout(() => {
       iframe.src = iframe.src;
-    }, 480000); // reload setelah 480 detik
+    }, 240000); // reload setelah 240 detik
   });
 </script>
