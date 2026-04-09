@@ -326,9 +326,11 @@ $result = $conn->query($sql);
     text-overflow: ellipsis;
 }
 .tabel-kecil th {
-    background: #f0f0f0;
-    color: #000;
-    border: 2px solid #000; /* header border hitam */
+    background: linear-gradient(135deg, #3b82f6, #60a5fa); /* biru muda */
+    color: white;      /* tulisan putih */
+   border: 2px solid #93c5fd; /* tambahan */
+letter-spacing: 0.5px;
+    font-weight: bold;
 }
 
 /* Lebar khusus untuk kolom Dokter & Poliklinik */

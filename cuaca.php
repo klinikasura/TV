@@ -291,5 +291,5 @@ async function loadWeather(){
 }
 
 loadWeather();
-setInterval(loadWeather,300000);
+setInterval(loadWeather,40000);
 </script>

@@ -166,7 +166,8 @@ $video_id = 'DOOrIxw5xOw';
 let dataSebelumnya = [];
 
 // 🔊 suara
-function playNotif() {
+{
+    if (modeAdzan) return; // 🚫 stop kalau adzan
     const audio = document.getElementById("notifSound");
     audio.currentTime = 0;
     audio.play().catch(() => {});
@@ -280,13 +281,11 @@ setInterval(function() {
 
 <script>
 function playNotifBayar() {
+    if (modeAdzan) return; // 🚫 stop kalau adzan
     const audio = document.getElementById("notifBayar");
-    if (audio) {
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
-    }
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
 }
-
 function tampilkanPopupBayar(pasien) {
     const popup = document.createElement("div");
 
@@ -325,129 +324,14 @@ bicara(`Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`);
     }, 8000);
 }
 </script>
-
-
-
 <!-- CODING GOOGLE SUARA TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
 
 
-<script>
-let lastCuaca = "";
-
-/* 🔔 BEEP RUMAH SAKIT */
-function beep(){
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(1000, ctx.currentTime); // nada tinggi
-
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.start();
-    osc.stop(ctx.currentTime + 0.2);
-}
-
-/* 🎙️ SUARA ANNOUNCER + ECHO */
-function bicara(teks) {
-    window.speechSynthesis.cancel();
-
-    const speech = new SpeechSynthesisUtterance(teks);
-
-    speech.lang = "id-ID";
-    speech.rate = 0.85;
-    speech.pitch = 1;
-    speech.volume = 1;
-
-    // pilih voice indo kalau ada
-    const voices = speechSynthesis.getVoices();
-    const indoVoice = voices.find(v => v.lang.includes("id"));
-    if (indoVoice) speech.voice = indoVoice;
-
-    // efek echo (ulang pelan)
-    speech.onend = () => {
-        setTimeout(() => {
-            const echo = new SpeechSynthesisUtterance(teks);
-            echo.lang = "id-ID";
-            echo.rate = 0.9;
-            echo.pitch = 1;
-            echo.volume = 0.3; // lebih pelan (echo)
-            window.speechSynthesis.speak(echo);
-        }, 300);
-    };
-
-    window.speechSynthesis.speak(speech);
-}
-
-/* FORMAT TEKS */
-function formatSuara(data){
-    return `Perhatian. Cuaca saat ini ${data.desc}. 
-    Suhu ${data.temp} derajat celcius. 
-    Kelembaban ${data.hum} persen. 
-    Kecepatan angin ${data.wind} kilometer per jam.`;
-}
-
-/* LOAD CUACA */
-function loadCuaca(){
-  fetch("https://wttr.in/Tugumulyo?format=j1")
-  .then(res => res.json())
-  .then(data => {
-
-    const cur = data.current_condition[0];
-
-    let kondisi = cur.weatherDesc[0].value.toLowerCase();
-    let desc = "cerah";
-
-    if(kondisi.includes("rain")) desc = "hujan";
-    else if(kondisi.includes("cloud")) desc = "berawan";
-    else if(kondisi.includes("storm")) desc = "badai petir";
-    else if(kondisi.includes("mist") || kondisi.includes("fog")) desc = "berkabut";
-
-    const info = {
-        temp: cur.temp_C,
-        hum: cur.humidity,
-        wind: cur.windspeedKmph,
-        desc: desc
-    };
-
-    // 🔥 hanya ngomong kalau berubah
-    const statusBaru = JSON.stringify(info);
-
-    if(statusBaru !== lastCuaca){
-        lastCuaca = statusBaru;
-
-        beep(); // 🔔 bunyi dulu
-
-        setTimeout(()=>{
-            const teks = formatSuara(info);
-            bicara(teks);
-        }, 300);
-    }
-
-  });
-}
-
-/* INIT */
-loadCuaca();
-setInterval(loadCuaca, 60000);
-
-// fix voice
-speechSynthesis.onvoiceschanged = () => {};
-</script>
 
 
 <!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
-
-
-
 <script>
 // ================= GLOBAL =================
-let dataSebelumnya = [];
 let modeAdzan = false;
 let antrianNotif = [];
 let modeQueue = true; // true = ditunda saat adzan
@@ -477,7 +361,7 @@ function playAdzan() {
 
 // ================= TEXT TO SPEECH =================
 function bicara(teks) {
-    if (modeAdzan) return;
+    if (modeAdzan) return; // 🚫 stop saat adzan
 
     const speech = new SpeechSynthesisUtterance(teks);
     speech.lang = "id-ID";
@@ -486,7 +370,6 @@ function bicara(teks) {
 
     window.speechSynthesis.speak(speech);
 }
-
 // ================= AUDIO NOTIF =================
 function playNotif() {
     const audio = document.getElementById("notifSound");
@@ -919,11 +802,17 @@ let jadwalSholat = [];
 let sudahAdzanHariIni = {};
 let iqomahMenit = 1; // UBAH DURASI IQOMAH DI SINI
 
-function muteSemuaAudio() {
-    document.querySelectorAll("video, audio").forEach(el => {
-        el.dataset.volume = el.volume;
-        el.volume = 0;
+{
+    // stop semua audio kecuali adzan
+    document.querySelectorAll("audio").forEach(el => {
+        if (el.id !== "audioAdzan") {
+            el.pause();
+            el.currentTime = 0;
+        }
     });
+
+    // stop suara robot (TTS)
+    window.speechSynthesis.cancel();
 }
 
 function unmuteSemuaAudio() {
@@ -1067,7 +956,7 @@ setInterval(() => {
             showNotifikasiAdzan(j.sholat);
         }
     });
-}, 1000);
+}, 3000);
 
 ambilJadwal();
 </script>
@@ -1446,8 +1335,7 @@ setInterval(updateText, 1000);
 <!-- FULL LAYAR -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    document.documentElement.requestFullscreen();
-});
+ });
 document.getElementById('fullScreenBtn').addEventListener('click', function() {
     if (document.fullscreenElement) {
         document.exitFullscreen();
