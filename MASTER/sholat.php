@@ -133,7 +133,24 @@ body {
     font-size: 13px;
   }
 }
+#times{
+  position: fixed;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 3px;
+  background: #ffffff;
+  padding: 2px 4px;
+  border-radius: 5px;
 
+  border: 4px solid #bfe3ff;        /* 👈 garis biru muda */
+  box-shadow: 0 2px 6px rgba(0, 150, 255, 0.2); /* glow halus */
+
+  white-space: nowrap;
+  z-index: 999;
+}
 
 </style>
 
