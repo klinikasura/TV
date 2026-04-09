@@ -1261,7 +1261,7 @@ cekHariSpesial();
 <!-- Widget Cuaca -->
 <font color="">
   <div style="position:absolute; top:110px; left:480px; background:; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid ;">
-    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/cuaca-widget.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:180px; border-radius:8px;" title="Klinik Asura"></iframe>
+    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/cuaca.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:180px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
 
