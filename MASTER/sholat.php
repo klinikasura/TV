@@ -79,7 +79,7 @@ body {
 /* ====== NOTIFIKASI (dibawah jadwal) ====== */
 #notif-container{
   position: fixed;
-  top: 30px;               /* posisi tepat bawah jadwal */
+  top: 32px;   /* sebelumnya 30px → sekarang lebih bawah */
   left: 50%;
   transform: translateX(-50%);
   width: 95%;
@@ -126,11 +126,11 @@ body {
 /* ====== RESPONSIVE TV BESAR ====== */
 @media (min-width: 1200px){
   #times > span{
-    font-size: 13px;
+    font-size: 10px;
     min-width: 115px;
   }
   .notif{
-    font-size: 13px;
+    font-size: 10px;
   }
 }
 #times{
@@ -143,9 +143,9 @@ body {
   gap: 3px;
   background: #ffffff;
   padding: 2px 4px;
-  border-radius: 5px;
+  border-radius: 2px;
 
-  border: 4px solid #bfe3ff;        /* 👈 garis biru muda */
+  border: 2px solid #bfe3ff;        /* 👈 garis biru muda */
   box-shadow: 0 2px 6px rgba(0, 150, 255, 0.2); /* glow halus */
 
   white-space: nowrap;
