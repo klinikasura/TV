@@ -9,14 +9,14 @@
       <div class="temp" id="temp">--°</div>
     </div>
 
-    <div id="desc">Loading...</div>
+    <div id="desc">myROBOT-V80....</div>
 
     <div class="details">
-      💨 <span id="wind"></span> km/h |
-      💧 <span id="humidity"></span>%
+       <span id="wind"></span> km/h |
+       <span id="humidity"></span>%
     </div>
 
-    <div class="hourly" id="hourly"></div>
+
 
   </div>
 </div>
@@ -36,7 +36,7 @@ body {
 /* CARD */
 .card {
   width:188px;
-  height:180px;
+  height:200px;
   padding:10px;
   border-radius:12px;
   background:#fff;
@@ -46,7 +46,7 @@ body {
   overflow:hidden;
 }
 
-/* CANVAS EFFECT */
+/* CANVAS */
 #effectCanvas {
   position:absolute;
   top:0;
@@ -56,15 +56,13 @@ body {
   pointer-events:none;
 }
 
-/* PETIR FLASH */
+/* FLASH */
 .flash {
   position:absolute;
   width:100%;
   height:100%;
   background:white;
   opacity:0;
-  top:0;
-  left:0;
 }
 
 .flash.active {
@@ -72,14 +70,12 @@ body {
 }
 
 @keyframes flash {
-  0% {opacity:0;}
   50% {opacity:0.8;}
-  100% {opacity:0;}
 }
 
 /* ICON */
 #icon {
-  width:80px;
+  width:100px;
   animation: float 3s infinite ease-in-out;
 }
 
@@ -94,25 +90,23 @@ body {
 }
 
 .temp {
-  font-size:32px;
-  margin-left:5px;
+  font-size:38px;
 }
 
 #desc {
-  font-size:18px;
+  font-size:24px;
   text-align:center;
 }
 
 .details {
-  font-size:14px;
+  font-size:18px;
   text-align:center;
 }
 
 .hourly {
   display:flex;
   justify-content:space-between;
-  font-size:12px;
-  margin-top:5px;
+  font-size:11px;
 }
 </style>
 
@@ -125,6 +119,7 @@ const ctx = canvas.getContext("2d");
 
 let particles = [];
 let mode = "clear";
+let lastWeatherCode = null;
 
 /* RESIZE */
 function resize(){
@@ -134,7 +129,7 @@ function resize(){
 resize();
 window.addEventListener("resize", resize);
 
-/* PARTICLE SYSTEM */
+/* PARTICLES */
 function createRain(){
   particles = [];
   for(let i=0;i<80;i++){
@@ -160,13 +155,12 @@ function createFog(){
   }
 }
 
+/* DRAW */
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  if(mode==="rain"){
+  if(mode==="rain" || mode==="storm"){
     ctx.strokeStyle="rgba(0,0,0,0.2)";
-    ctx.lineWidth=1;
-
     for(let p of particles){
       ctx.beginPath();
       ctx.moveTo(p.x,p.y);
@@ -184,16 +178,20 @@ function draw(){
   }
 
   if(mode==="fog"){
-    ctx.fillStyle="rgba(200,200,200,0.1)";
-    for(let p of particles){
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fill();
+  ctx.fillStyle="rgba(140,120,140,0.24)";
 
-      p.x+=p.xs;
-      if(p.x>canvas.width) p.x=0;
-    }
+  for(let p of particles){
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+
+    ctx.filter = "blur(12px)";   // 👈 TARO DI SINI
+    ctx.fill();                 // 👈 isi kabut
+    ctx.filter = "none";        // 👈 reset biar ga ngefek ke lainnya
+
+    p.x+=p.xs;
+    if(p.x>canvas.width) p.x=0;
   }
+}
 
   if(mode==="clear"){
     let grd = ctx.createRadialGradient(
@@ -202,7 +200,6 @@ function draw(){
     );
     grd.addColorStop(0,"rgba(255,200,0,0.3)");
     grd.addColorStop(1,"rgba(255,255,255,0)");
-
     ctx.fillStyle = grd;
     ctx.fillRect(0,0,canvas.width,canvas.height);
   }
@@ -211,15 +208,14 @@ function draw(){
 }
 draw();
 
-/* PETIR */
+/* ⚡ LIGHTNING */
 function lightning(){
   setInterval(()=>{
     if(mode==="storm"){
       const flash = document.getElementById("flash");
       flash.classList.add("active");
 
-      // suara petir
-      const audio = new Audio("https://www.soundjay.com/nature/thunder-01.mp3");
+      const audio = new Audio("AUDIO/TV-4-AUDIO.mp3");
       audio.volume = 0.3;
       audio.play();
 
@@ -231,9 +227,10 @@ lightning();
 
 /* ICON */
 function icon(code){
-  if(code==0) return "https://cdn-icons-png.flaticon.com/512/869/869869.png";
-  if(code<=3) return "https://cdn-icons-png.flaticon.com/512/414/414825.png";
-  return "https://cdn-icons-png.flaticon.com/512/1163/1163624.png";
+  if(code >= 95) return "JPG/95.png";
+  if(code >= 61) return "JPG/61.png";
+  if(code <= 3) return "JPG/3.png";
+  return "JPG/CERAH.png";
 }
 
 function desc(code){
@@ -245,6 +242,11 @@ function desc(code){
     95:"Badai"
   }[code] || "Cuaca";
 }
+
+/* 🔊 ENABLE AUDIO (klik pertama) */
+document.body.addEventListener("click", () => {
+  new Audio("AUDIO/TV-2.mp3").play().catch(()=>{});
+}, { once:true });
 
 /* WEATHER */
 async function loadWeather(){
@@ -261,7 +263,15 @@ async function loadWeather(){
   document.getElementById("icon").src = icon(w.weathercode);
   document.getElementById("desc").innerText = desc(w.weathercode);
 
-  // MODE EFFECT
+  /* 🔊 NOTIFIKASI PERUBAHAN CUACA */
+  if(lastWeatherCode !== null && lastWeatherCode !== w.weathercode){
+    const audio = new Audio("AUDIO/TV-2.mp3");
+    audio.volume = 0.5;
+    audio.play();
+  }
+  lastWeatherCode = w.weathercode;
+
+  /* MODE */
   if(w.weathercode>=95){
     mode="storm";
     createRain();
@@ -278,7 +288,7 @@ async function loadWeather(){
     mode="clear";
   }
 
-  // HOURLY
+  /* HOURLY */
   let html="";
   for(let i=1;i<=5;i++){
     html+=`

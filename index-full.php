@@ -15,6 +15,7 @@ $video_id = 'DOOrIxw5xOw';
 <head>
  <title>myROBOT-V80</title>
   <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
+
 <link rel="stylesheet" href="style-tv.css">
  <meta http-equiv="refresh" content="600;url=index.php">
 
@@ -91,11 +92,6 @@ $video_id = 'DOOrIxw5xOw';
     filter: drop-shadow(0 0 8px rgba(255,215,120,0.6));
 }
 
-
-
-
-
-
     </style>
 
 
@@ -154,17 +150,18 @@ $video_id = 'DOOrIxw5xOw';
 
 
 
+<audio autoplay>
+    <source src="AUDIO/NOTIFIKASI.mp3" type="audio/mpeg">
+    </audio>
 
 
 <audio id="notifSound" preload="auto">
-    <source src="AUDIO/TV-4-AUDIO.mp3" type="audio/mpeg">
+    <source src="AUDIO/NOTIFIKASI.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="notifBayar" preload="auto">
-    <source src="AUDIO/TV-4-AUDIO.mp3" type="audio/mpeg">
+    <source src="AUDIO/NOTIFIKASI.mp3" type="audio/mpeg">
 </audio>
-
-
 
 
 
@@ -174,7 +171,8 @@ $video_id = 'DOOrIxw5xOw';
 let dataSebelumnya = [];
 
 // 🔊 suara
-function playNotif() {
+{
+    if (modeAdzan) return; // 🚫 stop kalau adzan
     const audio = document.getElementById("notifSound");
     audio.currentTime = 0;
     audio.play().catch(() => {});
@@ -219,7 +217,7 @@ function tampilkanPopup(pasien) {
         <div style="font-size:16px;">
             Ke : ${pasien.nm_poli || '-'}
         </div>
-        <div style="font-size:14px;opacity:0.9;">
+        <div style="font-size:14px;opacity:0.8;">
             Pembayaran : ${pasien.cara_bayar || '-'}
         </div>
     `;
@@ -288,13 +286,11 @@ setInterval(function() {
 
 <script>
 function playNotifBayar() {
+    if (modeAdzan) return; // 🚫 stop kalau adzan
     const audio = document.getElementById("notifBayar");
-    if (audio) {
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
-    }
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
 }
-
 function tampilkanPopupBayar(pasien) {
     const popup = document.createElement("div");
 
@@ -333,34 +329,14 @@ bicara(`Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`);
     }, 8000);
 }
 </script>
-
-
-
 <!-- CODING GOOGLE SUARA TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
 
-
-<script>
-function bicara(teks) {
-    const speech = new SpeechSynthesisUtterance(teks);
-
-    speech.lang = "id-ID"; // Bahasa Indonesia
-    speech.rate = 0.4;     // kecepatan
-    speech.pitch = 1;      // nada
-    speech.volume = 1;     // 🔊 volume (0.0 - 1.0, 1 = paling keras)
-
-    window.speechSynthesis.speak(speech);
-}
-</script> 
 
 
 
 <!-- CODING TAMPILKAN PASIEN BARU DAFTAR DAN SUDAH BAYAR -->
-
-
-
 <script>
 // ================= GLOBAL =================
-let dataSebelumnya = [];
 let modeAdzan = false;
 let antrianNotif = [];
 let modeQueue = true; // true = ditunda saat adzan
@@ -390,16 +366,15 @@ function playAdzan() {
 
 // ================= TEXT TO SPEECH =================
 function bicara(teks) {
-    if (modeAdzan) return;
+    if (modeAdzan) return; // 🚫 stop saat adzan
 
     const speech = new SpeechSynthesisUtterance(teks);
     speech.lang = "id-ID";
-    speech.rate = 0.4;
+    speech.rate = 0.9;
     speech.pitch = 1;
 
     window.speechSynthesis.speak(speech);
 }
-
 // ================= AUDIO NOTIF =================
 function playNotif() {
     const audio = document.getElementById("notifSound");
@@ -806,7 +781,9 @@ $conn->close();
     <a href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/lab.php" target="_blank" class="bell-link">
         <span class="bell-icon"></span>LAB
     </a>
-    <font color="green" class="typing">&copy; myROBOT-V80</font>
+  <span class="typing" style="color: green; font-size: 18px;">
+  &copy; myROBOT-V80
+</span>
 </p>
 
 
@@ -825,29 +802,22 @@ $conn->close();
 }
 </style>
 
-<style>
-.kedip {
-    color: #00ccff; /* biru muda */
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0.2; }
-    100% { opacity: 1; }
-}
-</style>
-
 <script>
 let jadwalSholat = [];
 let sudahAdzanHariIni = {};
 let iqomahMenit = 1; // UBAH DURASI IQOMAH DI SINI
 
-function muteSemuaAudio() {
-    document.querySelectorAll("video, audio").forEach(el => {
-        el.dataset.volume = el.volume;
-        el.volume = 0;
+{
+    // stop semua audio kecuali adzan
+    document.querySelectorAll("audio").forEach(el => {
+        if (el.id !== "audioAdzan") {
+            el.pause();
+            el.currentTime = 0;
+        }
     });
+
+    // stop suara robot (TTS)
+    window.speechSynthesis.cancel();
 }
 
 function unmuteSemuaAudio() {
@@ -991,7 +961,7 @@ setInterval(() => {
             showNotifikasiAdzan(j.sholat);
         }
     });
-}, 1000);
+}, 3000);
 
 ambilJadwal();
 </script>
@@ -1070,8 +1040,8 @@ setInterval(updateText, 1000);
 
 <!-- FITUR -->
 
-<div style="position:fixed; top:210px; left:9%; transform:translate(-50%, -50%);
-background:#fff; padding:6px; width:200px; height:160px; border-radius:12px;
+<div style="position:fixed; top:200px; left:9%; transform:translate(-50%, -50%);
+background:#fff; padding:6px; width:200px; height:170px; border-radius:12px;
 box-shadow:0 0 40px rgba(0,0,0,0.12); text-align:center; border:20px solid #00FF00;">
 
 
@@ -1114,32 +1084,14 @@ window.addEventListener('load', function() {
 
 // -------------------------------------------------
 // Jam & hari
-ffunction updateJam() {
+function updateJam() {
     var now = new Date();
-
-    let jam = now.getHours().toString().padStart(2,'0');
-    let menit = now.getMinutes().toString().padStart(2,'0');
-    let detik = now.getSeconds().toString().padStart(2,'0');
-
-    let waktu = jam + ":" + menit + ":" + detik;
-
-    let elemenJam = document.getElementById('jam');
-    elemenJam.innerHTML = waktu;
-
-    document.getElementById('tanggal').innerHTML =
-        now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear();
-
-    document.getElementById('hari').innerHTML =
-        ['Hari Minggu','Hari Senin','Hari Selasa','Hari Rabu','Hari Kamis','Hari Jumat','Hari Sabtu'][now.getDay()];
-
-    // ================= CEK JAM KHUSUS =================
-    if ((jam === "12" || jam === "15") && menit === "00") {
-        elemenJam.classList.add("kedip");
-    } else {
-        elemenJam.classList.remove("kedip");
-    }
+    document.getElementById('jam').innerHTML = now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+    document.getElementById('tanggal').innerHTML = now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear();
+    document.getElementById('hari').innerHTML = ['Hari Minggu','Hari Senin','Hari Selasa','Hari Rabu','Hari Kamis','Hari Jumat','Hari Sabtu'][now.getDay()];
 }
 setInterval(updateJam,1000);
+
 </script>
 
 
@@ -1202,8 +1154,8 @@ cekHariSpesial();
 
 <!-- Widget Cuaca -->
 <font color="">
-  <div style="position:absolute; top:125px; left:480px; background:; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid ;">
-    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/cuaca.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:170px; border-radius:8px;" title="Klinik Asura"></iframe>
+  <div style="position:absolute; top:110px; left:480px; background:; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid ;">
+    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/cuaca.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:180px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
 
@@ -1216,8 +1168,8 @@ cekHariSpesial();
 
 <!-- Pasien Ranap -->
 <font color="#9900FF">
-  <div style="position:absolute; top:125px; left:230px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
-    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/ranap.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:240px; height:165px; border-radius:8px;" title="Klinik Asura"></iframe>
+  <div style="position:absolute; top:109px; left:230px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
+    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/ranap.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:240px; height:175px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
 
@@ -1226,7 +1178,7 @@ cekHariSpesial();
 
 <!-- Jadwal Sholat -->
 <font color="#9900FF">
-  <div style="position:absolute; top:650px; left:8px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
+  <div style="position:absolute; top:654px; left:8px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
     <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/sholat.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:660px; height:84px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
@@ -1380,6 +1332,7 @@ function updateText() {
 updateText();
 setInterval(updateText, 1000);
 </script>
+
 
 
 

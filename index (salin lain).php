@@ -16,7 +16,7 @@ $video_id = 'DOOrIxw5xOw';
  <title>myROBOT-V80</title>
   <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
 <link rel="stylesheet" href="style-tv.css">
- <meta http-equiv="refresh" content="600;url=index.php">
+ <meta http-equiv="refresh" content="1800;url=index.php">
 
 
     <!-- CSS umum -->
@@ -154,17 +154,13 @@ $video_id = 'DOOrIxw5xOw';
 
 
 
-
-
 <audio id="notifSound" preload="auto">
-    <source src="AUDIO/TV-4-AUDIO.mp3" type="audio/mpeg">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="notifBayar" preload="auto">
-    <source src="AUDIO/TV-4-AUDIO.mp3" type="audio/mpeg">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
 </audio>
-
-
 
 
 
@@ -234,9 +230,9 @@ bicara(`Pasien baru atas nama ${pasien.nm_pasien}, ${pasien.nm_poli}`);
 
     // ❌ hilang
     setTimeout(() => {
-        popup.style.animation = "slideOut 0.80s ease";
-        setTimeout(() => popup.remove(), 800);
-    }, 8000);
+        popup.style.animation = "slideOut 0.40s ease";
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
 }
 
 // 🔍 MONITOR DATA REALTIME
@@ -328,9 +324,9 @@ bicara(`Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`);
     playNotifBayar();
 
     setTimeout(() => {
-        popup.style.animation = "slideOut 0.80s ease";
-        setTimeout(() => popup.remove(), 800);
-    }, 8000);
+        popup.style.animation = "slideOut 0.40s ease";
+        setTimeout(() => popup.remove(), 500);
+    }, 3000);
 }
 </script>
 
@@ -344,13 +340,13 @@ function bicara(teks) {
     const speech = new SpeechSynthesisUtterance(teks);
 
     speech.lang = "id-ID"; // Bahasa Indonesia
-    speech.rate = 0.4;     // kecepatan
+    speech.rate = 0.9;     // kecepatan
     speech.pitch = 1;      // nada
-    speech.volume = 1;     // 🔊 volume (0.0 - 1.0, 1 = paling keras)
 
     window.speechSynthesis.speak(speech);
 }
-</script> 
+</script>
+
 
 
 
@@ -394,7 +390,7 @@ function bicara(teks) {
 
     const speech = new SpeechSynthesisUtterance(teks);
     speech.lang = "id-ID";
-    speech.rate = 0.4;
+    speech.rate = 0.9;
     speech.pitch = 1;
 
     window.speechSynthesis.speak(speech);
@@ -747,10 +743,6 @@ $conn->close();
         from, to { border-color:transparent; }
         50% { border-color:green; }
     }
-.typing {
-  color: green;
-  font-size: 18px; /* ukuran sedang */
-}
 </style>
 
 
@@ -822,19 +814,6 @@ $conn->close();
 @keyframes fadeIn{
     from{opacity:0}
     to{opacity:1}
-}
-</style>
-
-<style>
-.kedip {
-    color: #00ccff; /* biru muda */
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0.2; }
-    100% { opacity: 1; }
 }
 </style>
 
@@ -1114,32 +1093,14 @@ window.addEventListener('load', function() {
 
 // -------------------------------------------------
 // Jam & hari
-ffunction updateJam() {
+function updateJam() {
     var now = new Date();
-
-    let jam = now.getHours().toString().padStart(2,'0');
-    let menit = now.getMinutes().toString().padStart(2,'0');
-    let detik = now.getSeconds().toString().padStart(2,'0');
-
-    let waktu = jam + ":" + menit + ":" + detik;
-
-    let elemenJam = document.getElementById('jam');
-    elemenJam.innerHTML = waktu;
-
-    document.getElementById('tanggal').innerHTML =
-        now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear();
-
-    document.getElementById('hari').innerHTML =
-        ['Hari Minggu','Hari Senin','Hari Selasa','Hari Rabu','Hari Kamis','Hari Jumat','Hari Sabtu'][now.getDay()];
-
-    // ================= CEK JAM KHUSUS =================
-    if ((jam === "12" || jam === "15") && menit === "00") {
-        elemenJam.classList.add("kedip");
-    } else {
-        elemenJam.classList.remove("kedip");
-    }
+    document.getElementById('jam').innerHTML = now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+    document.getElementById('tanggal').innerHTML = now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear();
+    document.getElementById('hari').innerHTML = ['Hari Minggu','Hari Senin','Hari Selasa','Hari Rabu','Hari Kamis','Hari Jumat','Hari Sabtu'][now.getDay()];
 }
 setInterval(updateJam,1000);
+
 </script>
 
 
@@ -1203,7 +1164,7 @@ cekHariSpesial();
 <!-- Widget Cuaca -->
 <font color="">
   <div style="position:absolute; top:125px; left:480px; background:; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid ;">
-    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/cuaca.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:170px; border-radius:8px;" title="Klinik Asura"></iframe>
+    <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/widget_cuaca_lempuing.html" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:188px; height:170px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
 
@@ -1226,7 +1187,7 @@ cekHariSpesial();
 
 <!-- Jadwal Sholat -->
 <font color="#9900FF">
-  <div style="position:absolute; top:650px; left:8px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
+  <div style="position:absolute; top:654px; left:8px; background:#fff; padding:0; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.5); border: 2px solid #00FF00;">
     <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/sholat.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; width:660px; height:84px; border-radius:8px;" title="Klinik Asura"></iframe>
   </div>
 </font>
@@ -1273,7 +1234,7 @@ cekHariSpesial();
 <!-- TV Live + Tabel -->
 <div style="display:flex; justify-content:space-between;">
   <div style="width:680px; height:780px;">
-    <iframe width="100%" height="100%" src="youtube.php" frameborder="0" allowfullscreen></iframe> </div>
+    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $video_id;?>?autoplay=1&mute=1&loop=1&vq=hd480" frameborder="0" allowfullscreen></iframe> </div>
 
 
 
