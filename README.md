@@ -108,20 +108,25 @@ https://klinikasura.github.io/APLIKASI-V80/SLIDER/
 
 # 🖥️ Tampilan Aplikasi
 
-## Versi Desktop
+## Versi Desktop dan MObile Sama Aja
 
-![Desktop](https://github.com/user-attachments/assets/a951e8fd-ce45-432d-abbb-02d294dea41a)
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/f0fc0e9b-7157-4872-b95d-a2149b79e72a" />
 
-## Versi Mobile
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/659a03a8-8fe2-4b68-9f3e-7dbe909a7617" />
 
-![Mobile](https://github.com/user-attachments/assets/d4abf971-2454-447f-bb2d-be9396a20990)
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/6ee85b65-55fd-4aeb-b3e3-fd28117ac02a" />
 
-## Versi Multi Platform
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/d6057999-6da3-44c1-a5e2-ab1c5ecbf9e2" />
 
-![System1](https://github.com/user-attachments/assets/9b200029-9e73-4885-9a98-1a1c26174f6b)
-![System2](https://github.com/user-attachments/assets/bd8de1ae-c447-4220-90d7-439c0243a3bd)
-![System3](https://github.com/user-attachments/assets/2264e8e3-2161-462d-afb3-289a84eb231b)
-![System4](https://github.com/user-attachments/assets/877507ac-dc9c-4959-a607-f1151b5de112)
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/4bbd5b81-7295-4d1f-95c9-050a4e795da8" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/c55cfa6d-6707-42de-8b3b-021105de0578" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/64af1944-f701-4b1e-8cad-e39e78753e6b" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/af89d7bf-359b-4913-aac2-c85920d0119b" />
+
+
 
 ------------------------------------------------------------------------
 
