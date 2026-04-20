@@ -41,7 +41,7 @@ body {
 /* IFRAME */
 iframe {
   width: 100%;
-  height: 80%;
+  height: 50%;
   border: none;
 }
 
@@ -83,13 +83,13 @@ canvas {
 <div class="container">
 <p>
   <!-- IFRAME -->
-  <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/ANTRIAN-POLIKLINIK/poli-github-tv-2.php"
+  <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/ANTRIAN-POLIKLINIK/poli-github-tv.php"
     scrolling="no"
     title="Klinik Asura">
   </iframe>
 
 
-<iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/pasien8.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%; height:350px" title="Klinik Asura"></iframe>
+<iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/pasien8.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%; height:400px" title="Klinik Asura"></iframe>
 
 <button id="fullScreenBtn">Full Layar</button>
 

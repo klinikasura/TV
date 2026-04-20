@@ -36,64 +36,63 @@
 <button id="activateSound">Aktifkan Suara</button>
 
 <script>
-    const letters = ['A','B','C','D','E','F','G','H','I','J'];
-    let idx = 0, cnt = 1;
-    let synth = window.speechSynthesis;
-    let voice = new SpeechSynthesisUtterance();
-    voice.lang = 'id-ID';
-    let soundReady = false;               // flag: sudah di‑init?
+const letters = ['A','B','C','D','E','F','G','H','I','J'];
+let idx = 0, cnt = 1;
 
-    // -------------------------------------------------
-    // Inisialisasi suara setelah user klik tombol
-    document.getElementById('activateSound').addEventListener('click', function(){
-        soundReady = true;
-        this.style.display = 'none';
-        speakCode(letters[idx], cnt);     // ucapkan kode pertama otomatis
-    });
+let synth = window.speechSynthesis;
+let voice = new SpeechSynthesisUtterance();
+voice.lang = 'id-ID';
 
-    function pad(v){ return String(v).padStart(3,'0'); }
+let soundReady = false; // aktif setelah klik
 
-    // ucapkan kode lengkap, mis. "A satu"
-    function speakCode(letter, number) {
-        if(!soundReady) return;           // belum di‑init, keluar saja
-        const angka = ['nol','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan'];
-        const teks = `${letter} ${angka[number]}`;
-        voice.text = teks;
-        synth.speak(voice);
+function pad(v){ return String(v).padStart(3,'0'); }
+
+// tombol aktifkan suara
+document.getElementById('activateSound').addEventListener('click', function(){
+    soundReady = true;
+    this.style.display = 'none'; // sembunyikan tombol
+    speakCode(letters[idx], cnt); // langsung ucapkan pertama
+});
+
+function speakCode(letter, number) {
+    if(!soundReady) return; // cegah kalau belum klik
+    const angka = ['nol','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan'];
+    const teks = `${letter} ${angka[number]}`;
+    voice.text = teks;
+    synth.speak(voice);
+}
+
+function next(){
+    cnt++;
+    if(cnt>999){
+        cnt=1;
+        idx = (idx+1)%letters.length;
     }
+    document.getElementById('pref').textContent = letters[idx];
+    document.getElementById('num').textContent = pad(cnt);
+    speakCode(letters[idx], cnt);
+}
 
-    function next(){
-        cnt++;
-        if(cnt>999){
-            cnt=1;
-            idx = (idx+1)%letters.length;
-        }
-        document.getElementById('pref').textContent = letters[idx];
-        document.getElementById('num').textContent = pad(cnt);
-        speakCode(letters[idx], cnt);
-    }
-
-    function reset(){
-        const val = document.getElementById('resetVal').value.trim();
-        if(val){
-            const m = val.match(/^([A-J])(\d{1,3})$/i);
-            if(m){
-                idx = letters.indexOf(m[1].toUpperCase());
-                cnt = Math.max(1, Math.min(999, Number(m[2])));
-            }else{
-                alert('Format salah! Contoh: C015');
-                return;
-            }
+function reset(){
+    const val = document.getElementById('resetVal').value.trim();
+    if(val){
+        const m = val.match(/^([A-J])(\d{1,3})$/i);
+        if(m){
+            idx = letters.indexOf(m[1].toUpperCase());
+            cnt = Math.max(1, Math.min(999, Number(m[2])));
         }else{
-            idx = 0; cnt = 1;
+            alert('Format salah! Contoh: C015');
+            return;
         }
-        document.getElementById('pref').textContent = letters[idx];
-        document.getElementById('num').textContent = pad(cnt);
-        document.getElementById('resetVal').value = '';
-        speakCode(letters[idx], cnt);
+    }else{
+        idx = 0; cnt = 1;
     }
+    document.getElementById('pref').textContent = letters[idx];
+    document.getElementById('num').textContent = pad(cnt);
+    document.getElementById('resetVal').value = '';
+    speakCode(letters[idx], cnt);
+}
 </script>
-
 </body>
 </html>
 
