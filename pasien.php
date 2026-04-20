@@ -92,6 +92,10 @@ $jam     = date("H:i");
 
 .info-harian b{
     font-size:15px;      /* angka dibuat sedikit lebih besar */
+background-color: #add8e6; /* biru muda */
+  padding: 10px;
+  border-radius: 8px;
+
 }
 
 .berkedip2{
@@ -115,6 +119,10 @@ $jam     = date("H:i");
 /* angka normal */
 .info-harian b{
     font-size:15px;
+background-color: #add8e6; /* biru muda */
+  padding: 10px;
+  border-radius: 8px;
+
 }
 
 /* ANGKA BERKEDIP SEPERTI DETIK JAM */
@@ -149,6 +157,10 @@ $jam     = date("H:i");
     0%   { opacity: 1; }
     50%  { opacity: 0; }
     100% { opacity: 1; }
+}
+.label-biru {
+  color: #0b3d91; /* biru muda */
+  font-weight: 600;
 }
 
 </style>
@@ -196,19 +208,19 @@ $lab = $d4['jml'];
 ?>
 
 <div class="info-harian">
-Daftar Hari Ini :
-<b>(<span class="berkedip2"><?= $daftar ?></span>)</b>
+  <span class="label-biru">Daftar Hari Ini :</span>
+<b><span class="berkedip2"><?= $daftar ?></span></b>
 
-| Billing Pasien Bayar
-<b>(<span class="berkedip2"><?= $bayar ?></span>)</b>
+  <span class="label-biru"> Billing Pasien Bayar</span>
+<b><span class="berkedip2"><?= $bayar ?></span></b>
 
-| Farmasi
-<b>(<span class="berkedip2"><?= $farmasi ?></span>)</b>
+  <span class="label-biru"> Farmasi</span>
+<b><span class="berkedip2"><?= $farmasi ?></span></b>
 
-| Lab
-<b>(<span class="berkedip2"><?= $lab ?></span>)</b>
+  <span class="label-biru"> Lab</span>
+<b><span class="berkedip2"><?= $lab ?></span></b>
 
-   <span class="live-text">LIVE</span>
+   <span class="live-text"> LIVE</span>
 </div>
 
 

@@ -4,11 +4,81 @@
     <title>Aplikasi RS. Asura</title>
     <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
     <meta http-equiv="refresh" content="2;url=hanya-pasien.php">
-    <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f0f0f0; }
-    </style>
+<style>
+body {
+    margin:0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+}
+
+/* TABEL */
+table {
+    border-collapse: collapse;
+    width: 98%;
+    margin: 20px auto;
+    background: #f8fbff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+th {
+    background: linear-gradient(135deg, #60a5fa, #93c5fd);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+}
+
+/* ISI */
+td {
+    border: 1px solid #bfdbfe;
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #1e3a8a;
+    font-weight: 500;
+}
+
+/* ZEBRA */
+tr:nth-child(even) {
+    background: #f1f5ff;
+}
+
+/* HOVER */
+tr:hover {
+    background: #dbeafe;
+    transition: 0.2s;
+}
+
+/* TOTAL ROW */
+tr:last-child {
+    background: #bfdbfe !important;
+    font-weight: bold;
+    color: #1e40af;
+}
+
+/* KHUSUS KOLOM */
+td:nth-child(2) {
+    text-align: left; /* nama dokter rata kiri */
+    font-weight: 600;
+    color: #1d4ed8;
+}
+
+/* RESPONSIVE TV */
+@media screen and (min-width: 1200px) {
+    th, td {
+        font-size: 18px;
+    }
+}
+
+/* ANIMASI HALUS */
+* {
+    transition: all 0.2s ease-in-out;
+}
+</style>
 </head>
 <body>
 <?php

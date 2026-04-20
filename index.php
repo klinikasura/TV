@@ -157,11 +157,11 @@ $video_id = 'DOOrIxw5xOw';
 
 
 <audio id="notifSound" preload="auto">
-    <source src="AUDIO/TV-4-AUDIO.mp3" type="audio/mpeg">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
 </audio>
 
 <audio id="notifBayar" preload="auto">
-    <source src="AUDIO/TV-4-AUDIO.mp3" type="audio/mpeg">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
 </audio>
 
 
@@ -344,13 +344,13 @@ function bicara(teks) {
     const speech = new SpeechSynthesisUtterance(teks);
 
     speech.lang = "id-ID"; // Bahasa Indonesia
-    speech.rate = 0.4;     // kecepatan
+    speech.rate = 0.9;     // kecepatan
     speech.pitch = 1;      // nada
-    speech.volume = 1;     // 🔊 volume (0.0 - 1.0, 1 = paling keras)
 
     window.speechSynthesis.speak(speech);
 }
-</script> 
+</script>
+
 
 
 
@@ -1273,7 +1273,7 @@ cekHariSpesial();
 <!-- TV Live + Tabel -->
 <div style="display:flex; justify-content:space-between;">
   <div style="width:680px; height:780px;">
-    <iframe width="100%" height="100%" src="youtube.php" frameborder="0" allowfullscreen></iframe> </div>
+    <iframe width="100%" height="100%" src="https://www.youtube.com/embed/<?php echo $video_id;?>?autoplay=1&mute=1&loop=1&vq=hd480" frameborder="0" allowfullscreen></iframe> </div>
 
 
 
