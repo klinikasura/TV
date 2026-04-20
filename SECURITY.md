@@ -1,158 +1,197 @@
-UPDATE OTOMATIS 
+# myROBOT-V80
 
-UPDATE 2026 PENYEMPURNAAN CODING DAN PROGRAM AI ROBOT SYSTEM V80
+**myROBOT-V80 ATAU AI ROBOT SYSTEM V.80 -- Versi 8 (Final Release)**\
+Pengembangan dan penyempurnaan sistem AI Robot untuk integrasi aplikasi
+rumah sakit.
 
-# APLIKASI-V80
-APLIKASI AI ROBOT SYSTEM V.80
+**Status:** Development & Internal Use\
+**Pengembang:** IT Desain Hamba Alloh\
+**Creator:** Asep Pudin New
 
-VERSI TERBARU DI DEVELOPMENT OLEH IT DESAIN HAMBA ALLOH.
+------------------------------------------------------------------------
 
-DI LINDUNGI DENGAN KODE ROBOT : V80 DAN KODE KEAMANAN : V80
+# 📌 Informasi Aplikasi
 
+  Informasi         Detail
+  ----------------- ---------------------
+  Nama Aplikasi     AI ROBOT SYSTEM V80
+  Versi             8.0
+  Tahun Pembuatan   2023
+  Tahun Rilis       2024
+  Update Final      2026
+  Kode Robot        V80
+  Kode Keamanan     V80
 
-NAMA APLIKASI : AI ROBOT SYSTEM V80 VERSI 8
-PEMBUATAN TAHUN 2023 RILIS TAHUN 2024
+------------------------------------------------------------------------
 
-  -------------------------------------------------------------------------------
-  
-CEK UPDATE VERSI 8.0 RILIS
-LINK : https://github.com/klinikasura/APLIKASI-V80/releases/ (VERSI FINAL)
+# 🔗 Link Update Versi
 
-CEK RIVIEW TAMPILAN APLIKASI APLIKASI AI ROBOT SYSTEM V.80
-LINK : https://klinikasura.github.io/APLIKASI-V80/ (VERSI FINAL)
+### Release Versi Final
 
+https://github.com/klinikasura/APLIKASI-V80/releases/
 
-  -------------------------------------------------------------------------------
-DOWNLOAD APLIKASI AI ROBOT SYSTEM V.80 :
-LINK UNTUK ANDROID : https://github.com/klinikasura/APLIKASI-V80/releases/download/8.0_NEW_(14022026-0900)/app-release-14022026-0907.apk
-  -------------------------------------------------------------------------------
-LINK UNTUK IOS ATAU IPHONE : https://github.com/klinikasura/APLIKASI-V80/releases/download/8.0_NEW_(14022026-0900)/ios_source-14022026-0907.tar.gz
-  -------------------------------------------------------------------------------
+### Preview Tampilan Aplikasi
 
-  
-DOWNLOAD APLIKASI AI ROBOT SYSTEM V.80 AUDIO
-LINK : https://github.com/klinikasura/APLIKASI-V80/raw/refs/heads/main/BUILDING/AUDIO.apk
-  -------------------------------------------------------------------------------
+https://klinikasura.github.io/APLIKASI-V80/
 
+------------------------------------------------------------------------
 
-  
-WIDGET AI ROBOT SYSTEM V80 :
-  -------------------------------------------------------------------------------
-  
-1. CEK RIVIEW TAMPILAN APLIKASI APLIKASI AI ROBOT SYSTEM V.80 (AI HOTSPOT)
-   LINK : https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-HOTSPOT/login (VERSI FINAL)
-  -----------------------------------------------------------------------------
-  
-2. CEK RIVIEW TAMPILAN APLIKASI APLIKASI AI ROBOT SYSTEM V.80 (AI CHAT)
-   LINK : https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-AI-CHAT (VERSI FINAL
-  ----------------------------------------------------------------------------
-  
-3. CEK RIVIEW TAMPILAN APLIKASI APLIKASI AI ROBOT SYSTEM V.80 (AI CUACA)
-   LINK : https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-CUACA/ (VERSI FINAL
-  -----------------------------------------------------------------------------
-  
-4. CEK RIVIEW TAMPILAN APLIKASI APLIKASI AI ROBOT SYSTEM V.80 (AI SLIDER)
-   LINK : https://klinikasura.github.io/APLIKASI-V80/SLIDER/ (VERSI FINAL
-  -------------------------------------------------------------------------------
+# 📥 Download Aplikasi
 
+### Android
 
-  ---------------------------- RINCIAN PEMBAHARUAN -----------------------------
-- Pembaharuan Coding & Program Kecerdasan Buatan INTEL AQ 
-- Pembaharuan System Keamanan Cyber 
-- Pembaharuan Tampilan dan Desain Versi 8
-- Pembaharuan AI Robot System Widget Konek Database System
-- Pembaharuan di Aplikasi Mobile AI Robot System Versi 8 PRO
-- Pembaharuan di Aplikasi Komputer System Versi 8 PRO
-- Pembaharuan Integrasi SATU SEHAT KEMENKES & ASKES Nasional 
-- Pembaharuan Jaringan Internet Otomatis Smart
-  RINCIAN :
-- CODING DAN PROGRAM LEVEL 8
-- APLIKASI MOBILE LEVEL 8
-- GITHUB API UPDATE LEVEL 8
-- RILIS SYSTEM UPDATE LEVEL 8
-  ---------------------------- APLIKASI AI ROBOT SYSTEM V.80 ---------------------
+https://github.com/klinikasura/APLIKASI-V80/releases/download/8.0_NEW\_(14022026-0900)/app-release-14022026-0907.apk
 
-  -----------------------------------------------------------------------------------
- UPDATE TAMPILAN VERSI DESKTOP / KOMPUTER :
- 
-<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/a951e8fd-ce45-432d-abbb-02d294dea41a" />
+### iOS / iPhone Source
 
-  -----------------------------------------------------------------------------------
-  
-UPDATE TAMPILAN BARU VERSI HANDPHONE / ANDROID / IPHONE : 
+https://github.com/klinikasura/APLIKASI-V80/releases/download/8.0_NEW\_(14022026-0900)/ios_source-14022026-0907.tar.gz
 
-<img width="720" height="1600" alt="image" src="https://github.com/user-attachments/assets/d4abf971-2454-447f-bb2d-be9396a20990" />
+### AI Robot System Audio
 
+https://github.com/klinikasura/APLIKASI-V80/raw/refs/heads/main/BUILDING/AUDIO.apk
 
-  -----------------------------------------------------------------------------------
-  
-UPDATE TAMPILAN BARU VERSI 8.0 => 12 OS / LINUX / MAC / ANDROID / IPHONE :  
+------------------------------------------------------------------------
 
-<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/9b200029-9e73-4885-9a98-1a1c26174f6b" />
+# 🧩 Widget AI Robot System V80
 
-<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/bd8de1ae-c447-4220-90d7-439c0243a3bd" />
+### 1. AI Hotspot
 
-<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/2264e8e3-2161-462d-afb3-289a84eb231b" />
+https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-HOTSPOT/login
 
-<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/877507ac-dc9c-4959-a607-f1151b5de112" />
+### 2. AI Chat
 
-  -----------------------------------------------------------------------------------
+https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-AI-CHAT
 
-CATATAN : 
- PROGRAM APLIKASI AI ROBOT SYSTEM V.80 INI HANYA DI PERUNTUKAN DI RS KAMI TIDAK DI PUBLIKASI.
- JARINGAN GITHUB INI DI BUAT UNTUK PENGHUBUNG APLIKASI AI ROBOT SYSTEM V.80 SEBAGAI API (Application Programming Interface).
+### 3. AI Cuaca
 
-**Full Changelog**:
-LOGBOOK :
-VERSI 1 TAHUN 2021,
-VERSI 2 TAHUN 2021,
-VERSI 3 TAHUN 2021,
-VERSI 4 TAHUN 2022,
-VERSI 5 TAHUN 2023,
-VERSI 6 TAHUN 2024,
-VERSI 7 TAHUN 2024,
-VERSI 8 TAHUN 2025.
-VERSI 8 TAHUN 2026 FIX.
+https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-CUACA/
 
-  -----------------------------------------------------------------------------------
-  
-  CREATE APPS: ASEP PUDIN NEW.
-SUPPORT:
-IOS, OS, WINDOWS, LINUX, MAC, ANDROID, IPHONE, GOOGLE DAN XP
+### 4. AI Slider
 
-  -----------------------------------------------------------------------------------
-  
-PENYIMPANAN DATA :
-SQL, APACHE, AI, MDBL DAN INTEL AQ
+https://klinikasura.github.io/APLIKASI-V80/SLIDER/
 
-  -----------------------------------------------------------------------------------
-SINYAL:
-SATELIT AQ-08
+------------------------------------------------------------------------
 
-PROGRAM CODING SPESIAL : QS
+# 🚀 Rincian Pembaharuan Versi 8
 
-  -----------------------------------------------------------------------------------
-TERIMA KASIH.
+## Update Sistem
+
+-   Pembaharuan Coding & Program **AI INTEL AQ**
+-   Pembaharuan **Cyber Security System**
+-   Pembaharuan **UI / UX Desain Versi 8**
+-   Pembaharuan **Widget AI Robot System**
+-   Pembaharuan koneksi **Database System**
+
+## Update Aplikasi
+
+-   Mobile Application **AI Robot System V8 PRO**
+-   Desktop Application **AI Robot System V8 PRO**
+
+## Integrasi Sistem
+
+-   Integrasi **SATU SEHAT Kemenkes**
+-   Integrasi **ASKES Nasional**
+-   Pembaharuan **Smart Internet Network System**
+
+------------------------------------------------------------------------
+
+# ⚙️ Level Sistem
+
+  Sistem            Level
+  ----------------- ---------
+  Coding Program    Level 8
+  Aplikasi Mobile   Level 8
+  Github API        Level 8
+  System Release    Level 8
+
+------------------------------------------------------------------------
+
+# 🖥️ Tampilan Aplikasi
+
+## Versi Desktop dan MObile Sama Aja
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/f0fc0e9b-7157-4872-b95d-a2149b79e72a" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/659a03a8-8fe2-4b68-9f3e-7dbe909a7617" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/6ee85b65-55fd-4aeb-b3e3-fd28117ac02a" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/d6057999-6da3-44c1-a5e2-ab1c5ecbf9e2" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/4bbd5b81-7295-4d1f-95c9-050a4e795da8" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/c55cfa6d-6707-42de-8b3b-021105de0578" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/64af1944-f701-4b1e-8cad-e39e78753e6b" />
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/af89d7bf-359b-4913-aac2-c85920d0119b" />
 
 
-# Security Policy
 
-## Supported Versions
+------------------------------------------------------------------------
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+# 🗂️ Logbook Pengembangan
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+  Versi           Tahun
+  --------------- -------
+  Versi 1         2021
+  Versi 2         2021
+  Versi 3         2021
+  Versi 4         2022
+  Versi 5         2023
+  Versi 6         2024
+  Versi 7         2024
+  Versi 8         2025
+  Versi 8 Final   2026
 
-## Reporting a Vulnerability
+------------------------------------------------------------------------
 
-Use this section to tell people how to report a vulnerability.
+# 💾 Penyimpanan Data
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Sistem menggunakan teknologi:
+
+-   SQL Database
+-   Apache Server
+-   AI System
+-   MDBL
+-   INTEL AQ
+
+------------------------------------------------------------------------
+
+# 📡 Jaringan Sistem
+
+-   Satelit : **AQ-08**
+-   Sistem Coding Spesial : **QS**
+
+------------------------------------------------------------------------
+
+# 💻 Platform Support
+
+-   Windows
+-   Linux
+-   Mac OS
+-   Android
+-   iOS / iPhone
+-   Google Platform
+-   XP System
+
+------------------------------------------------------------------------
+
+# ⚠️ Catatan Penting
+
+Program **AI ROBOT SYSTEM V80** hanya digunakan untuk **internal Rumah
+Sakit** dan tidak dipublikasikan secara umum.
+
+Repository GitHub ini digunakan sebagai **API Connector (Application
+Programming Interface)** untuk komunikasi antar sistem AI Robot System
+V80.
+
+------------------------------------------------------------------------
+
+# 👨‍💻 Developer
+
+**Create Apps:**\
+ASEP PUDIN NEW
+
+**Support System:**\
+IT Desain Hamba Alloh
