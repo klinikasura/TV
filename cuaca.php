@@ -1,6 +1,6 @@
 <div id="weather-app">
   <div class="card">
-
+Cuaca Hari Ini
     <canvas id="effectCanvas"></canvas>
     <div class="flash" id="flash"></div>
 
@@ -12,14 +12,14 @@
       <div class="temp" id="temp">--°</div>
     </div>
 
-    <div id="desc">myROBOT-V80....</div>
+    <div id="desc">Loading...</div>
 
     <div class="details">
        <span id="wind"></span> km/h |
        <span id="humidity"></span>%
     </div>
 
-    
+ 
 
   </div>
 </div>
@@ -38,7 +38,7 @@ body {
 
 .card {
   width:188px;
-  height:220px;
+  height:240px;
   padding:10px;
   border-radius:12px;
   background:#111;
@@ -71,7 +71,7 @@ body {
 }
 
 #icon {
-  width:110px;
+  width:100px;
   animation: float 3s infinite ease-in-out;
 }
 
@@ -85,28 +85,25 @@ body {
   align-items:center;
 }
 
-.temp { font-size:32px; }
+.temp { font-size:40px; }
 
 #desc {
-  font-size:24px;
+  font-size:20px;
   text-align:center;
 }
 
 .details {
-  font-size:18px;
+  font-size:14px;
   text-align:center;
 }
 
-/* 🌙NIGHT */
 .night {
   text-align:center;
-  font-size:14px;
+  font-size:12px;
   margin-top:4px;
   color:#8be9fd;
-  text-shadow:#8be9fd;
 }
 
-/* POPUP CYBER */
 .popup {
   position:absolute;
   top:10px;
@@ -118,7 +115,6 @@ body {
   border-radius:8px;
   font-size:10px;
   opacity:0;
-
   border:1px solid rgba(0,255,255,0.6);
   box-shadow:0 0 6px #00f7ff;
   transition:all 0.25s;
@@ -136,6 +132,14 @@ const lon = 104.807;
 
 const canvas = document.getElementById("effectCanvas");
 const ctx = canvas.getContext("2d");
+const flash = document.getElementById("flash");
+
+const tempEl = document.getElementById("temp");
+const windEl = document.getElementById("wind");
+const humidityEl = document.getElementById("humidity");
+const iconEl = document.getElementById("icon");
+const descEl = document.getElementById("desc");
+const nightForecast = document.getElementById("nightForecast");
 
 let particles = [];
 let mode = "clear";
@@ -235,18 +239,16 @@ function showPopup(text){
   setTimeout(()=>p.classList.remove("show"),2500);
 }
 
-/* SOUND ONLINE */
+/* SOUND */
 function playWeatherSound(code){
   let src="";
 
   if(code>=95)
-    src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7e1c.mp3";
+    src="AUDIO/AUDIO-CUACA.mp3";
   else if(code>=61)
-    src="https://cdn.pixabay.com/download/audio/2022/02/23/audio_4c4b1f3b56.mp3";
-  else if(code<=3)
-    src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_6b1f9c2bdf.mp3";
+    src="AUDIO/AUDIO-CUACA.mp3";
   else
-    src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_d0f9fd0b6c.mp3";
+    src="AUDIO/AUDIO-CUACA.mp3";
 
   let a=new Audio(src);
   a.volume=0.5;
@@ -255,20 +257,33 @@ function playWeatherSound(code){
 
 /* ICON */
 function icon(code){
-  if(code>=95) return "JPG/95-95.gif";
-  if(code>=61) return "JPG/61-61-61.gif";
+  if(code>=95) return "JPG/95-petir-icon.gif";
+  if(code>=61) return "JPG/61-hujan-icon.gif";
   if(code<=3) return "JPG/3-3.gif";
   return "JPG/CERAH.png";
 }
 
+/* DESC */
 function desc(code){
-  return {
+  const map = {
     0:"Cerah",
+    1:"Cerah Berawan",
     2:"Berawan",
     3:"Mendung",
-    61:"Hujan",
-    95:"Badai"
-  }[code] || "Cuaca";
+    45:"Kabut",
+    48:"Kabut Tebal",
+    51:"Gerimis",
+    53:"Gerimis",
+    55:"Gerimis Lebat",
+    61:"Hujan Ringan",
+    63:"Hujan",
+    65:"Hujan Lebat",
+    80:"Hujan Lokal",
+    81:"Hujan",
+    82:"Hujan Deras",
+    95:"Badai Petir"
+  };
+  return map[code] ?? "Angin & Badai";
 }
 
 /* WEATHER */
@@ -279,15 +294,15 @@ async function loadWeather(){
   const data=await res.json();
   const w=data.current_weather;
 
-  temp.innerText=Math.round(w.temperature)+"°";
-  wind.innerText=w.windspeed;
-  humidity.innerText=data.hourly.relativehumidity_2m[0];
-  iconEl=document.getElementById("icon");
+  tempEl.innerText=Math.round(w.temperature)+"°";
+  windEl.innerText=w.windspeed;
   iconEl.src=icon(w.weathercode);
-  descEl=document.getElementById("desc");
   descEl.innerText=desc(w.weathercode);
 
-  /* 🌙 NIGHT SMART */
+  const nowIndex = data.hourly.time.indexOf(w.time);
+  humidityEl.innerText = data.hourly.relativehumidity_2m[nowIndex] ?? "-";
+
+  /* NIGHT FORECAST */
   let temps=[], codes={};
 
   for(let i=0;i<data.hourly.time.length;i++){
@@ -299,10 +314,7 @@ async function loadWeather(){
     }
   }
 
-  let avg=null;
-  if(temps.length){
-    avg=temps.reduce((a,b)=>a+b)/temps.length;
-  }
+  let avg = temps.length ? temps.reduce((a,b)=>a+b)/temps.length : null;
 
   let dom=null,max=0;
   for(let c in codes){
@@ -313,29 +325,33 @@ async function loadWeather(){
   }
 
   if(avg!==null){
-    nightForecast.innerText=
-      "Malam : "+Math.round(avg)+"° | "+desc(parseInt(dom));
+    nightForecast.innerText =
+      "Malam: "+Math.round(avg)+"° | "+desc(parseInt(dom));
   }
 
   /* CHANGE DETECT */
   if(lastWeatherCode!==null && lastWeatherCode!==w.weathercode){
     playWeatherSound(w.weathercode);
 
-    let txt="PERINGATAN CUACA : ";
-    if(w.weathercode>=95) txt+="BADAI";
-    else if(w.weathercode>=61) txt+="HUJAN";
-    else if(w.weathercode<=3) txt+="MENDUNG";
-    else txt+="CERAH";
-
+    let txt="PERUBAHAN CUACA: "+desc(w.weathercode);
     showPopup(txt);
   }
 
   lastWeatherCode=w.weathercode;
 
-  if(w.weathercode>=95){mode="storm";createRain();}
-  else if(w.weathercode>=61){mode="rain";createRain();}
-  else if(w.weathercode<=3){mode="fog";createFog();}
-  else{mode="clear";}
+  /* MODE */
+  if(w.weathercode>=95){
+    mode="storm"; createRain();
+  }
+  else if(w.weathercode>=61){
+    mode="rain"; createRain();
+  }
+  else if(w.weathercode<=3){
+    mode="clear";
+  }
+  else{
+    mode="fog"; createFog();
+  }
 }
 
 loadWeather();

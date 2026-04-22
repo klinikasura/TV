@@ -208,7 +208,7 @@ $lab = $d4['jml'];
 ?>
 
 <div class="info-harian">
-  <span class="label-biru">Daftar Hari Ini :</span>
+  <span class="label-biru">Registrasi </span>
 <b><span class="berkedip2"><?= $daftar ?></span></b>
 
   <span class="label-biru"> Billing Pasien Bayar</span>
