@@ -705,31 +705,40 @@ $(document).ready(function(){
     // ======================
     // LOAD RIWAYAT
     // ======================
-    function loadRiwayat(reset=false){
+   function loadRiwayat(reset=false){
 
-        if(!no_rm_global) return;
+    if(!no_rm_global) return;
 
-        $.ajax({
-            url: "riwayat-scan.php",
-            method: "POST",
-            data: {
-                no_rm: no_rm_global,
-                page: page
-            },
-            success: function(res){
+    $.ajax({
+        url: "riwayat-scan.php",
+        method: "POST",
+        data: {
+            no_rm: no_rm_global,
+            page: page
+        },
+        success: function(res){
 
-                if(reset){
-                    $("#hasil_pasien").append("<div id='riwayat'></div>");
-                    $("#riwayat").html(res);
-                } else {
-                    $("#riwayat").append(res);
-                }
-
-                $("#load_more").show();
+            if(reset){
+                $("#hasil_pasien").append("<div id='riwayat'></div>");
+                $("#riwayat").html(res);
+            } else {
+                $("#riwayat").append(res);
             }
-        });
-    }
 
+            // =========================
+            // CEK DATA MASIH ADA ATAU TIDAK
+            // =========================
+            let masihAda = $("#data_status").data("more");
+
+            if(masihAda == 1){
+                $("#load_more").show();
+            } else {
+                $("#load_more").hide();
+            }
+
+        }
+    });
+}
     // ======================
     // LOAD MORE
     // ======================

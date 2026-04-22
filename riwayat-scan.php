@@ -16,7 +16,7 @@ JOIN penjab pj ON rp.kd_pj = pj.kd_pj
 WHERE rp.no_rkm_medis = '$no_rm'
 AND rp.stts != 'Batal'
 ORDER BY rp.tgl_registrasi DESC
-LIMIT 10
+LIMIT 1000
 ");
 
 echo "<hr><h3>Riwayat Berobat</h3>";
