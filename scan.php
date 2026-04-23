@@ -1,3 +1,36 @@
+<?php
+session_start();
+require_once 'config.php';
+require_once 'includes.php';
+
+// Pastikan user sudah login
+if (!isset($_SESSION['user_id'])) {
+    header('Location: http://10.10.20.250/dashboard/APPS-ROBOT/TV/PIN/');
+    exit;
+}
+
+// Ambil data user berdasarkan ID di session
+$user_id = $_SESSION['user_id'];
+$query   = "SELECT * FROM robot80_data_anggota WHERE id=$user_id";
+$result  = $mysqli->query($query);
+$user    = $result->fetch_assoc();
+
+update_user_activity($user_id);
+?>
+
+<?php
+require_once('conf/conf.php');
+
+header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+date_default_timezone_set("Asia/Bangkok");
+
+$tanggal = mktime(date("m"),date("d"),date("Y"));
+$jam     = date("H:i");
+?>
+
+
+
 <!-- index.php -->
 <!DOCTYPE html>
 <html>
@@ -632,6 +665,10 @@ background:#3a72d6;
 
 </head>
 <body>
+ <p> Selamat Datang, <span>(<?= $user['nama']; ?>)</span> <?= $user['posisi']; ?> <p>
+<p>   <p>&nbsp;</p>
+
+
 <div style="display:flex; gap:10px; margin-bottom:15px;">
 
     <button class="btn-print" onclick="window.print()">
