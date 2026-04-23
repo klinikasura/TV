@@ -5,20 +5,29 @@ if(isset($_POST['keyword'])){
 
     $keyword = $conn->real_escape_string($_POST['keyword']);
 
+    // =========================
+    // QUERY PASIEN
+    // =========================
     $query = "
-    SELECT 
-        no_rkm_medis, 
-        nm_pasien, 
-        no_ktp,
-        alamat,
-        nm_ibu,
-        kd_pj
-    FROM pasien
-    WHERE no_rkm_medis LIKE '%$keyword%'
-       OR no_ktp LIKE '%$keyword%'
-       OR nm_pasien LIKE '%$keyword%'
-    LIMIT 10
-    ";
+SELECT DISTINCT
+    p.no_rkm_medis, 
+    p.nm_pasien, 
+    p.no_ktp,
+    p.alamat,
+    p.nm_ibu,
+    p.kd_pj
+FROM pasien p
+LEFT JOIN reg_periksa rp ON p.no_rkm_medis = rp.no_rkm_medis
+WHERE 
+    p.no_rkm_medis LIKE '%$keyword%'
+    OR p.no_ktp LIKE '%$keyword%'
+    OR p.nm_pasien LIKE '%$keyword%'
+    OR p.alamat LIKE '%$keyword%'        -- ✅ alamat
+    OR p.nm_ibu LIKE '%$keyword%'        -- ✅ ibu kandung
+    OR rp.p_jawab LIKE '%$keyword%'      -- ✅ penanggung jawab
+ORDER BY p.nm_pasien ASC
+LIMIT 10
+";
 
     $result = $conn->query($query);
 
@@ -26,32 +35,130 @@ if(isset($_POST['keyword'])){
 
         while($d = $result->fetch_assoc()){
 
-            // ambil penjamin dari tabel penjab
+            // =========================
+            // STATUS DAFTAR (LAMA / BARU)
+            // =========================
+            $status_daftar = "Baru";
+            $warna_status = "#e53935"; // merah
+
+            $qstatus = $conn->query("
+                SELECT stts_daftar 
+                FROM reg_periksa 
+                WHERE no_rkm_medis='{$d['no_rkm_medis']}'
+                ORDER BY tgl_registrasi DESC
+                LIMIT 1
+            ");
+
+            if($qstatus && $s = $qstatus->fetch_assoc()){
+                if($s['stts_daftar'] == "Lama"){
+                    $status_daftar = "Lama";
+                    $warna_status = "#43a047"; // hijau
+                }
+            }
+
+            // =========================
+            // PENJAMIN
+            // =========================
             $penjab = "-";
+
             if(!empty($d['kd_pj'])){
-                $pj = $conn->query("SELECT png_jawab FROM penjab WHERE kd_pj='{$d['kd_pj']}'");
+                $pj = $conn->query("
+                    SELECT png_jawab 
+                    FROM penjab 
+                    WHERE kd_pj='{$d['kd_pj']}'
+                    LIMIT 1
+                ");
                 if($p = $pj->fetch_assoc()){
                     $penjab = $p['png_jawab'];
                 }
             }
 
+            // warna penjamin
+            $warna_pj = "#6c757d";
+            $bg_pj = "#f1f1f1";
+
+            if(strpos(strtoupper($penjab), "BPJS") !== false){
+                $warna_pj = "#fff";
+                $bg_pj = "#43a047"; // hijau
+            } elseif(strtoupper($penjab) == "UMUM"){
+                $warna_pj = "#fff";
+                $bg_pj = "#1e88e5"; // biru
+            }
+
+            // =========================
+            // PENANGGUNG JAWAB
+            // =========================
+            $pjawab = "-";
+            $status_pj = "-";
+
+            $qpj = $conn->query("
+                SELECT p_jawab, hubunganpj
+                FROM reg_periksa 
+                WHERE no_rkm_medis='{$d['no_rkm_medis']}'
+                ORDER BY tgl_registrasi DESC
+                LIMIT 1
+            ");
+
+            if($qpj && $p = $qpj->fetch_assoc()){
+                if(!empty($p['p_jawab'])){
+                    $pjawab = $p['p_jawab'];
+                }
+                if(!empty($p['hubunganpj'])){
+                    $status_pj = $p['hubunganpj'];
+                }
+            } else {
+                $pjawab = $d['nm_ibu'];
+                $status_pj = "Ibu";
+            }
+
+            // =========================
+            // OUTPUT
+            // =========================
             echo "
             <div class='pasien-item'
                 data-rm='{$d['no_rkm_medis']}'
-                style='padding:10px;border-bottom:1px solid #ddd;cursor:pointer'>
+                style='padding:12px;border-bottom:1px solid #ddd;cursor:pointer'>
 
-                <b>{$d['nm_pasien']}</b><br>
+                <b style='color:#2a7da8'>{$d['nm_pasien']}</b>
+
+                <span style='
+                    float:right;
+                    background:$warna_status;
+                    color:white;
+                    padding:3px 8px;
+                    border-radius:8px;
+                    font-size:11px;
+                '>
+                    $status_daftar
+                </span>
+
+                <br>
+
                 RM: {$d['no_rkm_medis']} | NIK: {$d['no_ktp']}<br>
                 Alamat: {$d['alamat']}<br>
                 Ibu: {$d['nm_ibu']}<br>
-                Penjamin: {$penjab}
+
+                <b>Penanggung Jawab:</b> {$pjawab}<br>
+                <b>Status PJ:</b> {$status_pj}<br>
+
+                Penjamin: 
+                <span style='
+                    background:$bg_pj;
+                    color:$warna_pj;
+                    padding:3px 8px;
+                    border-radius:8px;
+                    font-size:11px;
+                    font-weight:bold;
+                '>
+                    $penjab
+                </span>
 
             </div>
             ";
         }
 
     } else {
-        echo "<p>Tidak ditemukan</p>";
+        echo "<p style='padding:10px'>Tidak ditemukan</p>";
     }
 }
 ?>

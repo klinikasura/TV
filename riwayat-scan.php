@@ -3,7 +3,7 @@ include 'koneksi-scan.php';
 
 if(isset($_POST['no_rm'])){
 
-$no_rm = $_POST['no_rm'];
+$no_rm = $conn->real_escape_string($_POST['no_rm']);
 
 $q = $conn->query("
 SELECT rp.no_rawat, rp.tgl_registrasi, rp.status_lanjut,
@@ -21,22 +21,35 @@ LIMIT 1000
 
 echo "<hr><h3>Riwayat Berobat</h3>";
 
+$last_tanggal = "";
+
 while($d = $q->fetch_assoc()){
 
-echo "<div style='margin-bottom:15px;padding:10px;background:#f1faff;border-radius:8px'>";
+// ================= PEMISAH TANGGAL =================
+$tanggal = date('Y-m-d', strtotime($d['tgl_registrasi']));
 
-echo "<b>Tanggal:</b> $d[tgl_registrasi]<br>";
+if($tanggal != $last_tanggal){
+    echo "<div style='margin:15px 0;padding:8px;background:#2c3e50;color:#fff;text-align:center;border-radius:6px;font-weight:bold'>
+    📅 ".date('d-m-Y', strtotime($d['tgl_registrasi']))."
+    </div>";
+    $last_tanggal = $tanggal;
+}
+
+echo "<div style='margin-bottom:15px;padding:12px;background:#f1faff;border-radius:10px'>";
+
 echo "<b>No Rawat:</b> $d[no_rawat]<br>";
 echo "<b>Poli:</b> $d[nm_poli]<br>";
 echo "<b>Dokter:</b> $d[nm_dokter]<br>";
 echo "<b>Pembayaran:</b> $d[png_jawab]<br>";
+
+$no_rawat = $d['no_rawat'];
 
 /* ================= DIAGNOSA ================= */
 $dx = $conn->query("
 SELECT p.nm_penyakit 
 FROM diagnosa_pasien dp
 JOIN penyakit p ON dp.kd_penyakit = p.kd_penyakit
-WHERE dp.no_rawat='$d[no_rawat]'
+WHERE dp.no_rawat='$no_rawat'
 ");
 
 echo "<b>Diagnosa:</b><ul>";
@@ -50,7 +63,7 @@ $obat = $conn->query("
 SELECT db.nama_brng, dpo.jml
 FROM detail_pemberian_obat dpo
 JOIN databarang db ON dpo.kode_brng = db.kode_brng
-WHERE dpo.no_rawat='$d[no_rawat]'
+WHERE dpo.no_rawat='$no_rawat'
 ");
 
 echo "<b>Obat:</b><ul>";
@@ -59,12 +72,86 @@ while($o = $obat->fetch_assoc()){
 }
 echo "</ul>";
 
+/* ================= TINDAKAN (ICON + BADGE) ================= */
+$tindakan = $conn->query("
+SELECT jp.nm_perawatan AS nama
+FROM rawat_jl_dr rjd
+JOIN jns_perawatan jp ON rjd.kd_jenis_prw = jp.kd_jenis_prw
+WHERE rjd.no_rawat='$no_rawat'
+
+UNION ALL
+
+SELECT jp.nm_perawatan AS nama
+FROM rawat_jl_pr rjp
+JOIN jns_perawatan jp ON rjp.kd_jenis_prw = jp.kd_jenis_prw
+WHERE rjp.no_rawat='$no_rawat'
+
+UNION ALL
+
+SELECT jp.nm_perawatan AS nama
+FROM rawat_jl_drpr rjdp
+JOIN jns_perawatan jp ON rjdp.kd_jenis_prw = jp.kd_jenis_prw
+WHERE rjdp.no_rawat='$no_rawat'
+");
+
+echo "<b>Tindakan:</b><br>";
+
+if($tindakan && $tindakan->num_rows > 0){
+
+    while($t = $tindakan->fetch_assoc()){
+
+        $nama = strtolower($t['nama']);
+        $icon = "🩺";
+        $color = "#7f8c8d";
+        $label = $t['nama'];
+
+        if(strpos($nama, 'suntik') !== false || strpos($nama, 'injek') !== false){
+            $icon = "💉";
+            $color = "#e74c3c";
+            $label = "Suntik";
+        } 
+        elseif(strpos($nama, 'infus') !== false){
+            $icon = "💧";
+            $color = "#3498db";
+            $label = "Infus";
+        } 
+        elseif(strpos($nama, 'nebul') !== false){
+            $icon = "🌫";
+            $color = "#9b59b6";
+            $label = "Nebulizer";
+        } 
+        elseif(strpos($nama, 'rawat luka') !== false){
+            $icon = "🩹";
+            $color = "#f39c12";
+            $label = "Perawatan Luka";
+        }
+
+        echo "
+        <span style='
+            display:inline-block;
+            padding:4px 10px;
+            margin:2px;
+            border-radius:20px;
+            background:$color;
+            color:#fff;
+            font-size:12px;
+        '>
+        $icon $label
+        </span>";
+    }
+
+} else {
+    echo "<i>-</i>";
+}
+
+echo "<br>";
+
 /* ================= LAB ================= */
 $lab = $conn->query("
 SELECT tl.Pemeriksaan, dpl.nilai
 FROM detail_periksa_lab dpl
 JOIN template_laboratorium tl ON dpl.id_template = tl.id_template
-WHERE dpl.no_rawat='$d[no_rawat]'
+WHERE dpl.no_rawat='$no_rawat'
 ");
 
 echo "<b>Lab:</b><ul>";
@@ -73,72 +160,46 @@ while($l = $lab->fetch_assoc()){
 }
 echo "</ul>";
 
-/* =========================
-   SOAP (PEMERIKSAAN RALAN)
-========================= */
+/* ================= SOAP ================= */
 $soap = $conn->query("
 SELECT * FROM pemeriksaan_ralan 
-WHERE no_rawat = '$d[no_rawat]'
+WHERE no_rawat = '$no_rawat'
 ORDER BY tgl_perawatan DESC, jam_rawat DESC
 LIMIT 1
 ");
 
 if($s = $soap->fetch_assoc()){
 
-    echo "<div style='margin-top:10px;padding:8px;background:#fff3e0;border-radius:6px'>";
-    echo "<b>SOAP:</b><br>";
+echo "<div style='margin-top:10px;padding:8px;background:#fff3e0;border-radius:6px'>";
+echo "<b>SOAP:</b><br>";
 
-    // SUBJECTIVE
-    echo "<b>S (Keluhan):</b><br>";
-    echo $s['keluhan'] ? $s['keluhan'] : "-";
-    echo "<br><br>";
+echo "<b>S:</b> ".($s['keluhan'] ?: '-')."<br><br>";
+echo "<b>O:</b> ".($s['pemeriksaan'] ?: '-')."<br>";
 
-    // OBJECTIVE
-    echo "<b>O (Pemeriksaan):</b><br>";
-    echo $s['pemeriksaan'] ? $s['pemeriksaan'] : "-";
-    echo "<br>";
+echo "<small>
+Tensi: $s[tensi] | Nadi: $s[nadi] | Suhu: $s[suhu_tubuh] |
+Respirasi: $s[respirasi] | SpO2: $s[spo2]
+</small><br><br>";
 
-    echo "<small>";
-    echo "Tensi: $s[tensi] | ";
-    echo "Nadi: $s[nadi] | ";
-    echo "Suhu: $s[suhu_tubuh] | ";
-    echo "Respirasi: $s[respirasi] | ";
-    echo "SpO2: $s[spo2]";
-    echo "</small><br><br>";
+echo "<b>A:</b> ".($s['penilaian'] ?: '-')."<br><br>";
+echo "<b>P:</b> ".($s['rtl'] ?: '-')."<br>";
+echo "<b>Instruksi:</b> ".($s['instruksi'] ?: '-')."<br><br>";
+echo "<b>Evaluasi:</b> ".($s['evaluasi'] ?: '-');
 
-    // ASSESSMENT
-    echo "<b>A (Penilaian):</b><br>";
-    echo $s['penilaian'] ? $s['penilaian'] : "-";
-    echo "<br><br>";
-
-    // PLAN
-    echo "<b>P (Rencana):</b><br>";
-    echo $s['rtl'] ? $s['rtl'] : "-";
-    echo "<br>";
-
-    echo "<b>Instruksi:</b><br>";
-    echo $s['instruksi'] ? $s['instruksi'] : "-";
-    echo "<br><br>";
-
-    // EVALUASI
-    echo "<b>Evaluasi:</b><br>";
-    echo $s['evaluasi'] ? $s['evaluasi'] : "-";
-
-    echo "</div>";
+echo "</div>";
 }
 
 /* ================= TOTAL BIAYA ================= */
 $bill = $conn->query("
 SELECT SUM(totalbiaya) as total 
 FROM billing 
-WHERE no_rawat='$d[no_rawat]'
+WHERE no_rawat='$no_rawat'
 ")->fetch_assoc();
 
 $total = $bill['total'] ?? 0;
 
 echo "<b>Total Biaya:</b> Rp ".number_format($total)."<br>";
 
-/* ================= STATUS BAYAR (DARI DB) ================= */
 echo "<b>Status Bayar:</b> $d[status_bayar]";
 
 echo "</div>";

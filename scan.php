@@ -632,8 +632,18 @@ background:#3a72d6;
 
 </head>
 <body>
+<div style="display:flex; gap:10px; margin-bottom:15px;">
 
-<button class="btn-print" onclick="window.print()">PRINT HALAMAN</button>
+    <button class="btn-print" onclick="window.print()">
+        PRINTF
+    </button>
+
+    <a href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/tiket.php" Target="_blank" id="btn-daftar" class="btn-print" 
+       style="background:#28a745;border-color:#1e7e34;">
+        DAFTARKAN
+    </a>
+
+</div>
 
 <input type="text" id="cari_pasien" placeholder="No RM / KTP / Nama">
 
@@ -749,6 +759,8 @@ $(document).ready(function(){
 
 });
 </script>
+
+
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
