@@ -1,33 +1,52 @@
 <?php
 include 'koneksi-scan.php';
 
-if(isset($_POST['keyword'])){
+if(isset($_POST['keyword1']) || isset($_POST['keyword2'])){
 
-    $keyword = $conn->real_escape_string($_POST['keyword']);
+    $keyword1 = $conn->real_escape_string($_POST['keyword1']);
+    $keyword2 = $conn->real_escape_string($_POST['keyword2']);
+
+    // =========================
+    // WHERE UTAMA (KOLOM 1)
+    // =========================
+    $where1 = "
+        p.no_rkm_medis LIKE '%$keyword1%'
+        OR p.no_ktp LIKE '%$keyword1%'
+        OR p.nm_pasien LIKE '%$keyword1%'
+        OR p.alamat LIKE '%$keyword1%'
+        OR p.nm_ibu LIKE '%$keyword1%'
+        OR rp.p_jawab LIKE '%$keyword1%'
+    ";
+
+    // =========================
+    // WHERE FILTER (KOLOM 2)
+    // =========================
+    $where2 = "";
+    if(!empty($keyword2)){
+        $where2 = "AND (
+            p.alamat LIKE '%$keyword2%'
+            OR rp.p_jawab LIKE '%$keyword2%'
+        )";
+    }
 
     // =========================
     // QUERY PASIEN
     // =========================
     $query = "
-SELECT DISTINCT
-    p.no_rkm_medis, 
-    p.nm_pasien, 
-    p.no_ktp,
-    p.alamat,
-    p.nm_ibu,
-    p.kd_pj
-FROM pasien p
-LEFT JOIN reg_periksa rp ON p.no_rkm_medis = rp.no_rkm_medis
-WHERE 
-    p.no_rkm_medis LIKE '%$keyword%'
-    OR p.no_ktp LIKE '%$keyword%'
-    OR p.nm_pasien LIKE '%$keyword%'
-    OR p.alamat LIKE '%$keyword%'        -- ✅ alamat
-    OR p.nm_ibu LIKE '%$keyword%'        -- ✅ ibu kandung
-    OR rp.p_jawab LIKE '%$keyword%'      -- ✅ penanggung jawab
-ORDER BY p.nm_pasien ASC
-LIMIT 10
-";
+    SELECT DISTINCT
+        p.no_rkm_medis, 
+        p.nm_pasien, 
+        p.no_ktp,
+        p.alamat,
+        p.nm_ibu,
+        p.kd_pj
+    FROM pasien p
+    LEFT JOIN reg_periksa rp ON p.no_rkm_medis = rp.no_rkm_medis
+    WHERE ($where1)
+    $where2
+    ORDER BY p.nm_pasien ASC
+    LIMIT 10
+    ";
 
     $result = $conn->query($query);
 
@@ -36,10 +55,10 @@ LIMIT 10
         while($d = $result->fetch_assoc()){
 
             // =========================
-            // STATUS DAFTAR (LAMA / BARU)
+            // STATUS DAFTAR
             // =========================
             $status_daftar = "Baru";
-            $warna_status = "#e53935"; // merah
+            $warna_status = "#e53935";
 
             $qstatus = $conn->query("
                 SELECT stts_daftar 
@@ -52,7 +71,7 @@ LIMIT 10
             if($qstatus && $s = $qstatus->fetch_assoc()){
                 if($s['stts_daftar'] == "Lama"){
                     $status_daftar = "Lama";
-                    $warna_status = "#43a047"; // hijau
+                    $warna_status = "#43a047";
                 }
             }
 
@@ -73,16 +92,15 @@ LIMIT 10
                 }
             }
 
-            // warna penjamin
             $warna_pj = "#6c757d";
             $bg_pj = "#f1f1f1";
 
             if(strpos(strtoupper($penjab), "BPJS") !== false){
                 $warna_pj = "#fff";
-                $bg_pj = "#43a047"; // hijau
+                $bg_pj = "#43a047";
             } elseif(strtoupper($penjab) == "UMUM"){
                 $warna_pj = "#fff";
-                $bg_pj = "#1e88e5"; // biru
+                $bg_pj = "#1e88e5";
             }
 
             // =========================

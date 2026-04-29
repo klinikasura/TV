@@ -18,8 +18,145 @@ AND rp.stts != 'Batal'
 ORDER BY rp.tgl_registrasi DESC
 LIMIT 1000
 ");
+// ================= DETAIL TERAKHIR =================
+$detail = $conn->query("
+SELECT 
+    ki.tgl_masuk,
+    ki.jam_masuk,
+    ki.tgl_keluar,
+    ki.jam_keluar,
+    ki.diagnosa_awal,
+    ki.diagnosa_akhir,
+    ki.lama,
+    ki.ttl_biaya,
+    ki.stts_pulang,
+    k.kd_kamar,
+    k.kelas,
+    b.nm_bangsal
+FROM kamar_inap ki
+JOIN kamar k ON ki.kd_kamar = k.kd_kamar
+JOIN bangsal b ON k.kd_bangsal = b.kd_bangsal
+JOIN reg_periksa rp ON ki.no_rawat = rp.no_rawat
+WHERE rp.no_rkm_medis = '$no_rm'
+ORDER BY ki.tgl_masuk DESC, ki.jam_masuk DESC
+LIMIT 1
+")->fetch_assoc();
 
-echo "<hr><h3>Riwayat Berobat</h3>";
+
+// ================= FORMAT =================
+$tgl_masuk = $detail['tgl_masuk'] 
+    ? date('d-m-Y', strtotime($detail['tgl_masuk'])) . " " . substr($detail['jam_masuk'],0,5)
+    : '-';
+
+if(!empty($detail['tgl_keluar'])){
+    $tgl_keluar = date('d-m-Y', strtotime($detail['tgl_keluar'])) . " " . substr($detail['jam_keluar'],0,5);
+} else {
+    $tgl_keluar = "⏳ Belum Pulang";
+}
+
+$diagnosa_awal  = $detail['diagnosa_awal'] ?: '-';
+$diagnosa_akhir = $detail['diagnosa_akhir'] ?: '-';
+
+$kamar = $detail['nm_bangsal']." | Kelas ".$detail['kelas']." | Kamar ".$detail['kd_kamar'];
+
+// ================= STATUS =================
+if($detail['stts_pulang'] == '-' || empty($detail['tgl_keluar'])){
+    $status = "🟥 Masih Dirawat";
+    $bg = "#e74c3c";
+} else {
+    $status = "🟩 Sudah Pulang";
+    $bg = "#27ae60";
+}
+
+// ================= LAMA =================
+if(!empty($detail['lama'])){
+    $lama = $detail['lama']." hari";
+} else {
+    $masuk = new DateTime($detail['tgl_masuk']);
+    $keluar = !empty($detail['tgl_keluar']) ? new DateTime($detail['tgl_keluar']) : new DateTime();
+    $lama = $masuk->diff($keluar)->days." hari";
+}
+
+// ================= BIAYA =================
+// ================= BIAYA DARI BILLING =================
+$bill_inap = $conn->query("
+SELECT SUM(totalbiaya) as total 
+FROM billing 
+WHERE no_rawat = (
+    SELECT ki.no_rawat 
+    FROM kamar_inap ki
+    JOIN reg_periksa rp ON ki.no_rawat = rp.no_rawat
+    WHERE rp.no_rkm_medis = '$no_rm'
+    ORDER BY ki.tgl_masuk DESC, ki.jam_masuk DESC
+    LIMIT 1
+)
+")->fetch_assoc();
+
+$biaya = number_format($bill_inap['total'] ?? 0);
+
+
+// ================= OUTPUT =================
+echo "
+<div style='
+    margin:10px 0;
+    padding:14px;
+    background:#fff;
+    border-radius:12px;
+    border-left:6px solid $bg;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+'>
+
+    <b style='color:#2c3e50;font-size:14px;'>🏥 RAWAT INAP TERAKHIR</b><br><br>
+
+    <b>📅 Masuk:</b> $tgl_masuk<br>
+    <b>📅 Keluar:</b> $tgl_keluar<br>
+
+    <b>🛏 Kamar:</b> $kamar<br>
+
+    <b>🧾 Diagnosa Awal:</b> $diagnosa_awal<br>
+    <b>🧾 Diagnosa Akhir:</b> $diagnosa_akhir<br>
+
+    <b>📊 Lama Dirawat:</b> $lama<br>
+    <b>💰 Total Biaya:</b> Rp $biaya<br><br>
+
+    <span style='
+        padding:6px 12px;
+        border-radius:20px;
+        background:$bg;
+        color:#fff;
+        font-size:12px;
+        font-weight:bold;
+    '>
+        $status
+    </span>
+
+</div>
+";
+
+echo "
+<div style='
+    margin:20px 0;
+    text-align:center;
+    font-weight:bold;
+    color:#fff;
+    background:#2c3e50;
+    padding:10px;
+    border-radius:8px;
+    font-size:14px;
+'>
+    ===== RIWAYAT RAWAT JALAN =====
+</div>
+";
+
+
+
+
+
+
+
+
+
+
 
 $last_tanggal = "";
 
@@ -189,6 +326,7 @@ echo "<b>Evaluasi:</b> ".($s['evaluasi'] ?: '-');
 echo "</div>";
 }
 
+
 /* ================= TOTAL BIAYA ================= */
 $bill = $conn->query("
 SELECT SUM(totalbiaya) as total 
@@ -204,6 +342,9 @@ echo "<b>Status Bayar:</b> $d[status_bayar]";
 
 echo "</div>";
 }
+
+
+
 
 }
 ?>

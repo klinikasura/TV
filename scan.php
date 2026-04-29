@@ -660,6 +660,13 @@ background:#3a72d6;
 
 </style>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+body{font-family:Segoe UI;background:#eaf6fb;padding:30px;}
+#popup_pasien{display:none;width:100%;max-width:600px;margin-top:10px;padding:15px;background:#fff;border-radius:12px;}
+</style>
+
 
 
 
@@ -682,17 +689,31 @@ background:#3a72d6;
 
 </div>
 
-<input type="text" id="cari_pasien" placeholder="No RM / KTP / Nama">
+<!-- ========================= -->
+<!-- 2 KOLOM PENCARIAN -->
+<!-- ========================= -->
+<div style="display:flex; gap:10px; margin-bottom:15px;">
 
+    <input type="text" id="cari_pasien1" placeholder="RM / KTP / Nama / Ibu"
+        style="flex:1;padding:10px;border-radius:8px;border:1px solid #ccc;">
+
+    <input type="text" id="cari_pasien2" placeholder="Alamat / Penanggung Jawab"
+        style="flex:1;padding:10px;border-radius:8px;border:1px solid #ccc;">
+
+</div>
+
+<!-- ========================= -->
+<!-- POPUP HASIL -->
+<!-- ========================= -->
 <div id="popup_pasien">
     <h3>Data Pasien</h3>
     <div id="hasil_pasien"></div>
 
-    <!-- 🔥 tombol load more -->
     <button id="load_more" style="display:none;margin-top:10px;">
         Load More
     </button>
 </div>
+
 <script>
 $(document).ready(function(){
 
@@ -700,19 +721,24 @@ $(document).ready(function(){
     let no_rm_global = '';
 
     // ======================
-    // SEARCH PASIEN
+    // FUNCTION SEARCH (2 KOLOM)
     // ======================
-    $("#cari_pasien").keyup(function(){
+    function cariPasien(){
 
-        let keyword = $(this).val();
+        let keyword1 = $("#cari_pasien1").val();
+        let keyword2 = $("#cari_pasien2").val();
+
         page = 0;
 
-        if(keyword.length >= 3){
+        if(keyword1.length >= 2 || keyword2.length >= 2){
 
             $.ajax({
                 url: "cari-pasien-rm.php",
                 method: "POST",
-                data: {keyword: keyword},
+                data: {
+                    keyword1: keyword1,
+                    keyword2: keyword2
+                },
                 success: function(response){
 
                     $("#popup_pasien").show();
@@ -724,10 +750,14 @@ $(document).ready(function(){
         } else {
             $("#popup_pasien").hide();
         }
-    });
+    }
+
+    // trigger dua input
+    $("#cari_pasien1").keyup(cariPasien);
+    $("#cari_pasien2").keyup(cariPasien);
 
     // ======================
-    // CLICK PASIEN (PENTING)
+    // CLICK PASIEN
     // ======================
     $(document).on("click", ".pasien-item", function(){
 
@@ -743,7 +773,6 @@ $(document).ready(function(){
             success: function(res){
 
                 $("#hasil_pasien").html(res);
-
                 loadRiwayat(true);
             }
         });
@@ -752,40 +781,37 @@ $(document).ready(function(){
     // ======================
     // LOAD RIWAYAT
     // ======================
-   function loadRiwayat(reset=false){
+    function loadRiwayat(reset=false){
 
-    if(!no_rm_global) return;
+        if(!no_rm_global) return;
 
-    $.ajax({
-        url: "riwayat-scan.php",
-        method: "POST",
-        data: {
-            no_rm: no_rm_global,
-            page: page
-        },
-        success: function(res){
+        $.ajax({
+            url: "riwayat-scan.php",
+            method: "POST",
+            data: {
+                no_rm: no_rm_global,
+                page: page
+            },
+            success: function(res){
 
-            if(reset){
-                $("#hasil_pasien").append("<div id='riwayat'></div>");
-                $("#riwayat").html(res);
-            } else {
-                $("#riwayat").append(res);
+                if(reset){
+                    $("#hasil_pasien").append("<div id='riwayat'></div>");
+                    $("#riwayat").html(res);
+                } else {
+                    $("#riwayat").append(res);
+                }
+
+                let masihAda = $("#data_status").data("more");
+
+                if(masihAda == 1){
+                    $("#load_more").show();
+                } else {
+                    $("#load_more").hide();
+                }
             }
+        });
+    }
 
-            // =========================
-            // CEK DATA MASIH ADA ATAU TIDAK
-            // =========================
-            let masihAda = $("#data_status").data("more");
-
-            if(masihAda == 1){
-                $("#load_more").show();
-            } else {
-                $("#load_more").hide();
-            }
-
-        }
-    });
-}
     // ======================
     // LOAD MORE
     // ======================
@@ -796,7 +822,6 @@ $(document).ready(function(){
 
 });
 </script>
-
 
 
 <!-- BOTTOM NAV -->
