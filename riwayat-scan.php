@@ -18,6 +18,7 @@ AND rp.stts != 'Batal'
 ORDER BY rp.tgl_registrasi DESC
 LIMIT 1000
 ");
+
 // ================= DETAIL TERAKHIR =================
 $detail = $conn->query("
 SELECT 
@@ -42,6 +43,30 @@ ORDER BY ki.tgl_masuk DESC, ki.jam_masuk DESC
 LIMIT 1
 ")->fetch_assoc();
 
+
+// ================= CEK DATA RAWAT INAP =================
+if(!$detail){
+
+echo "
+<div style='
+    margin:10px 0;
+    padding:14px;
+    background:#fff;
+    border-radius:12px;
+    border-left:6px solid #95a5a6;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+'>
+
+    <b style='color:#2c3e50;font-size:14px;'>🏥 RAWAT INAP</b><br><br>
+
+    <span style='color:#7f8c8d;'>
+        📭 Belum ada riwayat rawat inap
+    </span>
+
+</div>
+";
+
+} else {
 
 // ================= FORMAT =================
 $tgl_masuk = $detail['tgl_masuk'] 
@@ -78,7 +103,6 @@ if(!empty($detail['lama'])){
 }
 
 // ================= BIAYA =================
-// ================= BIAYA DARI BILLING =================
 $bill_inap = $conn->query("
 SELECT SUM(totalbiaya) as total 
 FROM billing 
@@ -133,6 +157,10 @@ echo "
 </div>
 ";
 
+} // penutup else rawat inap
+
+
+
 echo "
 <div style='
     margin:20px 0;
@@ -180,7 +208,6 @@ echo "<b>Dokter:</b> $d[nm_dokter]<br>";
 echo "<b>Pembayaran:</b> $d[png_jawab]<br>";
 
 $no_rawat = $d['no_rawat'];
-
 /* ================= DIAGNOSA ================= */
 $dx = $conn->query("
 SELECT p.nm_penyakit 
@@ -282,7 +309,6 @@ if($tindakan && $tindakan->num_rows > 0){
 }
 
 echo "<br>";
-
 /* ================= LAB ================= */
 $lab = $conn->query("
 SELECT tl.Pemeriksaan, dpl.nilai
@@ -327,6 +353,7 @@ echo "</div>";
 }
 
 
+
 /* ================= TOTAL BIAYA ================= */
 $bill = $conn->query("
 SELECT SUM(totalbiaya) as total 
@@ -337,14 +364,9 @@ WHERE no_rawat='$no_rawat'
 $total = $bill['total'] ?? 0;
 
 echo "<b>Total Biaya:</b> Rp ".number_format($total)."<br>";
-
 echo "<b>Status Bayar:</b> $d[status_bayar]";
-
 echo "</div>";
 }
-
-
-
 
 }
 ?>

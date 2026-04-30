@@ -7,6 +7,19 @@ if(isset($_POST['keyword1']) || isset($_POST['keyword2'])){
     $keyword2 = $conn->real_escape_string($_POST['keyword2']);
 
     // =========================
+    // FUNCTION HIGHLIGHT
+    // =========================
+    function highlight($text, $keyword){
+        if(empty($keyword)) return $text;
+
+        return preg_replace(
+            "/(" . preg_quote($keyword, '/') . ")/i",
+            "<span style='color:red;font-weight:bold;'>$1</span>",
+            $text
+        );
+    }
+
+    // =========================
     // WHERE UTAMA (KOLOM 1)
     // =========================
     $where1 = "
@@ -45,7 +58,7 @@ if(isset($_POST['keyword1']) || isset($_POST['keyword2'])){
     WHERE ($where1)
     $where2
     ORDER BY p.nm_pasien ASC
-    LIMIT 10
+    LIMIT 100
     ";
 
     $result = $conn->query($query);
@@ -137,7 +150,7 @@ if(isset($_POST['keyword1']) || isset($_POST['keyword2'])){
                 data-rm='{$d['no_rkm_medis']}'
                 style='padding:12px;border-bottom:1px solid #ddd;cursor:pointer'>
 
-                <b style='color:#2a7da8'>{$d['nm_pasien']}</b>
+                <b style='color:#2a7da8'>" . highlight($d['nm_pasien'], $keyword1) . "</b>
 
                 <span style='
                     float:right;
@@ -153,10 +166,10 @@ if(isset($_POST['keyword1']) || isset($_POST['keyword2'])){
                 <br>
 
                 RM: {$d['no_rkm_medis']} | NIK: {$d['no_ktp']}<br>
-                Alamat: {$d['alamat']}<br>
-                Ibu: {$d['nm_ibu']}<br>
+                Alamat: " . highlight($d['alamat'], $keyword1) . "<br>
+                Ibu: " . highlight($d['nm_ibu'], $keyword1) . "<br>
 
-                <b>Penanggung Jawab:</b> {$pjawab}<br>
+                <b>Penanggung Jawab:</b> " . highlight($pjawab, $keyword1) . "<br>
                 <b>Status PJ:</b> {$status_pj}<br>
 
                 Penjamin: 
