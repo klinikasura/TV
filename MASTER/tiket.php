@@ -103,6 +103,9 @@
 
 
 
+
+
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
       document.documentElement.requestFullscreen();

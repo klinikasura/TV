@@ -52,6 +52,48 @@
     border-radius: 5px;
   }
 </style>
+<style>
+  .floating-container {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    cursor: move;
+  }
+
+  .floating-btn {
+    padding: 12px 18px;
+    border-radius: 50px;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    min-width: 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: 0.3s;
+    user-select: none;
+  }
+
+  .floating-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .btn1 {
+    background: #2196F3;
+  }
+
+  .btn2 {
+    background: #4CAF50;
+  }
+
+  .btn3 {
+    background: #FF5722;
+  }
+</style>
 
 <?php 
   // ambil data pasien belum bayar dari database
@@ -84,7 +126,92 @@
 <iframe src="http://10.10.20.250/dashboard/APPS-ROBOT/TV/MASTER/pie.php" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:1225px; height:350px" title="Klinik Asura"></iframe>
 
 
+<div class="floating-container" id="floatingContainer">
 
+  <a class="floating-btn btn1"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/scan.php"
+     target="_blank">
+     E-RM
+  </a>
+
+  <a class="floating-btn btn2"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/pie.php"
+     target="_blank">
+     E-Rajal
+  </a>
+
+  <a class="floating-btn btn3"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/pie-ranap.php"
+     target="_blank">
+     E-Ranap
+  </a>
+
+</div>
+
+<script>
+
+  // DRAG FLOATING MENU
+  const floating = document.getElementById("floatingContainer");
+
+  let isDragging = false;
+  let offsetX, offsetY;
+
+  floating.addEventListener("mousedown", function(e) {
+
+    isDragging = true;
+
+    offsetX = e.clientX - floating.getBoundingClientRect().left;
+    offsetY = e.clientY - floating.getBoundingClientRect().top;
+
+  });
+
+  document.addEventListener("mousemove", function(e) {
+
+    if (isDragging) {
+
+      floating.style.left = (e.clientX - offsetX) + "px";
+      floating.style.top = (e.clientY - offsetY) + "px";
+      floating.style.right = "auto";
+
+    }
+
+  });
+
+  document.addEventListener("mouseup", function() {
+    isDragging = false;
+  });
+
+  // TOUCHSCREEN
+  floating.addEventListener("touchstart", function(e) {
+
+    isDragging = true;
+
+    const touch = e.touches[0];
+
+    offsetX = touch.clientX - floating.getBoundingClientRect().left;
+    offsetY = touch.clientY - floating.getBoundingClientRect().top;
+
+  });
+
+  document.addEventListener("touchmove", function(e) {
+
+    if (isDragging) {
+
+      const touch = e.touches[0];
+
+      floating.style.left = (touch.clientX - offsetX) + "px";
+      floating.style.top = (touch.clientY - offsetY) + "px";
+      floating.style.right = "auto";
+
+    }
+
+  });
+
+  document.addEventListener("touchend", function() {
+    isDragging = false;
+  });
+
+</script>
 
 
 

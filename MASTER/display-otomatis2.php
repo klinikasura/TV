@@ -12,7 +12,7 @@
         display:flex; flex-direction:column;
     }
     .iframe-container iframe { width:100%; border:none; }
-    .iframe-container iframe:nth-child(1) { height:300px; }
+    .iframe-container iframe:nth-child(1) { height:800px; }
     .iframe-container iframe:nth-child(2) { flex-grow:1; }
 
     #fullScreenBtn, #goToUrlBtn {
