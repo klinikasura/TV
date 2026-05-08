@@ -1,6 +1,5 @@
 <div id="weather-app">
   <div class="card">
-Cuaca Hari Ini
     <canvas id="effectCanvas"></canvas>
     <div class="flash" id="flash"></div>
 
@@ -260,7 +259,7 @@ function icon(code){
   if(code>=95) return "JPG/95-petir-icon.gif";
   if(code>=61) return "JPG/61-hujan-icon.gif";
   if(code<=3) return "JPG/3-3.gif";
-  return "JPG/CERAH.png";
+  return "JPG/3-3.gif";
 }
 
 /* DESC */

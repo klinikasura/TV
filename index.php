@@ -16,7 +16,7 @@ $video_id = 'DOOrIxw5xOw';
  <title>myROBOT-V80</title>
   <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
 <link rel="stylesheet" href="style-tv.css">
- <meta http-equiv="refresh" content="600;url=index.php">
+ <meta http-equiv="refresh" content="800;url=index.php">
 
 
     <!-- CSS umum -->
