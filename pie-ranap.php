@@ -177,6 +177,28 @@ button:hover{
     color:#64748b;
     font-size:14px;
 }
+.button-group{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.btn-link{
+    padding:13px 28px;
+    border-radius:10px;
+    background:#10b981;
+    color:white;
+    text-decoration:none;
+    font-size:15px;
+    transition:0.3s;
+    display:inline-block;
+    text-align:center;
+}
+
+.btn-link:hover{
+    background:#059669;
+}
 
 @media(max-width:600px){
 
@@ -225,15 +247,18 @@ button:hover{
                         value="<?= $tgl2 ?>"
                     >
                 </div>
+ <div style="display:flex; gap:10px; align-items:center;">
 
-                <div>
-                    <button type="submit">
-                        Tampilkan Data
-                    </button>
-                </div>
+          
+                     <button type="submit">
+        Filter Data
+    </button>
 
-            </div>
+    <button class="btn-print" onclick="window.print()">
+        PRINTF
+    </button>
 
+</div>
         </form>
 
         <div class="chart-box">

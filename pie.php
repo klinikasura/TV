@@ -178,6 +178,21 @@ button:hover{
     color:#64748b;
     font-size:14px;
 }
+.btn-link{
+    padding:12px 25px;
+    background:#10b981;
+    color:white;
+    text-decoration:none;
+    border-radius:10px;
+    font-size:15px;
+    transition:0.3s;
+    display:inline-block;
+    margin-top:20px;
+}
+
+.btn-link:hover{
+    background:#059669;
+}
 
 @media(max-width:600px){
 
@@ -191,6 +206,7 @@ button:hover{
     }
 
 }
+
 
 </style>
 
@@ -227,13 +243,16 @@ button:hover{
                     >
                 </div>
 
-                <div>
-                    <button type="submit">
-                        Filter Data
-                    </button>
-                </div>
+               <div style="display:flex; gap:10px; align-items:center;">
 
-            </div>
+    <button type="submit">
+        Filter Data
+    </button>
+
+     <button class="btn-print" onclick="window.print()">
+        PRINTF
+    </button>
+</div>
 
         </form>
 
