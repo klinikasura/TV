@@ -1,6 +1,7 @@
 <div id="weather-app">
   <div class="card">
     <canvas id="effectCanvas"></canvas>
+
     <div class="flash" id="flash"></div>
 
     <!-- POPUP -->
@@ -17,9 +18,6 @@
        <span id="wind"></span> km/h |
        <span id="humidity"></span>%
     </div>
-
- 
-
   </div>
 </div>
 
@@ -70,7 +68,7 @@ body {
 }
 
 #icon {
-  width:100px;
+  width:110px;
   animation: float 3s infinite ease-in-out;
 }
 
@@ -92,36 +90,51 @@ body {
 }
 
 .details {
-  font-size:14px;
+  font-size:18px;
   text-align:center;
 }
 
-.night {
-  text-align:center;
-  font-size:12px;
-  margin-top:4px;
-  color:#8be9fd;
-}
-
+/* ===== POPUP ===== */
 .popup {
   position:absolute;
   top:10px;
   left:50%;
-  transform:translateX(-50%) scale(0.8);
-  background:rgba(0,0,0,0.7);
-  color:#00f7ff;
+  transform:translateX(-50%) translateY(-10px) scale(0.9);
   padding:6px 12px;
   border-radius:8px;
   font-size:10px;
   opacity:0;
-  border:1px solid rgba(0,255,255,0.6);
-  box-shadow:0 0 6px #00f7ff;
-  transition:all 0.25s;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.2);
+  box-shadow:0 0 10px rgba(0,0,0,0.3);
+  transition:all 0.3s ease;
+  pointer-events:none;
 }
 
 .popup.show {
   opacity:1;
-  transform:translateX(-50%) scale(1);
+  transform:translateX(-50%) translateY(0) scale(1);
+}
+
+/* CUACA STYLE */
+.popup.clear {
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+  box-shadow:0 0 12px #00c6ff;
+}
+
+.popup.rain {
+  background:linear-gradient(135deg,#3a7bd5,#00d2ff);
+  box-shadow:0 0 12px #00d2ff;
+}
+
+.popup.storm {
+  background:linear-gradient(135deg,#232526,#ff4b1f);
+  box-shadow:0 0 12px #ff4b1f;
+}
+
+.popup.fog {
+  background:linear-gradient(135deg,#757f9a,#d7dde8);
+  box-shadow:0 0 12px #aaa;
 }
 </style>
 
@@ -138,11 +151,11 @@ const windEl = document.getElementById("wind");
 const humidityEl = document.getElementById("humidity");
 const iconEl = document.getElementById("icon");
 const descEl = document.getElementById("desc");
-const nightForecast = document.getElementById("nightForecast");
 
 let particles = [];
 let mode = "clear";
 let lastWeatherCode = null;
+let popupTimeout = null;
 
 /* RESIZE */
 function resize(){
@@ -195,7 +208,7 @@ function draw(){
   }
 
   if(mode==="fog"){
-    ctx.fillStyle="rgba(140,120,140,0.2)";
+    ctx.fillStyle="rgba(200,200,200,0.2)";
     for(let p of particles){
       ctx.beginPath();
       ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
@@ -222,7 +235,7 @@ function draw(){
 }
 draw();
 
-/* LIGHTNING */
+/* FLASH */
 setInterval(()=>{
   if(mode==="storm"){
     flash.classList.add("active");
@@ -231,27 +244,20 @@ setInterval(()=>{
 },5000);
 
 /* POPUP */
-function showPopup(text){
-  const p=document.getElementById("popup");
-  p.innerText=text;
+function showPopup(text, mode = "clear"){
+  const p = document.getElementById("popup");
+
+  if(popupTimeout) clearTimeout(popupTimeout);
+
+  p.className = "popup";
+  p.classList.add(mode);
+
+  p.innerText = text;
   p.classList.add("show");
-  setTimeout(()=>p.classList.remove("show"),2500);
-}
 
-/* SOUND */
-function playWeatherSound(code){
-  let src="";
-
-  if(code>=95)
-    src="AUDIO/AUDIO-CUACA.mp3";
-  else if(code>=61)
-    src="AUDIO/AUDIO-CUACA.mp3";
-  else
-    src="AUDIO/AUDIO-CUACA.mp3";
-
-  let a=new Audio(src);
-  a.volume=0.5;
-  a.play().catch(()=>{});
+  popupTimeout = setTimeout(()=>{
+    p.classList.remove("show");
+  },3000);
 }
 
 /* ICON */
@@ -265,24 +271,14 @@ function icon(code){
 /* DESC */
 function desc(code){
   const map = {
-    0:"Cerah",
-    1:"Cerah Berawan",
-    2:"Berawan",
-    3:"Mendung",
-    45:"Kabut",
-    48:"Kabut Tebal",
-    51:"Gerimis",
-    53:"Gerimis",
-    55:"Gerimis Lebat",
-    61:"Hujan Ringan",
-    63:"Hujan",
-    65:"Hujan Lebat",
-    80:"Hujan Lokal",
-    81:"Hujan",
-    82:"Hujan Deras",
+    0:"Cerah",1:"Cerah Berawan",2:"Berawan",3:"Mendung",
+    45:"Kabut",48:"Kabut Tebal",
+    51:"Gerimis",53:"Gerimis",55:"Gerimis Lebat",
+    61:"Hujan Ringan",63:"Hujan",65:"Hujan Lebat",
+    80:"Hujan Lokal",81:"Hujan",82:"Hujan Deras",
     95:"Badai Petir"
   };
-  return map[code] ?? "Angin & Badai";
+  return map[code] ?? "Angin";
 }
 
 /* WEATHER */
@@ -301,43 +297,6 @@ async function loadWeather(){
   const nowIndex = data.hourly.time.indexOf(w.time);
   humidityEl.innerText = data.hourly.relativehumidity_2m[nowIndex] ?? "-";
 
-  /* NIGHT FORECAST */
-  let temps=[], codes={};
-
-  for(let i=0;i<data.hourly.time.length;i++){
-    let h=parseInt(data.hourly.time[i].slice(11,13));
-    if(h>=18 && h<=23){
-      temps.push(data.hourly.temperature_2m[i]);
-      let c=data.hourly.weathercode[i];
-      codes[c]=(codes[c]||0)+1;
-    }
-  }
-
-  let avg = temps.length ? temps.reduce((a,b)=>a+b)/temps.length : null;
-
-  let dom=null,max=0;
-  for(let c in codes){
-    if(codes[c]>max){
-      max=codes[c];
-      dom=c;
-    }
-  }
-
-  if(avg!==null){
-    nightForecast.innerText =
-      "Malam: "+Math.round(avg)+"° | "+desc(parseInt(dom));
-  }
-
-  /* CHANGE DETECT */
-  if(lastWeatherCode!==null && lastWeatherCode!==w.weathercode){
-    playWeatherSound(w.weathercode);
-
-    let txt="PERUBAHAN CUACA: "+desc(w.weathercode);
-    showPopup(txt);
-  }
-
-  lastWeatherCode=w.weathercode;
-
   /* MODE */
   if(w.weathercode>=95){
     mode="storm"; createRain();
@@ -351,6 +310,24 @@ async function loadWeather(){
   else{
     mode="fog"; createFog();
   }
+
+  /* DETECT CHANGE */
+  if(lastWeatherCode !== null && lastWeatherCode !== w.weathercode){
+
+    let old = desc(lastWeatherCode);
+    let now = desc(w.weathercode);
+
+    let popupMode = "clear";
+
+    if(w.weathercode>=95) popupMode="storm";
+    else if(w.weathercode>=61) popupMode="rain";
+    else if(w.weathercode<=3) popupMode="clear";
+    else popupMode="fog";
+
+    showPopup(`CUACA: ${old} ➜ ${now}`, popupMode);
+  }
+
+  lastWeatherCode = w.weathercode;
 }
 
 loadWeather();
