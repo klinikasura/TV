@@ -465,6 +465,11 @@ HEADER
             Refresh
         </a>
 
+
+        <a href="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/SOAP/ROBOT-V80/rawat_jalan/manage?t=d9d3d5af7281" class="btn btn-refresh">
+            Tambah SOAP
+        </a>
+
     </div>
 
 </div>

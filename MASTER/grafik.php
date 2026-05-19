@@ -146,6 +146,12 @@
      E-Ranap
   </a>
 
+ <a class="floating-btn btn3"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/master.php"
+     target="_blank">
+     E-Master
+  </a>
+
 </div>
 
 <script>

@@ -1,0 +1,168 @@
+/* RESET */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* BODY */
+body{
+    background: linear-gradient(to right, #eef2f7, #d9e4f5);
+    padding:20px;
+    color:#333;
+}
+
+/* CONTAINER */
+.container{
+    width:95%;
+    max-width:1300px;
+    margin:auto;
+    background:#fff;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* JUDUL */
+h1,h2{
+    margin-bottom:20px;
+    color:#0d6efd;
+    text-align:center;
+}
+
+/* FORM */
+form{
+    margin-bottom:30px;
+}
+
+/* TABLE FORM */
+form table{
+    width:100%;
+}
+
+form table td{
+    padding:10px;
+    vertical-align:top;
+}
+
+/* INPUT */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    transition:0.3s;
+    font-size:14px;
+}
+
+/* TEXTAREA */
+textarea{
+    resize:vertical;
+    min-height:80px;
+}
+
+/* FOCUS */
+input:focus,
+textarea:focus{
+    border-color:#0d6efd;
+    outline:none;
+    box-shadow:0 0 5px rgba(13,110,253,0.4);
+}
+
+/* BUTTON */
+input[type="submit"]{
+    background:#0d6efd;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.3s;
+    font-weight:bold;
+}
+
+input[type="submit"]:hover{
+    background:#0b5ed7;
+    transform:translateY(-2px);
+}
+
+/* DATA TABLE */
+.container > table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    overflow:hidden;
+    border-radius:10px;
+}
+
+/* HEADER */
+.container > table th{
+    background:#0d6efd;
+    color:white;
+    padding:14px;
+    font-size:14px;
+    text-align:left;
+}
+
+/* BODY */
+.container > table td{
+    padding:12px;
+    border-bottom:1px solid #eee;
+    font-size:14px;
+}
+
+/* ROW HOVER */
+.container > table tr:hover{
+    background:#f5f9ff;
+}
+
+/* LINK */
+a{
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* EDIT */
+a[href*="edit"]{
+    color:#198754;
+}
+
+/* DELETE */
+a[href*="hapus"]{
+    color:#dc3545;
+}
+
+/* RESPONSIVE TABLE */
+.table-responsive{
+    overflow-x:auto;
+}
+
+/* FOOTER */
+.footer-area{
+    margin-top:40px;
+    text-align:center;
+    color:#666;
+    font-size:14px;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+    .container{
+        padding:15px;
+    }
+
+    form table,
+    .container > table{
+        font-size:12px;
+    }
+
+    input[type="submit"]{
+        width:100%;
+    }
+
+}
