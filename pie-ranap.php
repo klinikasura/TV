@@ -8,27 +8,65 @@ $dbname = "sikdraisyah";
 $conn = mysqli_connect($host,$user,$pass,$dbname);
 
 if(!$conn){
-    die("Koneksi Database Gagal");
+    die("Koneksi gagal");
 }
 
-$tgl1 = $_GET['tgl1'] ?? date('Y-m-01');
-$tgl2 = $_GET['tgl2'] ?? date('Y-m-d');
+/*
+|--------------------------------------------------------------------------
+| FILTER BULAN & TANGGAL
+|--------------------------------------------------------------------------
+*/
+
+$bulan = $_GET['bulan'] ?? '';
+
+$tgl1 = $_GET['tgl1'] ?? '';
+$tgl2 = $_GET['tgl2'] ?? '';
+
+/* Jika pilih bulan */
+if($bulan != ''){
+
+    $tgl1 = $bulan . '-01';
+    $tgl2 = date('Y-m-t', strtotime($tgl1));
+
+}
+
+/* Default tanggal */
+if($tgl1 == '' || $tgl2 == ''){
+
+    $tgl1 = date('Y-m-01');
+    $tgl2 = date('Y-m-d');
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| QUERY DATA
+|--------------------------------------------------------------------------
+*/
 
 $query = mysqli_query($conn, "
+
     SELECT 
         pasien.jk,
         COUNT(reg_periksa.no_rawat) AS jumlah
+
     FROM reg_periksa
+
     INNER JOIN pasien 
         ON pasien.no_rkm_medis = reg_periksa.no_rkm_medis
+
     WHERE reg_periksa.status_lanjut='Ranap'
+
     AND reg_periksa.tgl_registrasi 
         BETWEEN '$tgl1' AND '$tgl2'
+
     GROUP BY pasien.jk
+
 ");
 
 $labels = [];
 $data   = [];
+$total  = 0;
 
 while($row = mysqli_fetch_assoc($query)){
 
@@ -39,6 +77,8 @@ while($row = mysqli_fetch_assoc($query)){
     }
 
     $data[] = $row['jumlah'];
+
+    $total += $row['jumlah'];
 }
 
 ?>
@@ -50,10 +90,13 @@ while($row = mysqli_fetch_assoc($query)){
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
- <title>myROBOT-V80</title>
-  <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
+<title>myROBOT-V80</title>
+
+<link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
 
@@ -65,13 +108,13 @@ while($row = mysqli_fetch_assoc($query)){
 
 body{
     font-family:Arial, Helvetica, sans-serif;
-    background:#eef2ff;
+    background:#f1f5f9;
     padding:40px;
 }
 
 .container{
     width:100%;
-    max-width:950px;
+    max-width:1000px;
     margin:auto;
 }
 
@@ -79,132 +122,162 @@ body{
     background:white;
     border-radius:20px;
     padding:30px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
 .title{
     font-size:30px;
     font-weight:bold;
-    text-align:center;
-    margin-bottom:30px;
+    margin-bottom:10px;
     color:#1e293b;
+    text-align:center;
 }
 
-.filter-area{
+.subtitle{
+    text-align:center;
+    color:#64748b;
+    margin-bottom:30px;
+}
+
+.filter-box{
     display:flex;
-    justify-content:center;
-    align-items:end;
     gap:20px;
-    flex-wrap:wrap;
+    align-items:end;
+    justify-content:center;
     margin-bottom:35px;
+    flex-wrap:wrap;
 }
 
-.form-group{
+.input-group{
     display:flex;
     flex-direction:column;
 }
 
-.form-group label{
+label{
     margin-bottom:8px;
     font-size:14px;
     color:#475569;
+    font-weight:bold;
 }
 
-.form-group input{
+input[type=date],
+input[type=month]{
+
     padding:12px;
     border:1px solid #cbd5e1;
     border-radius:10px;
-    min-width:200px;
     outline:none;
-}
-
-.form-group input:focus{
-    border-color:#4f46e5;
-}
-
-button{
-    padding:13px 28px;
-    border:none;
-    border-radius:10px;
-    background:#4f46e5;
-    color:white;
-    cursor:pointer;
+    min-width:220px;
     font-size:15px;
-    transition:0.3s;
+
 }
 
-button:hover{
-    background:#4338ca;
+input[type=date]:focus,
+input[type=month]:focus{
+    border-color:#2563eb;
 }
 
-.chart-box{
-    width:100%;
-    max-width:500px;
-    margin:auto;
-}
-
-.statistik{
-    display:flex;
-    justify-content:center;
-    gap:20px;
-    margin-top:35px;
-    flex-wrap:wrap;
-}
-
-.box{
-    background:#f8fafc;
-    border-radius:12px;
-    padding:20px;
-    min-width:180px;
-    text-align:center;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05);
-}
-
-.box h4{
-    color:#475569;
-    margin-bottom:10px;
-}
-
-.box p{
-    font-size:28px;
-    font-weight:bold;
-    color:#4f46e5;
-}
-
-.footer{
-    margin-top:35px;
-    text-align:center;
-    color:#64748b;
-    font-size:14px;
-}
 .button-group{
     display:flex;
     gap:10px;
-    align-items:center;
     flex-wrap:wrap;
 }
 
-.btn-link{
-    padding:13px 28px;
+button{
+    padding:12px 25px;
+    border:none;
     border-radius:10px;
-    background:#10b981;
-    color:white;
-    text-decoration:none;
+    cursor:pointer;
     font-size:15px;
     transition:0.3s;
-    display:inline-block;
-    text-align:center;
+    color:white;
 }
 
-.btn-link:hover{
-    background:#059669;
+.btn-filter{
+    background:#2563eb;
+}
+
+.btn-filter:hover{
+    background:#1d4ed8;
+}
+
+.btn-print{
+    background:#ef4444;
+}
+
+.btn-print:hover{
+    background:#dc2626;
+}
+
+.chart-container{
+    width:100%;
+    max-width:500px;
+    margin:20px auto;
+}
+
+.info-box{
+    margin-top:35px;
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+.info-item{
+    background:#f8fafc;
+    padding:20px;
+    border-radius:15px;
+    text-align:center;
+    min-width:180px;
+    box-shadow:0 2px 5px rgba(0,0,0,0.05);
+}
+
+.info-item h3{
+    font-size:16px;
+    margin-bottom:10px;
+    color:#334155;
+}
+
+.info-item p{
+    font-size:28px;
+    font-weight:bold;
+    color:#2563eb;
+}
+
+/* TOTAL DI SAMPING */
+
+.total-side{
+    background:#2563eb;
+}
+
+.total-side h3{
+    color:white;
+}
+
+.total-side p{
+    color:white;
+}
+
+.footer{
+    text-align:center;
+    margin-top:35px;
+    color:#64748b;
+    font-size:14px;
 }
 
 @media(max-width:600px){
 
-    .filter-area{
+    body{
+        padding:15px;
+    }
+
+    .filter-box{
         flex-direction:column;
         align-items:stretch;
+    }
+
+    .button-group{
+        width:100%;
     }
 
     button{
@@ -216,70 +289,135 @@ button:hover{
 </style>
 
 </head>
+
 <body>
 
 <div class="container">
 
-    <div class="card">
+    <div class="card" id="printArea">
 
         <div class="title">
-            Grafik Pasien Rawat Inap (Ranap)
+            Grafik Pasien Rawat Inap (RANAP)
+        </div>
+
+        <div class="subtitle">
+            Berdasarkan Jenis Kelamin
         </div>
 
         <form method="GET">
 
-            <div class="filter-area">
+            <div class="filter-box">
 
-                <div class="form-group">
-                    <label>Tanggal Awal</label>
+                <!-- FILTER BULAN -->
+
+                <div class="input-group">
+
+                    <label>Filter Bulan</label>
+
                     <input 
-                        type="date"
+                        type="month" 
+                        name="bulan"
+                        value="<?= $bulan ?>"
+                    >
+
+                </div>
+
+                <!-- FILTER TANGGAL -->
+
+                <div class="input-group">
+
+                    <label>Tanggal Awal</label>
+
+                    <input 
+                        type="date" 
                         name="tgl1"
                         value="<?= $tgl1 ?>"
                     >
+
                 </div>
 
-                <div class="form-group">
+                <div class="input-group">
+
                     <label>Tanggal Akhir</label>
+
                     <input 
-                        type="date"
+                        type="date" 
                         name="tgl2"
                         value="<?= $tgl2 ?>"
                     >
+
                 </div>
- <div style="display:flex; gap:10px; align-items:center;">
 
-          
-                     <button type="submit">
-        Filter Data
-    </button>
+                <!-- BUTTON -->
 
-    <button class="btn-print" onclick="window.print()">
-        PRINTF
-    </button>
+                <div class="button-group">
 
-</div>
+                    <button 
+                        type="submit"
+                        class="btn-filter"
+                    >
+                        Filter Data
+                    </button>
+
+                    <button 
+                        type="button"
+                        class="btn-print"
+                        onclick="downloadPDF()"
+                    >
+                        CETAK PDF
+                    </button>
+
+<button onclick="window.open('pie-ranap-lapbul.php', '_blank')" class="btn-filter">
+    LAPBUL
+</button> 
+
+                </div>
+
+            </div>
+
         </form>
 
-        <div class="chart-box">
-            <canvas id="chartRanap"></canvas>
+        <!-- CHART -->
+
+        <div class="chart-container">
+            <canvas id="pieChart"></canvas>
         </div>
 
-        <div class="statistik">
+        <!-- INFO BOX -->
 
-            <?php foreach($labels as $i => $label){ ?>
+        <div class="info-box">
 
-            <div class="box">
-                <h4><?= $label ?></h4>
+            <?php foreach($labels as $i => $lbl){ ?>
+
+            <div class="info-item">
+
+                <h3><?= $lbl ?></h3>
+
                 <p><?= $data[$i] ?></p>
+
             </div>
 
             <?php } ?>
 
+            <!-- TOTAL -->
+
+            <div class="info-item total-side">
+
+                <h3>Total Pasien</h3>
+
+                <p><?= $total ?></p>
+
+            </div>
+
         </div>
 
         <div class="footer">
-            Statistik Pasien Rawat Inap Berdasarkan Jenis Kelamin
+
+            Periode :
+            <b><?= $tgl1 ?></b>
+            s/d
+            <b><?= $tgl2 ?></b>
+
         </div>
 
     </div>
@@ -288,50 +426,57 @@ button:hover{
 
 <script>
 
-const ctx = document.getElementById('chartRanap');
+const ctx = document.getElementById('pieChart');
 
 new Chart(ctx, {
 
-    type:'pie',
+    type: 'pie',
 
-    data:{
+    data: {
 
         labels: <?= json_encode($labels) ?>,
 
-        datasets:[{
+        datasets: [{
+
+            label: 'Jumlah Pasien',
 
             data: <?= json_encode($data) ?>,
 
-            backgroundColor:[
-                '#6366f1',
-                '#f43f5e'
+            backgroundColor: [
+                '#3b82f6',
+                '#ec4899'
             ],
 
-            borderColor:[
+            borderColor: [
                 '#ffffff',
                 '#ffffff'
             ],
 
-            borderWidth:3
+            borderWidth: 3
 
         }]
-
     },
 
-    options:{
+    options: {
 
         responsive:true,
 
-        plugins:{
+        plugins: {
 
-            legend:{
+            legend: {
+
                 position:'bottom',
+
                 labels:{
+
+                    padding:20,
+
                     font:{
                         size:14
-                    },
-                    padding:20
+                    }
+
                 }
+
             }
 
         }
@@ -339,6 +484,42 @@ new Chart(ctx, {
     }
 
 });
+
+/*
+|--------------------------------------------------------------------------
+| DOWNLOAD PDF
+|--------------------------------------------------------------------------
+*/
+
+function downloadPDF(){
+
+    const element = document.getElementById('printArea');
+
+    const opt = {
+
+        margin: 0.5,
+
+        filename: 'laporan-ranap-<?= date("m-Y", strtotime($tgl1)) ?>.pdf',
+
+        image: {
+            type: 'jpeg',
+            quality: 1
+        },
+
+        html2canvas: {
+            scale: 2
+        },
+
+        jsPDF: {
+            unit: 'in',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+
+    };
+
+    html2pdf().set(opt).from(element).save();
+}
 
 </script>
 

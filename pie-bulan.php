@@ -13,55 +13,26 @@ if(!$conn){
 
 /*
 |--------------------------------------------------------------------------
-| FILTER BULAN & TANGGAL
+| FILTER BULAN
 |--------------------------------------------------------------------------
 */
 
-$bulan = $_GET['bulan'] ?? '';
+$bulan = $_GET['bulan'] ?? date('Y-m');
 
-$tgl1 = $_GET['tgl1'] ?? '';
-$tgl2 = $_GET['tgl2'] ?? '';
-
-/* Jika pilih bulan */
-if($bulan != ''){
-
-    $tgl1 = $bulan . '-01';
-    $tgl2 = date('Y-m-t', strtotime($tgl1));
-
-}
-
-/* Default tanggal */
-if($tgl1 == '' || $tgl2 == ''){
-
-    $tgl1 = date('Y-m-01');
-    $tgl2 = date('Y-m-d');
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| QUERY DATA
-|--------------------------------------------------------------------------
-*/
+$tgl1 = $bulan . "-01";
+$tgl2 = date("Y-m-t", strtotime($tgl1));
 
 $query = mysqli_query($conn, "
-
     SELECT 
         pasien.jk,
         COUNT(reg_periksa.no_rawat) AS jumlah
-
     FROM reg_periksa
-
     INNER JOIN pasien 
         ON pasien.no_rkm_medis = reg_periksa.no_rkm_medis
-
     WHERE reg_periksa.status_lanjut='Ralan'
-
     AND reg_periksa.tgl_registrasi 
         BETWEEN '$tgl1' AND '$tgl2'
-
     GROUP BY pasien.jk
-
 ");
 
 $labels = [];
@@ -160,19 +131,15 @@ label{
     font-weight:bold;
 }
 
-input[type=date],
 input[type=month]{
-
     padding:12px;
     border:1px solid #cbd5e1;
     border-radius:10px;
     outline:none;
     min-width:220px;
     font-size:15px;
-
 }
 
-input[type=date]:focus,
 input[type=month]:focus{
     border-color:#2563eb;
 }
@@ -244,18 +211,23 @@ button{
     color:#2563eb;
 }
 
-/* TOTAL DI SAMPING */
-
-.total-side{
+.total-box{
+    margin-top:25px;
+    text-align:center;
     background:#2563eb;
+    color:white;
+    padding:20px;
+    border-radius:15px;
 }
 
-.total-side h3{
-    color:white;
+.total-box h2{
+    font-size:18px;
+    margin-bottom:10px;
 }
 
-.total-side p{
-    color:white;
+.total-box p{
+    font-size:35px;
+    font-weight:bold;
 }
 
 .footer{
@@ -308,11 +280,9 @@ button{
 
             <div class="filter-box">
 
-                <!-- FILTER BULAN -->
-
                 <div class="input-group">
 
-                    <label>Filter Bulan</label>
+                    <label>Pilih Bulan</label>
 
                     <input 
                         type="month" 
@@ -321,34 +291,6 @@ button{
                     >
 
                 </div>
-
-                <!-- FILTER TANGGAL -->
-
-                <div class="input-group">
-
-                    <label>Tanggal Awal</label>
-
-                    <input 
-                        type="date" 
-                        name="tgl1"
-                        value="<?= $tgl1 ?>"
-                    >
-
-                </div>
-
-                <div class="input-group">
-
-                    <label>Tanggal Akhir</label>
-
-                    <input 
-                        type="date" 
-                        name="tgl2"
-                        value="<?= $tgl2 ?>"
-                    >
-
-                </div>
-
-                <!-- BUTTON -->
 
                 <div class="button-group">
 
@@ -366,23 +308,16 @@ button{
                     >
                         CETAK PDF
                     </button>
-<button onclick="window.open('pie-lapbul.php', '_blank')" class="btn-filter">
-    LAPBUL
-</button>            </div>
+
+                </div>
 
             </div>
 
         </form>
 
-
-
-        <!-- CHART -->
-
         <div class="chart-container">
             <canvas id="pieChart"></canvas>
         </div>
-
-        <!-- INFO BOX -->
 
         <div class="info-box">
 
@@ -398,24 +333,20 @@ button{
 
             <?php } ?>
 
-            <!-- TOTAL -->
+        </div>
 
-            <div class="info-item total-side">
+        <div class="total-box">
 
-                <h3>Total Pasien</h3>
+            <h2>Total Pasien Ralan</h2>
 
-                <p><?= $total ?></p>
-
-            </div>
+            <p><?= $total ?></p>
 
         </div>
 
         <div class="footer">
 
             Periode :
-            <b><?= $tgl1 ?></b>
-            s/d
-            <b><?= $tgl2 ?></b>
+            <b><?= date('F Y', strtotime($tgl1)) ?></b>
 
         </div>
 
@@ -498,7 +429,7 @@ function downloadPDF(){
 
         margin: 0.5,
 
-        filename: 'laporan-ralan-<?= date("m-Y", strtotime($tgl1)) ?>.pdf',
+        filename: 'laporan-ralan-<?= $bulan ?>.pdf',
 
         image: {
             type: 'jpeg',
