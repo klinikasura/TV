@@ -1388,12 +1388,12 @@ setInterval(updateText, 1000);
 <div id="popup-rilis">
     <div class="popup-rilis-content">
 
-        <img src="http://10.10.20.250/dashboard/ROBOT-DASHBOARD/8.gif"
+        <img src="8.gif"
              alt="RILIS 8.0">
 
         <h1>Versi 8.0</h1>
 
-        <p>Update Aplikasi (20082025-0840)</p>
+        <p>Update Aplikasi (20052026-0840)</p>
 
     </div>
 </div>
