@@ -39,12 +39,18 @@ https://klinikasura.github.io/APLIKASI-V80/
 # 📥 Download Aplikasi
 
 ### Android
-
-https://github.com/klinikasura/APLIKASI-V80/releases/download/8.0_NEW\_(14022026-0900)/app-release-14022026-0907.apk
+https://github.com/klinikasura/APLIKASI-V80/releases/download/myROBOT-80(20052026-0840)/app-release-20052026-0840.apk
 
 ### iOS / iPhone Source
 
-https://github.com/klinikasura/APLIKASI-V80/releases/download/8.0_NEW\_(14022026-0900)/ios_source-14022026-0907.tar.gz
+https://github.com/klinikasura/APLIKASI-V80/releases/download/myROBOT-80(20052026-0840)/ios_source-20052026-0840.tar.gz
+
+### Dekstop Windows
+https://github.com/klinikasura/APLIKASI-V80/releases/download/myROBOT-80(20052026-0840)/myROBOT-V8-020052026-0840.bat
+
+### Dekstop Linux
+https://github.com/klinikasura/APLIKASI-V80/releases/download/myROBOT-80(20052026-0840)/LINUX.-.ROBOT.-NEW.-.20052026-0840.desktop
+
 
 ### AI Robot System Audio
 
@@ -58,9 +64,10 @@ https://github.com/klinikasura/APLIKASI-V80/raw/refs/heads/main/BUILDING/AUDIO.a
 
 https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-HOTSPOT/login
 
-### 2. AI Chat
+### 2. [ROBOT-V80](https://github.com/klinikasura/ROBOT-V80)
 
-https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-AI-CHAT
+https://klinikasura.github.io/ROBOT-V80/
+
 
 ### 3. AI Cuaca
 
@@ -69,6 +76,26 @@ https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-CUACA/
 ### 4. AI Slider
 
 https://klinikasura.github.io/APLIKASI-V80/SLIDER/
+
+
+### 5. [AI-ROBOT-SYSTEM-V80-HOTSPOT](https://github.com/klinikasura/AI-ROBOT-SYSTEM-V80-HOTSPOT)
+
+https://klinikasura.github.io/AI-ROBOT-SYSTEM-V80-HOTSPOT/login
+
+
+### 6. [BANK](https://github.com/klinikasura/BANK)
+
+https://klinikasura.github.io/BANK/
+
+
+### 7. [TV](https://github.com/klinikasura/TV)
+
+https://klinikasura.github.io/TV/
+
+
+### 8. [DOWNLOAD](https://github.com/klinikasura/DOWNLOAD)
+
+https://klinikasura.github.io/DOWNLOAD/
 
 ------------------------------------------------------------------------
 
