@@ -1381,7 +1381,127 @@ updateText();
 setInterval(updateText, 1000);
 </script>
 
+<!-- ===================================================== -->
+<!-- ================= POPUP RILIS 8.0 =================== -->
+<!-- ===================================================== -->
 
+<div id="popup-rilis">
+    <div class="popup-rilis-content">
+
+        <img src="http://10.10.20.250/dashboard/ROBOT-DASHBOARD/8.gif"
+             alt="RILIS 8.0">
+
+        <h1>Versi 8.0</h1>
+
+        <p>Update Aplikasi (20082025-0840)</p>
+
+    </div>
+</div>
+
+<style>
+
+#popup-rilis{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999999;
+    animation:fadeInPopup 0.5s ease;
+}
+
+.popup-rilis-content{
+    width:90%;
+    max-width:350px;
+    background:white;
+    border-radius:25px;
+    padding:25px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    animation:popupZoom 0.5s ease;
+}
+
+.popup-rilis-content img{
+    width:200px;
+    height:200px;
+    object-fit:contain;
+    margin-bottom:15px;
+    animation:putarLogo 3s linear infinite;
+}
+
+.popup-rilis-content h1{
+    font-size:32px;
+    color:#007bff;
+    margin-bottom:10px;
+    font-weight:bold;
+}
+
+.popup-rilis-content p{
+    font-size:20px;
+    color:#333;
+    font-weight:bold;
+    letter-spacing:2px;
+}
+
+/* Animasi muncul */
+@keyframes popupZoom{
+    from{
+        transform:scale(0.5);
+        opacity:0;
+    }
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+/* Animasi background */
+@keyframes fadeInPopup{
+    from{
+        opacity:0;
+    }
+    to{
+        opacity:1;
+    }
+}
+
+/* Animasi logo */
+@keyframes putarLogo{
+    0%{
+        transform:rotate(0deg);
+    }
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+</style>
+
+<script>
+
+// Popup otomatis hilang setelah 6 detik
+setTimeout(function(){
+
+    var popup = document.getElementById("popup-rilis");
+
+    popup.style.transition = "0.5s";
+    popup.style.opacity = "0";
+
+    setTimeout(function(){
+        popup.style.display = "none";
+    },500);
+
+},6000);
+
+</script>
+
+<!-- ===================================================== -->
+<!-- ================= END POPUP ========================= -->
+<!-- ===================================================== -->
 
 
 
