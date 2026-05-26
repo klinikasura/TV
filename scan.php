@@ -45,6 +45,49 @@ $jam     = date("H:i");
         background: #eaf6fb;
         padding: 30px;
     }
+/* BOTTOM NAV */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 420px;
+    width: 100%;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+}
+.nav-item {
+    font-size: 12px;
+    text-align: center;
+}
+.home-btn {
+    background: #4e8cff;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-top: -30px;
+    font-size: 22px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* RESPONSIVE */
+@media (max-width: 360px) {
+    .menu-item { width: 60px; height: 60px; }
+    .send-item img { width: 50px; height: 50px; }
+    .card { margin: -30px 10px 20px; padding: 15px; }
+}
+
+
+
 
     h2 {
         color: #2a7da8;
@@ -59,6 +102,7 @@ $jam     = date("H:i");
         font-size: 14px;
         transition: 0.3s;
     }
+
 
     #cari_pasien:focus {
         border-color: #4fc3f7;

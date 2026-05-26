@@ -1520,6 +1520,222 @@ document.getElementById('fullScreenBtn').addEventListener('click', function() {
 </script>
 
 
+<!-- ===================================================== -->
+
+<!-- ============ POPUP CUACA EKSTREM ==================== -->
+
+<!-- ===================================================== -->
+
+<audio id="audioCuaca" preload="auto">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+let cuacaSebelumnya = "";
+let modeCuacaEkstrem = false;
+
+// =============================
+// PLAY SUARA
+// =============================
+function playNotifCuaca() {
+    const audio = document.getElementById("audioCuaca");
+
+    if(audio){
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+    }
+}
+
+// =============================
+// ROBOT BICARA
+// =============================
+function bicaraCuaca(teks) {
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(teks);
+
+    speech.lang = "id-ID";
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+// =============================
+// POPUP CUACA
+// =============================
+function tampilkanPopupCuaca(judul, pesan, warna="#ff0000") {
+
+    if(modeCuacaEkstrem) return;
+
+    modeCuacaEkstrem = true;
+
+    playNotifCuaca();
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = "0";
+    popup.style.left = "0";
+    popup.style.width = "100%";
+    popup.style.height = "100%";
+    popup.style.background = "rgba(0,0,0,0.85)";
+    popup.style.display = "flex";
+    popup.style.flexDirection = "column";
+    popup.style.justifyContent = "center";
+    popup.style.alignItems = "center";
+    popup.style.zIndex = "999999";
+    popup.style.animation = "fadeIn 1s";
+
+    popup.innerHTML = `
+        <div style="
+            background:${warna};
+            padding:40px;
+            border-radius:20px;
+            text-align:center;
+            width:70%;
+            box-shadow:0 0 40px rgba(0,0,0,0.5);
+        ">
+
+            <h1 style="
+                font-size:70px;
+                color:white;
+                margin-bottom:20px;
+            ">
+                ${judul}
+            </h1>
+
+            <h2 style="
+                font-size:40px;
+                color:white;
+                line-height:1.5;
+            ">
+                ${pesan}
+            </h2>
+
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    bicaraCuaca(`${judul}. ${pesan}`);
+
+    setTimeout(() => {
+
+        popup.style.transition = "1s";
+        popup.style.opacity = "0";
+
+        setTimeout(() => {
+
+            popup.remove();
+            modeCuacaEkstrem = false;
+
+        },1000);
+
+    },15000);
+}
+
+// =============================
+// CEK CUACA OTOMATIS
+// =============================
+async function cekCuacaEkstrem() {
+
+    try {
+
+        // GANTI KOTA DISINI
+        const kota = "Kayuagung";
+
+        const response = await fetch(
+            `https://wttr.in/${kota}?format=j1`
+        );
+
+        const data = await response.json();
+
+        const cuaca = data.current_condition[0];
+
+        const kondisi = cuaca.weatherDesc[0].value;
+        const suhu = cuaca.temp_C;
+        const kelembaban = cuaca.humidity;
+
+        console.log("CUACA:", kondisi);
+
+        // ====================================
+        // DETEKSI PERUBAHAN CUACA
+        // ====================================
+
+        if(cuacaSebelumnya !== "" && cuacaSebelumnya !== kondisi){
+
+            tampilkanPopupCuaca(
+                "PERUBAHAN CUACA",
+                `Cuaca berubah menjadi ${kondisi}. Suhu ${suhu} derajat celcius`
+            );
+
+        }
+
+        cuacaSebelumnya = kondisi;
+
+        // ====================================
+        // DETEKSI CUACA EKSTREM
+        // ====================================
+
+        const kondisiLower = kondisi.toLowerCase();
+
+        if(
+            kondisiLower.includes("thunder") ||
+            kondisiLower.includes("storm") ||
+            kondisiLower.includes("heavy rain") ||
+            kondisiLower.includes("petir") ||
+            kondisiLower.includes("badai")
+        ){
+
+            tampilkanPopupCuaca(
+                "PERINGATAN CUACA EKSTREM",
+                `Saat ini terjadi ${kondisi}. Mohon berhati-hati`,
+                "#d50000"
+            );
+
+        }
+
+        // ====================================
+        // SUHU PANAS EKSTREM
+        // ====================================
+
+        if(parseInt(suhu) >= 35){
+
+            tampilkanPopupCuaca(
+                "PERINGATAN SUHU PANAS",
+                `Suhu mencapai ${suhu} derajat celcius`,
+                "#ff6f00"
+            );
+
+        }
+
+    } catch(err){
+
+        console.log("Gagal cek cuaca:", err);
+
+    }
+}
+
+// =============================
+// JALANKAN
+// =============================
+
+// cek pertama
+cekCuacaEkstrem();
+
+// cek tiap 5 menit
+setInterval(cekCuacaEkstrem, 300000);
+
+</script>
+
+<!-- ===================================================== -->
+
+<!-- ========== END POPUP CUACA EKSTREM ================== -->
+
+<!-- ===================================================== -->
 
 
 </body>
