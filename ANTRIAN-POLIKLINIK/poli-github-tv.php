@@ -140,25 +140,24 @@ body{
 }
 
 /* ===================================== */
-/* KEDIP MERAH UNTUK JAM MULAI & SELESAI */
+/* KEDIP HIJAU UNTUK JAM MULAI & SELESAI */
 /* ===================================== */
 
+/* KEDIP HIJAU */
+/* KEDIP HIJAU HANYA TEKS */
 .blink-time{
-    animation:blinkRed 1s infinite;
-    font-weight:bold;
+    animation: blinkGreen 1s infinite;
+    font-weight: bold;
 }
 
-@keyframes blinkRed{
+@keyframes blinkGreen{
     0%,100%{
-        background:#ffffff;
-        color:#000000;
+        color: #FF0000; /* hitam */
     }
     50%{
-        background:#ff0000;
-        color:#ffffff;
+        color: #FF0000; /* hijau */
     }
 }
-
 </style>
 </head>
 
