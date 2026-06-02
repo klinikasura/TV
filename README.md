@@ -1,3 +1,8 @@
+TV-MyROBOT-V80
+
+
+<img width="1024" height="768" alt="image" src="https://github.com/user-attachments/assets/b3dfe9d9-17c0-4e91-9b51-d5fc2396c682" />
+
 # myROBOT-V80
 
 **myROBOT-V80 ATAU AI ROBOT SYSTEM V.80 -- Versi 8 (Final Release)**\
