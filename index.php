@@ -239,6 +239,272 @@ bicara(`Pasien baru atas nama ${pasien.nm_pasien}, ${pasien.nm_poli}`);
     }, 8000);
 }
 
+// =========================================
+// MONITOR PASIEN BARU & SUDAH BAYAR
+// =========================================
+
+let dataSebelumnya = [];
+
+// posisi popup agar tidak bertumpuk
+let posisiKanan = 20;
+let posisiKiri = 20;
+
+// =========================================
+// AUDIO
+// =========================================
+function playNotif() {
+    const audio = document.getElementById("notifSound");
+    if(audio){
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+    }
+}
+
+function playNotifBayar() {
+    const audio = document.getElementById("notifBayar");
+    if(audio){
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+    }
+}
+
+// =========================================
+// TEXT TO SPEECH
+// =========================================
+function bicara(teks) {
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(teks);
+
+    speech.lang = "id-ID";
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+// =========================================
+// WARNA BERDASARKAN POLI
+// =========================================
+function getWarnaPoli(poli){
+
+    if(!poli) return "#607d8b";
+
+    poli = poli.toLowerCase();
+
+    if(poli.includes("umum")) return "#2196f3";
+    if(poli.includes("gigi")) return "#ff9800";
+    if(poli.includes("anak")) return "#e91e63";
+    if(poli.includes("mata")) return "#4caf50";
+    if(poli.includes("saraf")) return "#795548";
+    if(poli.includes("paru")) return "#009688";
+    if(poli.includes("jantung")) return "#f44336";
+    if(poli.includes("kandungan")) return "#9c27b0";
+
+    return "#3f51b5";
+}
+
+// =========================================
+// WARNA BERDASARKAN CARA BAYAR
+// =========================================
+function getWarnaBayar(cara){
+
+    if(!cara) return "#607d8b";
+
+    cara = cara.toLowerCase();
+
+    if(cara.includes("bpjs")) return "#1565c0";
+    if(cara.includes("umum")) return "#2e7d32";
+    if(cara.includes("asuransi")) return "#ef6c00";
+    if(cara.includes("perusahaan")) return "#6a1b9a";
+
+    return "#546e7a";
+}
+
+// =========================================
+// POPUP PASIEN BARU
+// =========================================
+function tampilkanPopup(pasien){
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = posisiKanan + "px";
+    popup.style.right = "20px";
+    popup.style.background = getWarnaPoli(pasien.nm_poli);
+    popup.style.color = "white";
+    popup.style.padding = "20px";
+    popup.style.borderRadius = "15px";
+    popup.style.boxShadow = "0 0 30px rgba(0,0,0,0.5)";
+    popup.style.zIndex = "999999999";
+    popup.style.minWidth = "350px";
+    popup.style.fontFamily = "Arial";
+    popup.style.animation = "slideIn 0.8s ease";
+
+    posisiKanan += 120;
+
+    if(posisiKanan > 600){
+        posisiKanan = 20;
+    }
+
+    popup.innerHTML = `
+        <div style="font-size:14px;">
+            INFORMASI PASIEN BARU
+        </div>
+
+        <div style="
+            font-size:28px;
+            font-weight:bold;
+            margin-top:8px;
+        ">
+            ${pasien.nm_pasien}
+        </div>
+
+        <div style="font-size:18px;">
+            Poli : ${pasien.nm_poli || '-'}
+        </div>
+
+        <div style="font-size:15px;">
+            Pembayaran : ${pasien.cara_bayar || '-'}
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    playNotif();
+
+    bicara(
+        `Pasien baru atas nama ${pasien.nm_pasien}, menuju ${pasien.nm_poli}`
+    );
+
+    setTimeout(() => {
+
+        popup.style.transition = "0.8s";
+        popup.style.opacity = "0";
+        popup.style.transform = "translateX(150px)";
+
+        setTimeout(() => {
+            popup.remove();
+        }, 800);
+
+    }, 8000);
+}
+
+// =========================================
+// POPUP PASIEN SUDAH BAYAR
+// =========================================
+function tampilkanPopupBayar(pasien){
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = posisiKiri + "px";
+    popup.style.left = "20px";
+    popup.style.background = getWarnaBayar(pasien.cara_bayar);
+    popup.style.color = "white";
+    popup.style.padding = "20px";
+    popup.style.borderRadius = "15px";
+    popup.style.boxShadow = "0 0 30px rgba(0,0,0,0.5)";
+    popup.style.zIndex = "999999999";
+    popup.style.minWidth = "350px";
+    popup.style.fontFamily = "Arial";
+    popup.style.animation = "slideInLeft 0.8s ease";
+
+    posisiKiri += 120;
+
+    if(posisiKiri > 600){
+        posisiKiri = 20;
+    }
+
+    popup.innerHTML = `
+        <div style="font-size:14px;">
+            PEMBAYARAN SELESAI
+        </div>
+
+        <div style="
+            font-size:28px;
+            font-weight:bold;
+            margin-top:8px;
+        ">
+            ${pasien.nm_pasien}
+        </div>
+
+        <div style="font-size:18px;">
+            Poli : ${pasien.nm_poli || '-'}
+        </div>
+
+        <div style="font-size:15px;">
+            Cara Bayar : ${pasien.cara_bayar || '-'}
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    playNotifBayar();
+
+    bicara(
+        `Pasien atas nama ${pasien.nm_pasien} telah menyelesaikan pembayaran`
+    );
+
+    setTimeout(() => {
+
+        popup.style.transition = "0.8s";
+        popup.style.opacity = "0";
+        popup.style.transform = "translateX(-150px)";
+
+        setTimeout(() => {
+            popup.remove();
+        }, 800);
+
+    }, 8000);
+}
+
+// =========================================
+// MONITOR REALTIME
+// =========================================
+setInterval(() => {
+
+    fetch('get_pasien2.php')
+
+    .then(res => res.json())
+
+    .then(dataBaru => {
+
+        if(dataSebelumnya.length > 0){
+
+            dataBaru.forEach(pasienBaru => {
+
+                let pasienLama = dataSebelumnya.find(
+                    p => p.no_rawat === pasienBaru.no_rawat
+                );
+
+                // PASIEN BARU DAFTAR
+                if(!pasienLama){
+                    tampilkanPopup(pasienBaru);
+                }
+
+                // STATUS BAYAR BERUBAH
+                if(
+                    pasienLama &&
+                    pasienLama.status_bayar === "Belum Bayar" &&
+                    pasienBaru.status_bayar === "Sudah Bayar"
+                ){
+                    tampilkanPopupBayar(pasienBaru);
+                }
+
+            });
+
+        }
+
+        dataSebelumnya = dataBaru;
+
+    })
+
+    .catch(err => console.log(err));
+
+}, 1000);
+
 // 🔍 MONITOR DATA REALTIME
 setInterval(function() {
     fetch('get_pasien2.php')
@@ -1114,7 +1380,7 @@ window.addEventListener('load', function() {
 
 // -------------------------------------------------
 // Jam & hari
-ffunction updateJam() {
+function updateJam() {
     var now = new Date();
 
     let jam = now.getHours().toString().padStart(2,'0');
@@ -1736,6 +2002,292 @@ setInterval(cekCuacaEkstrem, 300000);
 <!-- ========== END POPUP CUACA EKSTREM ================== -->
 
 <!-- ===================================================== -->
+
+
+
+
+<style>
+
+@keyframes kedipInternet {
+    0% { opacity:1; }
+    50% { opacity:0.2; }
+    100% { opacity:1; }
+}
+
+</style>
+
+<script>
+
+// ======================================
+// KONFIGURASI
+// ======================================
+
+let internetPutus = false;
+let gagalCount = 0;
+
+// FILE YANG SELALU ADA DI SERVER
+const URL_CEK = "get_pasien.php";
+
+// BERAPA KALI GAGAL BARU DIANGGAP PUTUS
+const BATAS_GAGAL = 3;
+
+// ======================================
+// POPUP MERAH
+// ======================================
+
+function tampilkanPopupInternetPutus() {
+
+    if(document.getElementById("popupInternetPutus")) return;
+
+    const popup = document.createElement("div");
+
+    popup.id = "popupInternetPutus";
+
+    popup.style.position = "fixed";
+    popup.style.top = "0";
+    popup.style.left = "0";
+    popup.style.width = "100%";
+    popup.style.height = "100%";
+    popup.style.background = "#d50000";
+    popup.style.zIndex = "999999999";
+    popup.style.display = "flex";
+    popup.style.flexDirection = "column";
+    popup.style.justifyContent = "center";
+    popup.style.alignItems = "center";
+    popup.style.color = "white";
+
+    popup.innerHTML = `
+        <div style="
+            font-size:180px;
+            animation:kedipInternet 1s infinite;
+        ">
+            📡 myROBOT-V80 - 
+        </div>
+
+        <div style="
+            font-size:90px;
+            font-weight:bold;
+        ">
+            SERVER TERPUTUS
+        </div>
+
+        <div style="
+            font-size:45px;
+            margin-top:20px;
+        ">
+            Periksa Jaringan / Hubungi IT
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    bicaraInternetPutus();
+}
+
+// ======================================
+// TUTUP POPUP MERAH
+// ======================================
+
+function tutupPopupInternetPutus(){
+
+    const popup =
+        document.getElementById("popupInternetPutus");
+
+    if(popup){
+        popup.remove();
+    }
+}
+
+// ======================================
+// POPUP HIJAU
+// ======================================
+
+function tampilkanPopupInternetAktif() {
+
+    if(document.getElementById("popupInternetAktif")) return;
+
+    const popup = document.createElement("div");
+
+    popup.id = "popupInternetAktif";
+
+    popup.style.position = "fixed";
+    popup.style.top = "0";
+    popup.style.left = "0";
+    popup.style.width = "100%";
+    popup.style.height = "100%";
+    popup.style.background = "#00c853";
+    popup.style.zIndex = "999999999";
+    popup.style.display = "flex";
+    popup.style.flexDirection = "column";
+    popup.style.justifyContent = "center";
+    popup.style.alignItems = "center";
+    popup.style.color = "white";
+
+    popup.innerHTML = `
+        <div style="font-size:180px;">
+            📶 myROBOT-V80 - 
+        </div>
+
+        <div style="
+            font-size:90px;
+            font-weight:bold;
+        ">
+            JARINGAN AKTIF
+        </div>
+
+        <div style="
+            font-size:45px;
+            margin-top:20px;
+        ">
+            Dashboard Akan Direfresh
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    bicaraInternetAktif();
+
+    setTimeout(() => {
+
+        popup.style.transition = "1s";
+        popup.style.opacity = "0";
+
+        setTimeout(() => {
+
+            location.reload();
+
+        },1000);
+
+    },5000);
+}
+
+// ======================================
+// SUARA
+// ======================================
+
+function bicaraInternetPutus(){
+
+    try {
+
+        window.speechSynthesis.cancel();
+
+        const speech =
+            new SpeechSynthesisUtterance(
+                "Perhatian. Koneksi ke server terputus. Mohon hubungi petugas IT."
+            );
+
+        speech.lang = "id-ID";
+        speech.rate = 0.9;
+
+        window.speechSynthesis.speak(speech);
+
+    } catch(e){}
+}
+
+function bicaraInternetAktif(){
+
+    try {
+
+        window.speechSynthesis.cancel();
+
+        const speech =
+            new SpeechSynthesisUtterance(
+                "Informasi. Koneksi server telah aktif kembali. Dashboard akan dimuat ulang."
+            );
+
+        speech.lang = "id-ID";
+        speech.rate = 0.9;
+
+        window.speechSynthesis.speak(speech);
+
+    } catch(e){}
+}
+
+// ======================================
+// CEK SERVER
+// ======================================
+
+async function cekInternet() {
+
+    try {
+
+        const response = await fetch(
+            URL_CEK + "?t=" + Date.now(),
+            {
+                cache: "no-cache"
+            }
+        );
+
+        if(!response.ok){
+            throw new Error();
+        }
+
+        // server normal
+        gagalCount = 0;
+
+        if(internetPutus){
+
+            internetPutus = false;
+
+            tutupPopupInternetPutus();
+
+            tampilkanPopupInternetAktif();
+        }
+
+    }
+    catch(err){
+
+        gagalCount++;
+
+        console.log(
+            "Gagal koneksi ke server : "
+            + gagalCount
+        );
+
+        if(
+            gagalCount >= BATAS_GAGAL &&
+            !internetPutus
+        ){
+
+            internetPutus = true;
+
+            tampilkanPopupInternetPutus();
+        }
+    }
+}
+
+// ======================================
+// EVENT BROWSER
+// ======================================
+
+window.addEventListener("offline", () => {
+
+    internetPutus = true;
+
+    tampilkanPopupInternetPutus();
+
+});
+
+window.addEventListener("online", () => {
+
+    cekInternet();
+
+});
+
+// ======================================
+// JALANKAN
+// ======================================
+
+// cek pertama
+cekInternet();
+
+// cek tiap 10 detik
+setInterval(cekInternet,10000);
+
+</script>
+
+
+
 
 
 </body>
