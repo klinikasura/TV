@@ -14,7 +14,7 @@ $jam     = date("H:i");
 <head>
     <title>Aplikasi RS. Asura</title>
     <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
-    <meta http-equiv="refresh" content="2;url=pasien.php">
+
     <style>
         table {border-collapse:collapse;width:100%;font-size:0.9em;}
         th, td {border:2px solid #ff69b4;padding:6px 10px;text-align:left;}
@@ -552,6 +552,13 @@ $conn->close();
 
     // Ganti tiap 1 detik
     setInterval(updateText, 2000);
+</script>
+
+
+<script>
+setInterval(function () {
+    window.location.reload();
+}, 2000); // 2 detik
 </script>
 
 </body>

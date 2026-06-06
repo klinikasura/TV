@@ -31,7 +31,7 @@ body{
 
 .kosong{
     color:red;
-    font-size:15px;
+    font-size:25px;
     font-weight:bold;
     text-align:center;
     animation:kedip 1s infinite;

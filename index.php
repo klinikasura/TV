@@ -2290,5 +2290,386 @@ setInterval(cekInternet,10000);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<audio id="audioCuaca" preload="auto">
+    <source src="AUDIO/BAYAR2.mp3" type="audio/mpeg">
+</audio>
+
+<style>
+
+@keyframes fadeInCuaca{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes kedipPetir{
+    0%{opacity:1;}
+    50%{opacity:0.2;}
+    100%{opacity:1;}
+}
+
+</style>
+
+<script>
+
+// =======================================
+// GOOGLE VOICE
+// =======================================
+
+let googleVoice = null;
+
+window.speechSynthesis.onvoiceschanged = function(){
+
+    const voices =
+        window.speechSynthesis.getVoices();
+
+    googleVoice = voices.find(v =>
+        v.lang === "id-ID"
+    ) || voices.find(v =>
+        v.lang.startsWith("id")
+    );
+
+};
+
+// =======================================
+// SUARA GOOGLE
+// =======================================
+
+function bicaraGoogle(teks){
+
+    try{
+
+        window.speechSynthesis.cancel();
+
+        const speech =
+            new SpeechSynthesisUtterance(teks);
+
+        speech.lang = "id-ID";
+        speech.rate = 0.9;
+        speech.pitch = 1;
+
+        if(googleVoice){
+            speech.voice = googleVoice;
+        }
+
+        window.speechSynthesis.speak(speech);
+
+    }catch(err){
+
+        console.log(err);
+
+    }
+}
+
+// =======================================
+// PLAY AUDIO ALERT
+// =======================================
+
+function playNotifCuaca(){
+
+    const audio =
+        document.getElementById("audioCuaca");
+
+    if(audio){
+
+        audio.currentTime = 0;
+
+        audio.play().catch(()=>{});
+
+    }
+}
+
+// =======================================
+// STATUS
+// =======================================
+
+let statusBadaiAktif = false;
+
+// =======================================
+// POPUP BADAI
+// =======================================
+
+function tampilkanPopupBadai(kondisi,suhu){
+
+    if(document.getElementById("popupBadai")){
+        return;
+    }
+
+    playNotifCuaca();
+
+    const popup =
+        document.createElement("div");
+
+    popup.id = "popupBadai";
+
+    popup.style.position = "fixed";
+    popup.style.top = "0";
+    popup.style.left = "0";
+    popup.style.width = "100%";
+    popup.style.height = "100%";
+    popup.style.background =
+        "rgba(0,0,0,0.92)";
+    popup.style.display = "flex";
+    popup.style.justifyContent = "center";
+    popup.style.alignItems = "center";
+    popup.style.zIndex = "999999999";
+    popup.style.animation =
+        "fadeInCuaca 1s";
+
+    popup.innerHTML = `
+        <div style="
+            background:#d50000;
+            width:80%;
+            padding:50px;
+            border-radius:30px;
+            text-align:center;
+            box-shadow:0 0 60px #000;
+            color:white;
+        ">
+
+            <div style="
+                font-size:150px;
+                animation:kedipPetir 1s infinite;
+            ">
+                ⛈️
+            </div>
+
+            <div style="
+                font-size:80px;
+                font-weight:bold;
+            ">
+                PERINGATAN CUACA EKSTREM
+            </div>
+
+            <div style="
+                font-size:45px;
+                margin-top:20px;
+            ">
+                ${kondisi}
+            </div>
+
+            <div style="
+                font-size:35px;
+                margin-top:15px;
+            ">
+                Suhu ${suhu}°C
+            </div>
+
+            <div style="
+                font-size:28px;
+                margin-top:25px;
+            ">
+                Wilayah OKI Kecamatan Lempuing
+            </div>
+
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    bicaraGoogle(
+        `Perhatian. Saat ini terdeteksi ${kondisi} di wilayah Ogan Komering Ilir Kecamatan Lempuing. Mohon berhati hati dan kurangi aktivitas di luar ruangan.`
+    );
+
+    setTimeout(()=>{
+
+        popup.style.transition="1s";
+        popup.style.opacity="0";
+
+        setTimeout(()=>{
+
+            popup.remove();
+
+        },1000);
+
+    },15000);
+
+}
+
+// =======================================
+// POPUP HUJAN LEBAT
+// =======================================
+
+function tampilkanPopupHujan(kondisi){
+
+    if(document.getElementById("popupHujan")){
+        return;
+    }
+
+    const popup =
+        document.createElement("div");
+
+    popup.id = "popupHujan";
+
+    popup.style.position = "fixed";
+    popup.style.top = "20px";
+    popup.style.right = "20px";
+    popup.style.background = "#1565c0";
+    popup.style.color = "#fff";
+    popup.style.padding = "25px";
+    popup.style.borderRadius = "20px";
+    popup.style.zIndex = "999999999";
+    popup.style.boxShadow =
+        "0 0 30px rgba(0,0,0,.5)";
+
+    popup.innerHTML = `
+        <h1>🌧️ HUJAN LEBAT</h1>
+        <h2>${kondisi}</h2>
+        <h3>Wilayah Lempuing</h3>
+    `;
+
+    document.body.appendChild(popup);
+
+    setTimeout(()=>{
+        popup.remove();
+    },10000);
+
+}
+
+// =======================================
+// CEK CUACA LEMPUING
+// =======================================
+
+async function cekCuacaEkstrem(){
+
+    try{
+
+        const response =
+            await fetch(
+                "https://wttr.in/Lempuing?format=j1"
+            );
+
+        const data =
+            await response.json();
+
+        const kondisi =
+            data.current_condition[0]
+            .weatherDesc[0].value;
+
+        const suhu =
+            data.current_condition[0]
+            .temp_C;
+
+        const kondisiLower =
+            kondisi.toLowerCase();
+
+        console.log(
+            "CUACA LEMPUING :",
+            kondisi
+        );
+
+        // ==========================
+        // DETEKSI BADAI / PETIR
+        // ==========================
+
+        if(
+
+            kondisiLower.includes("thunder") ||
+            kondisiLower.includes("storm") ||
+            kondisiLower.includes("thunderstorm") ||
+            kondisiLower.includes("petir") ||
+            kondisiLower.includes("badai")
+
+        ){
+
+            if(!statusBadaiAktif){
+
+                statusBadaiAktif = true;
+
+                tampilkanPopupBadai(
+                    kondisi,
+                    suhu
+                );
+            }
+
+        }else{
+
+            statusBadaiAktif = false;
+
+        }
+
+        // ==========================
+        // DETEKSI HUJAN LEBAT
+        // ==========================
+
+        if(
+            kondisiLower.includes("heavy rain")
+        ){
+
+            tampilkanPopupHujan(
+                kondisi
+            );
+        }
+
+    }
+    catch(err){
+
+        console.log(
+            "Gagal mengambil cuaca",
+            err
+        );
+
+    }
+
+}
+
+// =======================================
+// JALANKAN
+// =======================================
+
+// unlock suara browser
+document.addEventListener(
+    "click",
+    function(){
+        window.speechSynthesis.getVoices();
+    },
+    {once:true}
+);
+
+// cek pertama
+cekCuacaEkstrem();
+
+// cek tiap 5 menit
+setInterval(
+    cekCuacaEkstrem,
+    300000
+);
+
+</script>
+
+
+
+
+
+
+
+
+
 </body>
 </html>
