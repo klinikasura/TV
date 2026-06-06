@@ -185,7 +185,7 @@ body {
     const blinkIntervals = {};
     function updateTimes() {
       // Tambahin timezone supaya API ngasih waktu WIB
-      const api = 'http://api.aladhan.com/v1/timingsByCity?city=Oki&country=Indonesia&method=2&timezone=Asia/Jakarta';
+      const api = 'https://api.aladhan.com/v1/timingsByCity?city=Oki&country=Indonesia&method=20';
       fetch(api)
         .then(r => r.json())
         .then(data => {
