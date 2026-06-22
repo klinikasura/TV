@@ -1,0 +1,12 @@
+Private Sub Command1_Click()
+    Dim a As Integer
+    Dim b As Integer
+    Dim hasil As Integer
+
+    a = Val(Text1.Text)
+    b = Val(Text2.Text)
+
+    hasil = a + b
+
+    MsgBox "Hasil: " & hasil
+End Sub
