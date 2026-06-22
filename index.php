@@ -1362,51 +1362,143 @@ box-shadow:0 0 40px rgba(0,0,0,0.12); text-align:center; border:20px solid #00FF
 
 
 
+<style>
+@keyframes kedipBiru{
+    0%{
+        color:#000000;
+    }
+    50%{
+        color:#FF0000;
+    }
+    100%{
+        color:#000000;
+    }
+}
+
+.kedip-biru{
+    animation: kedipBiru 1s infinite;
+}
+</style>
+
 <script>
+
+let jamTerakhirDiumumkan = "";
+
 // -------------------------------------------------
 // Fullscreen
+// -------------------------------------------------
 document.getElementById('fullScreenBtn').addEventListener('click', function() {
-    if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => console.log('Fullscreen gagal:', err));
-    } else {
-        document.exitFullscreen();
-    }
-});
 
-// Auto fullscreen saat load (opsional)
-window.addEventListener('load', function() {
-    // document.documentElement.requestFullscreen().catch(err => console.log('Fullscreen gagal:', err));
+    if (!document.fullscreenElement) {
+
+        document.documentElement.requestFullscreen()
+        .catch(err => console.log('Fullscreen gagal:', err));
+
+    } else {
+
+        document.exitFullscreen();
+
+    }
+
 });
 
 // -------------------------------------------------
-// Jam & hari
+// Popup Jam
+// -------------------------------------------------
+function tampilkanInfoJam(jam){
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%,-50%)";
+    popup.style.background = "linear-gradient(135deg,#00c853,#69f0ae)";
+    popup.style.color = "#fff";
+    popup.style.padding = "40px";
+    popup.style.borderRadius = "20px";
+    popup.style.fontSize = "55px";
+    popup.style.fontWeight = "bold";
+    popup.style.zIndex = "999999";
+    popup.style.boxShadow = "0 0 50px rgba(0,255,0,.8)";
+
+    popup.innerHTML = "🕒 " + jam + ":00";
+
+    document.body.appendChild(popup);
+
+    setTimeout(function(){
+
+        popup.style.transition = "0.5s";
+        popup.style.opacity = "0";
+
+        setTimeout(function(){
+            popup.remove();
+        },500);
+
+    },5000);
+}
+
+// -------------------------------------------------
+// Jam & Hari
+// -------------------------------------------------
 function updateJam() {
+
     var now = new Date();
 
     let jam = now.getHours().toString().padStart(2,'0');
     let menit = now.getMinutes().toString().padStart(2,'0');
     let detik = now.getSeconds().toString().padStart(2,'0');
 
-    let waktu = jam + ":" + menit + ":" + detik;
-
     let elemenJam = document.getElementById('jam');
-    elemenJam.innerHTML = waktu;
+
+    elemenJam.innerHTML = jam + ":" + menit + ":" + detik;
 
     document.getElementById('tanggal').innerHTML =
         now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear();
 
     document.getElementById('hari').innerHTML =
-        ['Hari Minggu','Hari Senin','Hari Selasa','Hari Rabu','Hari Kamis','Hari Jumat','Hari Sabtu'][now.getDay()];
+        ['Hari Minggu','Hari Senin','Hari Selasa','Hari Rabu',
+         'Hari Kamis','Hari Jumat','Hari Sabtu'][now.getDay()];
 
-    // ================= CEK JAM KHUSUS =================
-    if ((jam === "12" || jam === "15") && menit === "00") {
-        elemenJam.classList.add("kedip");
-    } else {
-        elemenJam.classList.remove("kedip");
+    // Jam berkedip hijau selama menit 00
+    if(menit === "00"){
+        elemenJam.classList.add("kedip-biru");
+    }else{
+        elemenJam.classList.remove("kedip-biru");
+    }
+
+    // Tepat setiap awal jam
+    if(
+        menit === "00" &&
+        detik === "00" &&
+        jamTerakhirDiumumkan !== jam
+    ){
+
+        jamTerakhirDiumumkan = jam;
+
+        bicara(
+            "Perhatian. Sekarang pukul " + jam + " tepat"
+        );
+
+        tampilkanInfoJam(jam);
     }
 }
+
+// -------------------------------------------------
+// Jalankan
+// -------------------------------------------------
+updateJam();
 setInterval(updateJam,1000);
+
 </script>
+
+
+
+
+
+
+
+
 
 
 <script>
@@ -2668,6 +2760,254 @@ setInterval(
 
 
 
+
+<!-- CODING TAMPIL PASIEN DISPLAY -->
+
+
+
+<script>
+
+// ===============================
+// TEXT TO SPEECH
+// ===============================
+function bicara(teks){
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(teks);
+    speech.lang = "id-ID";
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+// ===============================
+// WARNA BERDASARKAN POLI
+// ===============================
+function getWarnaPoli(poli){
+
+    if(!poli) return "#607d8b";
+
+    poli = poli.toLowerCase();
+
+    if(poli.includes("umum")) return "#2196f3";
+    if(poli.includes("gigi")) return "#ff9800";
+    if(poli.includes("anak")) return "#e91e63";
+    if(poli.includes("mata")) return "#4caf50";
+    if(poli.includes("saraf")) return "#795548";
+    if(poli.includes("paru")) return "#009688";
+    if(poli.includes("jantung")) return "#f44336";
+    if(poli.includes("kandungan")) return "#9c27b0";
+
+    return "#3f51b5";
+}
+
+// ===============================
+// WARNA BERDASARKAN CARA BAYAR
+// ===============================
+function getWarnaBayar(cara){
+
+    if(!cara) return "#607d8b";
+
+    cara = cara.toLowerCase();
+
+    if(cara.includes("bpjs"))
+        return "linear-gradient(135deg,#1565c0,#42a5f5)";
+
+    if(cara.includes("umum"))
+        return "linear-gradient(135deg,#2e7d32,#66bb6a)";
+
+    if(cara.includes("asuransi"))
+        return "linear-gradient(135deg,#ef6c00,#ffb74d)";
+
+    if(cara.includes("perusahaan"))
+        return "linear-gradient(135deg,#6a1b9a,#ab47bc)";
+
+    return "linear-gradient(135deg,#455a64,#78909c)";
+}
+
+// ===============================
+// POPUP PASIEN BARU
+// ===============================
+function tampilkanPopup(pasien){
+
+    const overlay = document.createElement("div");
+
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0,0,0,0.35)";
+    overlay.style.zIndex = "99998";
+
+    document.body.appendChild(overlay);
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform = "translate(-50%,-50%) scale(0.5)";
+    popup.style.background = getWarnaPoli(pasien.nm_poli);
+    popup.style.color = "white";
+    popup.style.padding = "35px";
+    popup.style.borderRadius = "20px";
+    popup.style.minWidth = "600px";
+    popup.style.textAlign = "center";
+    popup.style.zIndex = "99999";
+    popup.style.transition = "0.5s";
+
+    popup.innerHTML = `
+        <div style="font-size:20px;">
+            INFORMASI : 🆕 PASIEN BARU TERDAFTAR !
+        </div>
+
+        <div style="
+            font-size:42px;
+            font-weight:bold;
+            margin-top:10px;">
+            Nama Pasien : ${pasien.nm_pasien}
+        </div>
+
+        <div style="
+            font-size:24px;
+            margin-top:10px;">
+            Tujuan Ke : ${pasien.nm_poli}
+        </div>
+
+        <div style="
+            font-size:18px;
+            margin-top:10px;">
+           Cara Pembayaran : ${pasien.cara_bayar}
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    setTimeout(()=>{
+        popup.style.transform =
+        "translate(-50%,-50%) scale(1)";
+    },50);
+
+    playNotif();
+
+    bicara(
+      `Pasien baru atas nama
+      ${pasien.nm_pasien},
+      menuju ke ${pasien.nm_poli}`
+    );
+
+    setTimeout(()=>{
+
+        popup.style.opacity = "0";
+        popup.style.transform =
+        "translate(-50%,-50%) scale(0.5)";
+
+        overlay.style.opacity = "0";
+
+        setTimeout(()=>{
+            popup.remove();
+            overlay.remove();
+        },500);
+
+    },7000);
+}
+
+// ===============================
+// POPUP PEMBAYARAN SELESAI
+// ===============================
+function tampilkanPopupBayar(pasien){
+
+    const overlay = document.createElement("div");
+
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "rgba(0,0,0,0.35)";
+    overlay.style.zIndex = "99998";
+
+    document.body.appendChild(overlay);
+
+    const popup = document.createElement("div");
+
+    popup.style.position = "fixed";
+    popup.style.top = "50%";
+    popup.style.left = "50%";
+    popup.style.transform =
+    "translate(-50%,-50%) scale(0.5)";
+
+    popup.style.background =
+    getWarnaBayar(pasien.cara_bayar);
+
+    popup.style.color = "white";
+    popup.style.padding = "35px";
+    popup.style.borderRadius = "20px";
+    popup.style.minWidth = "600px";
+    popup.style.textAlign = "center";
+    popup.style.zIndex = "99999";
+    popup.style.transition = "0.5s";
+
+    popup.innerHTML = `
+        <div style="font-size:20px;">
+            INFROMASI : 💰 PEMBAYARAN SELESAI !
+        </div>
+
+        <div style="
+            font-size:42px;
+            font-weight:bold;
+            margin-top:10px;">
+           Nama Pasien : ${pasien.nm_pasien}
+        </div>
+
+        <div style="
+            font-size:24px;
+            margin-top:10px;">
+            Dari Poli : ${pasien.nm_poli}
+        </div>
+
+        <div style="
+            font-size:18px;
+            margin-top:10px;">
+           Pembayaran Via : ${pasien.cara_bayar}
+        </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    setTimeout(()=>{
+        popup.style.transform =
+        "translate(-50%,-50%) scale(1)";
+    },50);
+
+    playNotifBayar();
+
+    bicara(
+      `Pasien atas nama
+      ${pasien.nm_pasien}
+      telah menyelesaikan pembayaran, terima kasih`
+    );
+
+    setTimeout(()=>{
+
+        popup.style.opacity = "0";
+        popup.style.transform =
+        "translate(-50%,-50%) scale(0.5)";
+
+        overlay.style.opacity = "0";
+
+        setTimeout(()=>{
+            popup.remove();
+            overlay.remove();
+        },500);
+
+    },7000);
+}
+
+</script>
 
 
 
