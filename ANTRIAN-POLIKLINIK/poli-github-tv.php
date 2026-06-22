@@ -19,7 +19,7 @@ $jam = date("H:i");
 <link href="http://10.10.20.250/dashboard/download.jpeg" rel="icon" type="image/png" />
 <script type="text/javascript" src="conf/validator.js"></script>
 
-<meta http-equiv="refresh" content="2;url=poli-github-tv.php">
+
 
 <title>Aplikasi RS. Asura</title>
 
@@ -297,6 +297,12 @@ while($data=mysqli_fetch_array($hasil)){
         </td>
     </tr>
 </table>
+
+<script>
+setInterval(function () {
+    window.location.reload();
+}, 2000); // 2 detik
+</script>
 
 </body>
 </html>
