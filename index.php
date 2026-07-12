@@ -1365,13 +1365,13 @@ box-shadow:0 0 40px rgba(0,0,0,0.12); text-align:center; border:20px solid #00FF
 <style>
 @keyframes kedipBiru{
     0%{
-        color:#000000;
-    }
-    50%{
         color:#FF0000;
     }
-    100%{
+    50%{
         color:#000000;
+    }
+    100%{
+        color:#FF0000;
     }
 }
 

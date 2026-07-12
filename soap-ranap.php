@@ -71,46 +71,54 @@ if(count($where) > 0){
 
 $query = mysqli_query($koneksi, "
 
-    SELECT
+SELECT
 
-        pemeriksaan_ranap.*,
+    MAX(pemeriksaan_ranap.tgl_perawatan) AS tgl_perawatan,
+    MAX(pemeriksaan_ranap.jam_rawat) AS jam_rawat,
 
-        petugas.nama AS nama_petugas,
+    pemeriksaan_ranap.no_rawat,
 
-        dokter.nm_dokter,
+    pasien.no_rkm_medis,
+    pasien.nm_pasien,
 
-        poliklinik.nm_poli,
+    poliklinik.nm_poli,
 
-        pasien.no_rkm_medis,
+    GROUP_CONCAT(
+        DISTINCT dokter.nm_dokter
+        SEPARATOR ', '
+    ) AS nm_dokter,
 
-        pasien.nm_pasien
+    GROUP_CONCAT(
+        DISTINCT petugas.nama
+        SEPARATOR ', '
+    ) AS nama_petugas
 
-    FROM pemeriksaan_ranap
+FROM pemeriksaan_ranap
 
-    LEFT JOIN petugas
-        ON petugas.nip = pemeriksaan_ranap.nip
+LEFT JOIN petugas
+ON petugas.nip = pemeriksaan_ranap.nip
 
-    LEFT JOIN reg_periksa
-        ON reg_periksa.no_rawat =
-           pemeriksaan_ranap.no_rawat
+LEFT JOIN reg_periksa
+ON reg_periksa.no_rawat = pemeriksaan_ranap.no_rawat
 
-    LEFT JOIN dokter
-        ON dokter.kd_dokter =
-           reg_periksa.kd_dokter
+LEFT JOIN dokter
+ON dokter.kd_dokter = reg_periksa.kd_dokter
 
-    LEFT JOIN poliklinik
-        ON poliklinik.kd_poli =
-           reg_periksa.kd_poli
+LEFT JOIN poliklinik
+ON poliklinik.kd_poli = reg_periksa.kd_poli
 
-    LEFT JOIN pasien
-        ON pasien.no_rkm_medis =
-           reg_periksa.no_rkm_medis
+LEFT JOIN pasien
+ON pasien.no_rkm_medis = reg_periksa.no_rkm_medis
 
-    $where_sql
+$where_sql
 
-    ORDER BY
-        pemeriksaan_ranap.tgl_perawatan DESC,
-        pemeriksaan_ranap.jam_rawat DESC
+GROUP BY pemeriksaan_ranap.no_rawat
+
+ORDER BY
+MAX(pemeriksaan_ranap.tgl_perawatan) DESC,
+MAX(pemeriksaan_ranap.jam_rawat) DESC
+
+
 
     LIMIT 20
 
@@ -196,6 +204,50 @@ h2{
     margin-bottom:20px;
     color:#0f172a;
 }
+/* BOTTOM NAV */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 420px;
+    width: 100%;
+    background: #fff;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+}
+.nav-item {
+    font-size: 12px;
+    text-align: center;
+}
+.home-btn {
+    background: #4e8cff;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    margin-top: -30px;
+    font-size: 22px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* RESPONSIVE */
+@media (max-width: 360px) {
+    .menu-item { width: 60px; height: 60px; }
+    .send-item img { width: 50px; height: 50px; }
+    .card { margin: -30px 10px 20px; padding: 15px; }
+}
+
+
+
+
 
 /* FILTER */
 
@@ -458,14 +510,15 @@ HEADER
     <div class="header-button">
 
         <a href="soap.php" class="btn btn-dashboard">
-           SOAP RALAN
+            SOAP RALAN
         </a>
 
         <a href="soap-ranap.php" class="btn btn-refresh">
             Refresh
         </a>
 
- <a href="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/SOAP/ROBOT-V80/rawat_jalan/manage?t=d9d3d5af7281" class="btn btn-refresh">
+
+        <a href="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/SOAP/ROBOT-V80/rawat_jalan/manage?t=d9d3d5af7281" class="btn btn-refresh">
             Tambah SOAP
         </a>
 
@@ -609,7 +662,7 @@ FILTER
 
 <div class="form-group">
 
-<a href="soap.php"
+<a href="soap-ranap.php"
 class="btn btn-reset">
 RESET
 </a>
@@ -649,25 +702,8 @@ class="display nowrap">
 <th>Petugas & Dokter</th>
 
 <th>Poli</th>
+<th>Aksi</th>
 
-<th>Suhu</th>
-<th>Tensi</th>
-<th>Nadi</th>
-<th>Respirasi</th>
-<th>Tinggi</th>
-<th>Berat</th>
-<th>SPO2</th>
-<th>GCS</th>
-<th>Kesadaran</th>
-<th>Alergi</th>
-
-
-<th>Keluhan</th>
-<th>Pemeriksaan</th>
-<th>Penilaian</th>
-<th>RTL</th>
-<th>Instruksi</th>
-<th>Evaluasi</th>
 
 </tr>
 
@@ -724,39 +760,12 @@ while($row = mysqli_fetch_assoc($query)){
 
 <td><?= $row['nm_poli'] ?></td>
 
-<td><?= $row['suhu_tubuh'] ?></td>
-
-<td><?= $row['tensi'] ?></td>
-
-<td><?= $row['nadi'] ?></td>
-
-<td><?= $row['respirasi'] ?></td>
-
-<td><?= $row['tinggi'] ?></td>
-
-<td><?= $row['berat'] ?></td>
-
-<td><?= $row['spo2'] ?></td>
-
-<td><?= $row['gcs'] ?></td>
-
-<td><?= $row['kesadaran'] ?></td>
-
-<td><?= $row['alergi'] ?></td>
-
-
-<td><?= $row['keluhan'] ?></td>
-
-<td><?= $row['pemeriksaan'] ?></td>
-
-<td><?= $row['penilaian'] ?></td>
-
-<td><?= $row['rtl'] ?></td>
-
-<td><?= $row['instruksi'] ?></td>
-
-<td><?= $row['evaluasi'] ?></td>
-
+<td>
+    <a target="_blank" href="detail-soap-ranap.php?no_rawat=<?= $row['no_rawat'] ?>"
+       class="btn btn-filter">
+       Lihat SOAP
+    </a>
+</td>
 </tr>
 
 <?php } ?>
@@ -815,7 +824,7 @@ title:'DATA SOAP PASIEN'
 
 language:{
 
-search:"Pencarian Nama Medis/Dokter :",
+search:"Pencarian :",
 
 lengthMenu:"Tampilkan _MENU_ data",
 
@@ -866,6 +875,81 @@ cell.innerHTML = start + i + 1;
 });
 
 </script>
+
+
+
+
+<p>   <p>&nbsp;</p>
+<p>   <p>&nbsp;</p>
+<p>   <p>&nbsp;</p>
+<p>   <p>&nbsp;</p>
+
+<p>   <p>&nbsp;</p>
+<p>   <p>&nbsp;</p>
+
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+   <a href="http://10.10.20.250/dashboard/ROBOT-DASHBOARD/"  class="nav-item"><img src="http://10.10.20.250/dashboard/APPS-ROBOT/ANDROID-NEW/BERANDA2.png" alt="" class="profile-pic" height="70" width="50" ><br> BERANDA </a>
+
+ <a href="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/SOAP/ROBOT-V80/rawat_jalan/manage?t=d9d3d5af7281" id="vib1" class="nav-item">
+  <img src="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/SOAP.png"
+       alt=""
+       id="goyang"
+       class="profile-pic"
+       height="70"
+       width="50">
+  <br> SOAP
+</a>
+
+<a href="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/index-dashboard2.php" class="home-btn">
+    <img src="http://10.10.20.250/dashboard/APPS-ROBOT/ANDROID-NEW/APPS2.png"
+         alt=""
+         class="profile-pic bounce"
+         height="100"
+         width="100">
+</a>
+
+<img src="https://i.imgur.com/gYHDr9S.gif"
+     alt=""
+     class="profile-pic"
+     height="18"
+     width="18">
+
+<style>
+.bounce {
+    animation: loncat 0.8s infinite;
+    display: inline-block;
+}
+
+@keyframes loncat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+</style>
+
+
+
+
+<a href="<?= $user['gaji']; ?>" class="nav-item" id="vib1">
+  <img src="http://10.10.20.250/dashboard/APPS-ROBOT/ANDROID-NEW/GAJI.png"
+       alt=""
+       id="goyang"
+       class="profile-pic"
+       height="70"
+       width="50">
+  <br> SLIP GAJI
+</a>
+
+   
+
+
+     <a href="http://10.10.20.250/dashboard/APPS-ROBOT/ANDROID-NEW/logout2.php" class="nav-item"><img src="http://10.10.20.250/dashboard/APPS-ROBOT/ANDROID-NEW/LOGOUT.png" alt="" class="profile-pic" height="70" width="50" ><br> LOGOUT</a>
+</div>
 
 </body>
 </html>

@@ -71,46 +71,54 @@ if(count($where) > 0){
 
 $query = mysqli_query($koneksi, "
 
-    SELECT
+SELECT
 
-        pemeriksaan_ralan.*,
+    MAX(pemeriksaan_ralan.tgl_perawatan) AS tgl_perawatan,
+    MAX(pemeriksaan_ralan.jam_rawat) AS jam_rawat,
 
-        petugas.nama AS nama_petugas,
+    pemeriksaan_ralan.no_rawat,
 
-        dokter.nm_dokter,
+    pasien.no_rkm_medis,
+    pasien.nm_pasien,
 
-        poliklinik.nm_poli,
+    poliklinik.nm_poli,
 
-        pasien.no_rkm_medis,
+    GROUP_CONCAT(
+        DISTINCT dokter.nm_dokter
+        SEPARATOR ', '
+    ) AS nm_dokter,
 
-        pasien.nm_pasien
+    GROUP_CONCAT(
+        DISTINCT petugas.nama
+        SEPARATOR ', '
+    ) AS nama_petugas
 
-    FROM pemeriksaan_ralan
+FROM pemeriksaan_ralan
 
-    LEFT JOIN petugas
-        ON petugas.nip = pemeriksaan_ralan.nip
+LEFT JOIN petugas
+ON petugas.nip = pemeriksaan_ralan.nip
 
-    LEFT JOIN reg_periksa
-        ON reg_periksa.no_rawat =
-           pemeriksaan_ralan.no_rawat
+LEFT JOIN reg_periksa
+ON reg_periksa.no_rawat = pemeriksaan_ralan.no_rawat
 
-    LEFT JOIN dokter
-        ON dokter.kd_dokter =
-           reg_periksa.kd_dokter
+LEFT JOIN dokter
+ON dokter.kd_dokter = reg_periksa.kd_dokter
 
-    LEFT JOIN poliklinik
-        ON poliklinik.kd_poli =
-           reg_periksa.kd_poli
+LEFT JOIN poliklinik
+ON poliklinik.kd_poli = reg_periksa.kd_poli
 
-    LEFT JOIN pasien
-        ON pasien.no_rkm_medis =
-           reg_periksa.no_rkm_medis
+LEFT JOIN pasien
+ON pasien.no_rkm_medis = reg_periksa.no_rkm_medis
 
-    $where_sql
+$where_sql
 
-    ORDER BY
-        pemeriksaan_ralan.tgl_perawatan DESC,
-        pemeriksaan_ralan.jam_rawat DESC
+GROUP BY pemeriksaan_ralan.no_rawat
+
+ORDER BY
+MAX(pemeriksaan_ralan.tgl_perawatan) DESC,
+MAX(pemeriksaan_ralan.jam_rawat) DESC
+
+
 
     LIMIT 20
 
@@ -694,25 +702,8 @@ class="display nowrap">
 <th>Petugas & Dokter</th>
 
 <th>Poli</th>
+<th>Aksi</th>
 
-<th>Suhu</th>
-<th>Tensi</th>
-<th>Nadi</th>
-<th>Respirasi</th>
-<th>Tinggi</th>
-<th>Berat</th>
-<th>SPO2</th>
-<th>GCS</th>
-<th>Kesadaran</th>
-<th>Alergi</th>
-<th>Lingkar Perut</th>
-
-<th>Keluhan</th>
-<th>Pemeriksaan</th>
-<th>Penilaian</th>
-<th>RTL</th>
-<th>Instruksi</th>
-<th>Evaluasi</th>
 
 </tr>
 
@@ -769,40 +760,12 @@ while($row = mysqli_fetch_assoc($query)){
 
 <td><?= $row['nm_poli'] ?></td>
 
-<td><?= $row['suhu_tubuh'] ?></td>
-
-<td><?= $row['tensi'] ?></td>
-
-<td><?= $row['nadi'] ?></td>
-
-<td><?= $row['respirasi'] ?></td>
-
-<td><?= $row['tinggi'] ?></td>
-
-<td><?= $row['berat'] ?></td>
-
-<td><?= $row['spo2'] ?></td>
-
-<td><?= $row['gcs'] ?></td>
-
-<td><?= $row['kesadaran'] ?></td>
-
-<td><?= $row['alergi'] ?></td>
-
-<td><?= $row['lingkar_perut'] ?></td>
-
-<td><?= $row['keluhan'] ?></td>
-
-<td><?= $row['pemeriksaan'] ?></td>
-
-<td><?= $row['penilaian'] ?></td>
-
-<td><?= $row['rtl'] ?></td>
-
-<td><?= $row['instruksi'] ?></td>
-
-<td><?= $row['evaluasi'] ?></td>
-
+<td>
+    <a target="_blank" href="detail-soap.php?no_rawat=<?= $row['no_rawat'] ?>"
+       class="btn btn-filter">
+       Lihat SOAP
+    </a>
+</td>
 </tr>
 
 <?php } ?>
@@ -861,7 +824,7 @@ title:'DATA SOAP PASIEN'
 
 language:{
 
-search:"Pencarian Nama Medis/Dokter :",
+search:"Pencarian :",
 
 lengthMenu:"Tampilkan _MENU_ data",
 
