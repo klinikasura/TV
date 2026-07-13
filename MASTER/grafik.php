@@ -140,7 +140,7 @@
      E-Rajal
   </a>
 
-  <a class="floating-btn btn3"
+  <a class="floating-btn btn2"
      href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/pie-ranap.php"
      target="_blank">
      E-Ranap
@@ -150,6 +150,26 @@
      href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/master.php"
      target="_blank">
      E-Master
+  </a>
+ <a class="floating-btn btn3"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/STOK/"
+     target="_blank">
+     E-STOK
+  </a>
+ <a class="floating-btn btn3"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/tindakan.php"
+     target="_blank">
+     E-TINDAKAN
+  </a>
+ <a class="floating-btn btn3"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/soap.php"
+     target="_blank">
+     E-SOAP
+  </a>
+ <a class="floating-btn btn3"
+     href="http://10.10.20.250/dashboard/APPS-ROBOT/TV/diagnosa.php"
+     target="_blank">
+     E-DIAGNOSA
   </a>
 
 </div>
