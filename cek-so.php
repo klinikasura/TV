@@ -427,6 +427,11 @@ class="btn-print">
 Cetak
 </a>
 
+<a href="grafik_obat_keluar.php"
+class="btn-print">
+📊 Dashboard Grafik
+</a>
+
 </div>
 
 </div>
@@ -487,7 +492,6 @@ while($d=mysqli_fetch_assoc($q)){
 
 <tr>
 <td><?=$d['tanggal']?></td>
-<td><?=$d['kode_brng']?></td>
 <td><?=$d['nama_brng']?></td>
 <td><?=$d['jumlah_keluar']?></td>
 <td><?=$d['tujuan']?></td>

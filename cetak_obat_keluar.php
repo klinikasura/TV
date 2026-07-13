@@ -33,7 +33,9 @@ ORDER BY tanggal DESC
 <!DOCTYPE html>
 <html>
 <head>
-<title>Laporan Obat Keluar</title>
+<title>myROBOT-V80</title>
+  <link href="http://10.10.20.250/dashboard/APPS-ROBOT/BUILDING APLIKASI/@API-GITHUB-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 
@@ -72,7 +74,6 @@ th,td{
 <tr>
     <th>No</th>
     <th>Tanggal</th>
-    <th>Kode</th>
     <th>Nama Obat</th>
     <th>Jumlah</th>
     <th>Poli</th>
@@ -89,7 +90,6 @@ while($d=mysqli_fetch_assoc($q)){
 <tr>
     <td><?= $no++ ?></td>
     <td><?= $d['tanggal'] ?></td>
-    <td><?= $d['kode_brng'] ?></td>
     <td><?= $d['nama_brng'] ?></td>
     <td><?= $d['jumlah_keluar'] ?></td>
     <td><?= $d['tujuan'] ?></td>
