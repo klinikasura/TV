@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
 
-<meta http-equiv="refresh" content="0;url=https://klinikasura.github.io/APLIKASI-V80/APPS/login-erm.html"/> 
+<meta http-equiv="refresh" content="0;url=https://klinikasura.github.io/APLIKASI-V80/APPS/login-stok.html"/> 
 
 <script type="text/javascript" src="chartjs/Chart.js"></script>
 

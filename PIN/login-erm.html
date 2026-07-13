@@ -1,0 +1,352 @@
+<title>myROBOT-V80</title>
+<link href="https://klinikasura.github.io/APLIKASI-V80/ROBOT-GITHUB/ROBOTV80.png" rel="icon" type="image/png"/>
+
+
+<style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+    }
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .loading-spinner {
+      border: 5px solid #ccc;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+    .loading-text {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #666;
+    }
+    .timer {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+
+
+
+
+<audio autoplay>
+    
+<source src="http://10.10.20.250/dashboard/AUDIO/INTERNET-IP.mp3" type="audio/mpeg">
+    </audio>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+
+<body>
+  <div class="loading-container">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">APLIKASI ROBOT V80</div>
+    <div class="timer" id="timer"></div>
+  </div>
+  <script>
+    let timer = 2;
+    const timerElement = document.getElementById("timer");
+    const loadingContainer = document.querySelector(".loading-container");
+
+    function updateTimer() {
+      timerElement.innerHTML = timer;
+      timer--;
+      if (timer < 0) {
+        loadingContainer.style.display = "none";
+      } else {
+        setTimeout(updateTimer, 1000);
+      }
+    }
+
+    updateTimer();
+  </script>
+</body>
+
+
+    <meta charset="UTF-8">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- Stylesheet File -->
+    <link rel="stylesheet" href="http://10.10.20.250/dashboard/APPS-ROBOT/assets/css/vendor.css">
+    <link rel="stylesheet" href="http://10.10.20.250/dashboard/APPS-ROBOT/assets/css/style.css">
+    <link rel="stylesheet" href="http://10.10.20.250/dashboard/APPS-ROBOT/assets/css/responsive.css">
+
+
+
+<script type="text/javascript" src="http://10.10.20.250/dashboard/APPS-ROBOT/chartjs/Chart.js"></script>
+
+<meta http-equiv="refresh" content="0;url=http://10.10.20.250/dashboard/APPS-ROBOT/TV/PIN/index2.php"/>  
+
+
+
+
+<div class="footer-area">
+        <div class="footer-top text-center" style="background-image: url();">
+            <div class="container">
+                
+            </div>
+        </div>
+
+
+
+
+
+   
+
+ 
+<!-- balance start -->
+    <center><div class="balance-area pd-top-40 mg-top-50">
+        <div class="container">
+            <div class="">
+                <div class="balance-title text-center">
+                    <h6><br> </h6>
+                </div>
+                <div class="" style="background-image: url();">
+                    <div class="icon">
+                        <img src="http://10.10.20.250/dashboard/KONEKSI.gif" class="img-fluid animated" alt="img">
+                    </div>
+             
+                    <h5 class="amount"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- balance End -->
+
+
+
+
+
+
+
+<p>
+
+
+
+			    <h1><span><font color='green'>Koneksi Internet Anda </font></span></h1>					
+								
+								
+								
+								
+								
+					<?php
+// Mengetahui IP Pengunjung
+function get_client_ip() {
+    $ipaddress = '';
+    if (getenv('HTTP_CLIENT_IP'))
+        $ipaddress = getenv('HTTP_CLIENT_IP');
+    else if(getenv('HTTP_X_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+    else if(getenv('HTTP_X_FORWARDED'))
+        $ipaddress = getenv('HTTP_X_FORWARDED');
+    else if(getenv('HTTP_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_FORWARDED_FOR');
+    else if(getenv('HTTP_FORWARDED'))
+       $ipaddress = getenv('HTTP_FORWARDED');
+    else if(getenv('REMOTE_ADDR'))
+        $ipaddress = getenv('REMOTE_ADDR');
+    else
+        $ipaddress = 'IP tidak dikenali';
+    return $ipaddress;
+}
+   
+   
+// Mengetahui web browser yang digunakan pengunjung
+function get_client_browser() {
+    $browser = '';
+    if(strpos($_SERVER['HTTP_USER_AGENT'], 'Netscape'))
+        $browser = 'Netscape';
+    else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox'))
+        $browser = 'Firefox';
+    else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Chrome'))
+        $browser = 'Chrome';
+    else if (strpos($_SERVER['HTTP_USER_AGENT'], 'Opera'))
+        $browser = 'Opera';
+    else if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE'))
+        $browser = 'Internet Explorer';
+    else
+        $browser = 'Other';
+    return $browser;
+}
+   echo "IP Anda adalah : ". get_client_ip()."<br>";
+   echo "Browser : ".get_client_browser()."<br>";
+   echo "Sistem Operasi Handphone/Komputer Anda : <p>".$_SERVER['HTTP_USER_AGENT'];
+?>			
+				
+<p>
+Kode Keamanan : 
+<img src="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/CAPTCHA/captcha.php" /> 			
+								
+							
+<p>
+<center>AI ROBOT SYSTEM | DEVELOPMEN IT</center>
+<center>Versi 8.0</center>
+
+
+
+
+
+
+
+
+<div class="footer-area">
+        <div class="footer-top text-center" style="background-image: url();">
+            <div class="container">
+                
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+      
+    <!-- Footer Area -->
+    
+            <h1><div class="footer-bottom text-center">
+                <ul>
+                    <li>
+                        <a href="#">
+<img border="0" src="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/FILE/BERANDA.png"  height="45" width="45" id="vib1"/></a> <a id="log"></a>
+                            <i class=""></i>
+                            <p>Beranda</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+<img border="0" src="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/FILE/SATUSEHAT-INTEGRASI-VERSI-80-2.png"  height="50" width="50" id="vib1"/></a><a id="log"></a>
+                            <i class=""></i>
+                            <p>ASKES</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+<img border="0" src="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/SCANRM2.webp" height="45" width="45"id="vib1" /></a><a id="log"></a>
+                            <i class=""></i>
+                            <p>SCAN RM</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+<img border="0" src="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/FILE/PLAYSTORE.png"  height="45" width="45" id="vib1"/></a><a id="log"></a>
+                            <i class=""></i>
+                            <p>PLAYSTORE</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+<img border="0" src="http://10.10.20.250/dashboard/APPS-ROBOT/GITHUB/LOGOUT.webp"  height="45" width="45" id="vib1" /></a> <a id="log"></a>
+                            <i class=""></i>
+                            <p>LOGOUT</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+    </div>
+</div>
+
+
+
+     
+
+
+
+<script type='text/javascript' >
+history.pushState(null, null,"#" );window.addEventListener("popstate" ,function(event)
+{
+history.pushState(null, null, "#" );
+});
+</script>
+
+<script type='text/javascript' >
+window.history.forward(); function noBack()}
+</script>
+
+<script language='javascript' >
+(function(window, location) {history.replaceState(null, document.title,location.pathname+"#!/history");history.pushState(null, document.title,location.pathname); window.addEventListener("popstate", function() {if(location.hash === "#"!/history") {history.replaceState(null, document.title,location.pathname); setTimeout(function() {location.reolace("https://omevan.com/"); }, 0 } }, false); } (window, location));
+</script>
+
+
+<script languange="javascript">
+(function(window, location) {history.replaceState(null, document.title, location.pathname+&quot;#!/history&quot;); historypushState(null, document.title,location.pathname); window.addEventListener(&quot;popstate&quot;, function() {if(location.hash === & quot;#!/history&quot;) {history.replaceState(null,document.title, location.pathname); setTimeout(function(){location.replace(&quot;https://omevan.com/&quot;);},0;}}, false) ;} (window, location)) ;
+</script>
+
+
+<script type = "text/javascript" > history.pushState(null, null); window.addEventListener('popstate', function(event) { history.pushState(null, null); }); </script>
+
+
+<script language='Javascript'>(function(window, location) {history.replaceState(null, document.title, location.pathname+"#!/history");history.pushState(null, document.title, location.pathname);window.addEventListener("popstate", function() {if(location.hash === "#!/history") {history.replaceState(null, document.title, location.pathname);setTimeout(function(){location.replace("https://bisablog.com/");},0);}}, false);}(window, location));</script>
+
+
+<script type = "text/javascript" >
+function preventBack(){window.history.forward();}
+setTimeout("preventBack()", 0);
+window.onunload=function(){null};
+</script>
+
+
+    <!-- back to top area start -->
+    <div class="back-to-top">
+        <span class="back-top"><i class="fa fa-angle-up"></i></span>
+    </div>
+    <!-- back to top area end -->
+
+    <!-- All Js File here -->
+    <script src="http://10.10.20.250/dashboard/APPS-ROBOT/assets/js/vendor.js"></script>
+    <script src="http://10.10.20.250/dashboard/APPS-ROBOT/assets/js/main.js"></script>
+
+</body>
+
+</html>
+
+
+
